@@ -1,37 +1,34 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
-  "version": "${version}",
-
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "id": "golemsgalore",
+  "version": "0.1.0",
+  "name": "Golems Galore",
+  "description": "Adds many more golems that help you protect places in interesting ways!",
   "authors": [
-    "Me!"
+    "ffrann"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/franiscoder/golemsgalore",
+    "sources": "https://github.com/franiscoder/golemsgalore",
+    "issues": "https://github.com/franiscoder/golemsgalore"
   },
-
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
-
+  "license": "LGPL-3.0",
+  "icon": "assets/golemsgalore/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "io.github.franiscoder.golemsgalore.GolemsGalore"
+    ],
+    "client": [
+      "io.github.franiscoder.golemsgalore.GolemsGaloreClient"
     ]
   },
-  "mixins": [
-    "modid.mixins.json"
-  ],
-
   "depends": {
-    "fabricloader": ">=0.7.4",
+    "fabricloader": ">=0.8.3",
     "fabric": "*",
-    "minecraft": "1.15.x"
+    "minecraft": ">=1.16-"
   },
-  "suggests": {
-    "flamingo": "*"
-  }
+  "mixins": [
+    "golemsgalore.mixins.json"
+  ]
 }
