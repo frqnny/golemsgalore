@@ -1,6 +1,16 @@
+buildscript {
+	repositories { jcenter() }
+	dependencies {
+		classpath("io.github.fudge:forgedflowerloom:1.0.0")
+	}
+}
+
 plugins {
 	id 'fabric-loom' version '0.4-SNAPSHOT'
-	id 'maven-publish'
+
+}
+minecraft {
+	addDecompiler(new ForgedFlowerDecompiler(project))
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -19,12 +29,25 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+	modImplementation 'com.github.Draylar:structurized:1.0.0'
+	include 'com.github.Draylar:structurized:1.0.0'
+
+	modCompile "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
+	include  "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
+
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
+
+	modRuntime ("com.github.SuperCoder7979:databreaker:b40c9ed05c3c90d0d43344565578cc17992733b4") {
+		exclude module : "fabric-loader"
+	}
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
 }
+repositories {
 
+	maven { url 'https://jitpack.io' }
+}
 processResources {
 	inputs.property "version", project.version
 
@@ -56,3 +79,4 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 jar {
 	from "LICENSE"
 }
+

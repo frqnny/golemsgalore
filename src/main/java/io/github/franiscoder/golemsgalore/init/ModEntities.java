@@ -2,6 +2,8 @@ package io.github.franiscoder.golemsgalore.init;
 
 import io.github.franiscoder.golemsgalore.GolemsGalore;
 import io.github.franiscoder.golemsgalore.api.enums.Type;
+import io.github.franiscoder.golemsgalore.config.GolemsGaloreConfig;
+import io.github.franiscoder.golemsgalore.entity.AntiCreeperGolemEntity;
 import io.github.franiscoder.golemsgalore.entity.LaserGolemEntity;
 import io.github.franiscoder.golemsgalore.entity.ModGolemEntity;
 import net.fabricmc.fabric.api.entity.FabricDefaultAttributeRegistry;
@@ -25,27 +27,29 @@ public class ModEntities {
     public static EntityType<ModGolemEntity> OBSIDIAN_GOLEM;
 
     public static EntityType<LaserGolemEntity> LASER_GOLEM;
+    public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
 
     public static EnumMap<Type, EntityType<ModGolemEntity>> typeMap;
     public static EnumMap<Type, DefaultAttributeContainer.Builder> attributeContainerMap;
 
     public static void init() {
+        GolemsGaloreConfig config = GolemsGalore.getConfig();
         attributeContainerMap = new EnumMap<>(Type.class);
         // base is 100 hp, speed .25d, knockback resistance 1,  attack damage 15
         attributeContainerMap.put(Type.DIAMOND,
-                createDefaultGolemAttributes(230, 0.2D, 1D, 20)
+                createDefaultGolemAttributes(config.healthDiamond, config.speedDiamond, config.knockbackResistanceDiamond, config.attackDamageDiamond)
         );
         attributeContainerMap.put(Type.NETHERITE,
-                createDefaultGolemAttributes(450, 0.18D, 1.1D, 30)
+                createDefaultGolemAttributes(config.healthNetherite, config.speedNetherite, config.knockbackResistanceNetherite, config.attackDamageNetherite)
         );
         attributeContainerMap.put(Type.GOLD,
-                createDefaultGolemAttributes(50, 0.35D, 1D, 19.9)
+                createDefaultGolemAttributes(config.healthGolden, config.speedGolden, config.knockbackResistanceGolden, config.attackDamageGolden)
         );
         attributeContainerMap.put(Type.QUARTZ,
-                createDefaultGolemAttributes(50, 0.25D, 0.5D, 5).add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 3.0D)
+                createDefaultGolemAttributes(config.healthQuartz, config.speedQuartz, config.knockbackResistanceQuartz, config.attackDamageQuartz).add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 3.0D)
         );
         attributeContainerMap.put(Type.OBSIDIAN,
-                createDefaultGolemAttributes(200, 0.15D, 2D, 15)
+                createDefaultGolemAttributes(config.healthObsidian, config.speedObsidian, config.knockbackResistanceObsidian, config.attackDamageObsidian)
         );
 
 
@@ -78,7 +82,14 @@ public class ModEntities {
                 FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, LaserGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
         FabricDefaultAttributeRegistry.register(LASER_GOLEM,
-                createDefaultGolemAttributes(100, .25D, 1, 10)
+                createDefaultGolemAttributes(config.healthLaser, config.speedLaser, config.knockbackResistanceLaser, config.attackDamageLaser)
+        );
+
+        ANTI_CREEPER_GOLEM = register("anti_creeper_golem",
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, AntiCreeperGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build()
+        );
+        FabricDefaultAttributeRegistry.register(ANTI_CREEPER_GOLEM,
+                createDefaultGolemAttributes(config.healthCreeper, config.speedCreeper, config.knockbackResistanceCreeper, config.attackDamageCreeper).add(EntityAttributes.GENERIC_ARMOR, 2D)
         );
 
         typeMap = new EnumMap<>(Type.class);

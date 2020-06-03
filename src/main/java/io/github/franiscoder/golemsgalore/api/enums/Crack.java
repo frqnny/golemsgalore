@@ -21,7 +21,7 @@ public enum Crack {
 
     public static Crack from(float healthFraction) {
         for (Crack crack : VALUES) {
-            if (healthFraction <= crack.maxHealthFraction) {
+            if (healthFraction < crack.maxHealthFraction) {
                 return crack;
             }
         }

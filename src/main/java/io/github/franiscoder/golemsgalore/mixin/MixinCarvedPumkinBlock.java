@@ -1,6 +1,7 @@
 package io.github.franiscoder.golemsgalore.mixin;
 
 import io.github.franiscoder.golemsgalore.api.enums.Type;
+import io.github.franiscoder.golemsgalore.entity.AntiCreeperGolemEntity;
 import io.github.franiscoder.golemsgalore.entity.LaserGolemEntity;
 import io.github.franiscoder.golemsgalore.entity.ModGolemEntity;
 import io.github.franiscoder.golemsgalore.init.ModEntities;
@@ -30,8 +31,10 @@ public class MixinCarvedPumkinBlock extends Block {
     private static final Predicate<BlockState> IS_PUMPKIN_PREDICATE;
     private static final Predicate<BlockState> IRON_FUCK;
     private static final Predicate<BlockState> REDSTONE_FUCK;
+    private static final Predicate<BlockState> TNT_FUCK;
     private static final BlockPattern commonPattern;
     private static final BlockPattern laserPattern;
+    private static final BlockPattern antiCreeperPattern;
 
     static {
         IS_PUMPKIN_PREDICATE = (blockState) -> blockState != null &&
@@ -49,6 +52,9 @@ public class MixinCarvedPumkinBlock extends Block {
 
         REDSTONE_FUCK = (blockState) -> blockState != null && blockState.isOf(Blocks.REDSTONE_BLOCK);
 
+        TNT_FUCK = (blockState) -> blockState != null && blockState.isOf(Blocks.TNT);
+
+
         commonPattern = BlockPatternBuilder.start().aisle("~^~", "###", "~#~")
                 .where('^', CachedBlockPosition.matchesBlockState(IS_PUMPKIN_PREDICATE))
                 .where('#', CachedBlockPosition.matchesBlockState(IS_VALID_BLOCK))
@@ -58,6 +64,12 @@ public class MixinCarvedPumkinBlock extends Block {
                 .where('^', CachedBlockPosition.matchesBlockState(IS_PUMPKIN_PREDICATE))
                 .where('#', CachedBlockPosition.matchesBlockState(IRON_FUCK))
                 .where('%', CachedBlockPosition.matchesBlockState(REDSTONE_FUCK))
+                .where('~', CachedBlockPosition.matchesBlockState(MaterialPredicate.create(Material.AIR)))
+                .build();
+        antiCreeperPattern = BlockPatternBuilder.start().aisle("~^~", "#%#", "~#~")
+                .where('^', CachedBlockPosition.matchesBlockState(IS_PUMPKIN_PREDICATE))
+                .where('#', CachedBlockPosition.matchesBlockState(IRON_FUCK))
+                .where('%', CachedBlockPosition.matchesBlockState(TNT_FUCK))
                 .where('~', CachedBlockPosition.matchesBlockState(MaterialPredicate.create(Material.AIR)))
                 .build();
 
@@ -72,6 +84,7 @@ public class MixinCarvedPumkinBlock extends Block {
         if (stack.getItem() == ModItems.GOLEM_SOUL) {
             BlockPattern.Result result = commonPattern.searchAround(world, pos);
             BlockPattern.Result laser = laserPattern.searchAround(world, pos);
+            BlockPattern.Result anti_creeper = antiCreeperPattern.searchAround(world, pos);
             if (result != null) {
                 if (!player.abilities.creativeMode) {
                     player.getStackInHand(hand).decrement(1);
@@ -145,6 +158,41 @@ public class MixinCarvedPumkinBlock extends Block {
                 for (int m = 0; m < width; ++m) {
                     for (int n = 0; n < height; ++n) {
                         CachedBlockPosition cachedBlockPosition4 = laser.translate(m, n, 0);
+                        world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
+                    }
+                }
+            } else if (anti_creeper != null) {
+                if (!player.abilities.creativeMode) {
+                    player.getStackInHand(hand).decrement(1);
+                }
+
+                int width = commonPattern.getWidth();
+                int height = commonPattern.getHeight();
+
+                for (int k = 0; k < width; ++k) {
+                    for (int l = 0; l < height; ++l) {
+                        CachedBlockPosition cachedBlockPosition3 = anti_creeper.translate(k, l, 0);
+                        world.setBlockState(cachedBlockPosition3.getBlockPos(), Blocks.AIR.getDefaultState(), 2);
+                        world.syncWorldEvent(2001, cachedBlockPosition3.getBlockPos(), Block.getRawIdFromState(cachedBlockPosition3.getBlockState()));
+                    }
+                }
+
+                AntiCreeperGolemEntity golem = ModEntities.ANTI_CREEPER_GOLEM.create(world);
+                assert golem != null;
+                golem.setPlayerCreated(true);
+
+                BlockPos blockPos2 = anti_creeper.translate(1, 2, 0).getBlockPos();
+                golem.refreshPositionAndAngles((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.05D, (double) blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
+                world.spawnEntity(golem);
+
+                for (ServerPlayerEntity serverPlayer : world.getNonSpectatingEntities(ServerPlayerEntity.class, golem.getBoundingBox().expand(5.0D))) {
+                    Criteria.SUMMONED_ENTITY.trigger(serverPlayer, golem);
+                }
+
+
+                for (int m = 0; m < width; ++m) {
+                    for (int n = 0; n < height; ++n) {
+                        CachedBlockPosition cachedBlockPosition4 = anti_creeper.translate(m, n, 0);
                         world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
                     }
                 }

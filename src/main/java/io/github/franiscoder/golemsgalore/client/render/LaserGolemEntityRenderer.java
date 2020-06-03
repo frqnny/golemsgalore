@@ -71,46 +71,46 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
         }
     }
 
-    public void render(LaserGolemEntity golem, float f, float deltaTicks, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        super.render(golem, f, deltaTicks, matrixStack, vertexConsumerProvider, i);
+    public void render(LaserGolemEntity golem, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+        super.render(golem, f, g, matrixStack, vertexConsumerProvider, i);
         LivingEntity livingEntity = golem.getBeamTarget();
         if (livingEntity != null) {
-            float beamProgress = golem.getBeamProgress(deltaTicks);
-            float exactTime = (float) golem.world.getTime() + deltaTicks;
-            float k = exactTime * 0.5F % 1.0F;
-            float eyeHeight = golem.getStandingEyeHeight();
+            float h = golem.getBeamProgress(g);
+            float j = (float) golem.world.getTime() + g;
+            float k = j * 0.5F % 1.0F;
+            float l = golem.getStandingEyeHeight();
             matrixStack.push();
-            matrixStack.translate(0.0D, eyeHeight, 0.0D);
-            Vec3d vec3d = fromLerpedPosition(livingEntity, (double) livingEntity.getHeight() * 0.5D, deltaTicks);
-            Vec3d vec3d2 = fromLerpedPosition(golem, eyeHeight, deltaTicks);
+            matrixStack.translate(0.0D, l, 0.0D);
+            Vec3d vec3d = fromLerpedPosition(livingEntity, (double) livingEntity.getHeight() * 0.5D, g);
+            Vec3d vec3d2 = fromLerpedPosition(golem, l, g);
             Vec3d vec3d3 = vec3d.subtract(vec3d2);
             float m = (float) (vec3d3.length() + 1.0D);
             vec3d3 = vec3d3.normalize();
             float n = (float) Math.acos(vec3d3.y);
             float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((1.5707964F - o) * 57.295776F));
-            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * 57.295776F));
-            float q = exactTime * 0.05F * -1.5F;
-            float beamProgressSqr = beamProgress * beamProgress;
-            int s = 64 + (int) (beamProgressSqr * 191.0F);
-            int t = 32 + (int) (beamProgressSqr * 191.0F);
-            int u = 128 - (int) (beamProgressSqr * 64.0F);
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
+            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * (180F / (float) Math.PI)));
+            float q = j * 0.05F * -1.5F;
+            float r = h * h;
+            int s = 64 + (int) (r * 191.0F);
+            int t = 32 + (int) (r * 191.0F);
+            int u = 128 - (int) (r * 64.0F);
             float x = MathHelper.cos(q + 2.3561945F) * 0.282F;
             float y = MathHelper.sin(q + 2.3561945F) * 0.282F;
-            float z = MathHelper.cos(q + 0.7853982F) * 0.282F;
-            float aa = MathHelper.sin(q + 0.7853982F) * 0.282F;
+            float z = MathHelper.cos(q + ((float) Math.PI / 4F)) * 0.282F;
+            float aa = MathHelper.sin(q + ((float) Math.PI / 4F)) * 0.282F;
             float ab = MathHelper.cos(q + 3.926991F) * 0.282F;
             float ac = MathHelper.sin(q + 3.926991F) * 0.282F;
             float ad = MathHelper.cos(q + 5.4977875F) * 0.282F;
             float ae = MathHelper.sin(q + 5.4977875F) * 0.282F;
-            float af = MathHelper.cos(q + 3.1415927F) * 0.2F;
-            float ag = MathHelper.sin(q + 3.1415927F) * 0.2F;
+            float af = MathHelper.cos(q + (float) Math.PI) * 0.2F;
+            float ag = MathHelper.sin(q + (float) Math.PI) * 0.2F;
             float ah = MathHelper.cos(q + 0.0F) * 0.2F;
             float ai = MathHelper.sin(q + 0.0F) * 0.2F;
-            float aj = MathHelper.cos(q + 1.5707964F) * 0.2F;
-            float ak = MathHelper.sin(q + 1.5707964F) * 0.2F;
-            float al = MathHelper.cos(q + 4.712389F) * 0.2F;
-            float am = MathHelper.sin(q + 4.712389F) * 0.2F;
+            float aj = MathHelper.cos(q + ((float) Math.PI / 2F)) * 0.2F;
+            float ak = MathHelper.sin(q + ((float) Math.PI / 2F)) * 0.2F;
+            float al = MathHelper.cos(q + ((float) Math.PI * 1.5F)) * 0.2F;
+            float am = MathHelper.sin(q + ((float) Math.PI * 1.5F)) * 0.2F;
             float aq = -1.0F + k;
             float ar = m * 2.5F + aq;
             VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);

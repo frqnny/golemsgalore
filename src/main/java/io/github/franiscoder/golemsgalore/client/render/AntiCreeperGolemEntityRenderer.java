@@ -1,5 +1,6 @@
 package io.github.franiscoder.golemsgalore.client.render;
 
+import io.github.franiscoder.golemsgalore.GolemsGalore;
 import io.github.franiscoder.golemsgalore.client.render.feature.ModGolemCrackFeatureRenderer;
 import io.github.franiscoder.golemsgalore.client.render.feature.ModGolemFlowerFeatureRenderer;
 import io.github.franiscoder.golemsgalore.client.render.model.ModGolemEntityModel;
@@ -10,8 +11,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 
-public class ModGolemEntityRenderer extends MobEntityRenderer<ModGolemEntity, ModGolemEntityModel<ModGolemEntity>> {
-    public ModGolemEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
+public class AntiCreeperGolemEntityRenderer extends MobEntityRenderer<ModGolemEntity, ModGolemEntityModel<ModGolemEntity>> {
+    public static final Identifier TEXTURE = GolemsGalore.id("textures/entity/golem/anticreeper_golem.png");
+
+    public AntiCreeperGolemEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher, new ModGolemEntityModel<>(), 1);
         this.addFeature(new ModGolemCrackFeatureRenderer<>(this));
         this.addFeature(new ModGolemFlowerFeatureRenderer<>(this));
@@ -19,7 +22,7 @@ public class ModGolemEntityRenderer extends MobEntityRenderer<ModGolemEntity, Mo
 
     @Override
     public Identifier getTexture(ModGolemEntity entity) {
-        return entity.getGolemType().texture;
+        return TEXTURE;
 
     }
 
