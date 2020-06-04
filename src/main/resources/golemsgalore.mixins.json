@@ -5,7 +5,8 @@
   "mixins": [
     "MixinGolemEntity",
     "MixinCarvedPumkinBlock",
-    "MixinHostiles"
+    "MixinHostiles",
+    "MixinSummonCommand"
   ],
   "client": [
   ],

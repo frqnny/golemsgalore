@@ -15,7 +15,7 @@ public enum Type {
     NETHERITE(Blocks.NETHERITE_BLOCK, Items.NETHERITE_INGOT, GolemsGalore.id("textures/entity/golem/netherite_golem.png")),
     QUARTZ(Blocks.QUARTZ_BLOCK, Items.QUARTZ, GolemsGalore.id("textures/entity/golem/quartz_golem.png")),
     OBSIDIAN(Blocks.OBSIDIAN, Items.OBSIDIAN, GolemsGalore.id("textures/entity/golem/obsidian_golem.png")),
-    NULL(Blocks.DIRT, Items.DIRT, null);
+    NULL(Blocks.DIRT, Items.DIRT, GolemsGalore.id("textures/entity/golem/quartz_golem.png"));
 
     public final Block block;
     public final Item item;

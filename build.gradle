@@ -1,16 +1,6 @@
-buildscript {
-	repositories { jcenter() }
-	dependencies {
-		classpath("io.github.fudge:forgedflowerloom:1.0.0")
-	}
-}
-
 plugins {
 	id 'fabric-loom' version '0.4-SNAPSHOT'
 
-}
-minecraft {
-	addDecompiler(new ForgedFlowerDecompiler(project))
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -36,10 +26,6 @@ dependencies {
 	include  "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
 
 	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
-
-	modRuntime ("com.github.SuperCoder7979:databreaker:b40c9ed05c3c90d0d43344565578cc17992733b4") {
-		exclude module : "fabric-loader"
-	}
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
