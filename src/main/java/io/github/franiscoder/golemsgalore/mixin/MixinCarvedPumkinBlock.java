@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
@@ -82,51 +83,54 @@ public class MixinCarvedPumkinBlock extends Block {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack stack = player.getStackInHand(hand);
         if (stack.getItem() == ModItems.GOLEM_SOUL) {
-            BlockPattern.Result result = commonPattern.searchAround(world, pos);
-            BlockPattern.Result laser = laserPattern.searchAround(world, pos);
-            BlockPattern.Result anti_creeper = antiCreeperPattern.searchAround(world, pos);
-            if (result != null) {
+            Optional<BlockPattern.Result> result = Optional.ofNullable(commonPattern.searchAround(world, pos));
+            Optional<BlockPattern.Result> laser = Optional.ofNullable(laserPattern.searchAround(world, pos));
+            Optional<BlockPattern.Result> antiCreeper = Optional.ofNullable(antiCreeperPattern.searchAround(world, pos));
+            if (result.isPresent()) {
                 if (!player.abilities.creativeMode) {
                     player.getStackInHand(hand).decrement(1);
                 }
 
-                Block block = null;
+                Optional<Block> block = Optional.empty();
                 int width = commonPattern.getWidth();
                 int height = commonPattern.getHeight();
                 for (int k = 0; k < width; ++k) {
                     for (int l = 0; l < height; ++l) {
-                        CachedBlockPosition cachedBlockPosition3 = result.translate(k, l, 0);
+                        CachedBlockPosition cachedBlockPosition3 = result.get().translate(k, l, 0);
                         if (IS_VALID_BLOCK.test(cachedBlockPosition3.getBlockState())) {
-                            block = cachedBlockPosition3.getBlockState().getBlock();
+                            block = Optional.ofNullable(cachedBlockPosition3.getBlockState().getBlock());
                         }
                         world.setBlockState(cachedBlockPosition3.getBlockPos(), Blocks.AIR.getDefaultState(), 2);
                         world.syncWorldEvent(2001, cachedBlockPosition3.getBlockPos(), Block.getRawIdFromState(cachedBlockPosition3.getBlockState()));
                     }
                 }
 
-                BlockPos blockPos2 = result.translate(1, 2, 0).getBlockPos();
+                BlockPos blockPos2 = result.get().translate(1, 2, 0).getBlockPos();
+                if (block.isPresent()) {
+                    Type type = Type.fromBlock(block.get());
 
-                assert block != null;
-                Type type = Type.fromBlock(block);
+                    Optional<ModGolemEntity> golem = Optional.ofNullable(ModEntities.typeMap.get(type).create(world));
+                    if (golem.isPresent()) {
+                        golem.get().setGolemType(type);
+                        golem.get().setPlayerCreated(true);
+                        golem.get().refreshPositionAndAngles((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.05D, (double) blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
+                        world.spawnEntity(golem.get());
 
-                ModGolemEntity golem = ModEntities.typeMap.get(type).create(world);
-                assert golem != null;
-                golem.setGolemType(type);
-                golem.setPlayerCreated(true);
-                golem.refreshPositionAndAngles((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.05D, (double) blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
-                world.spawnEntity(golem);
+                        for (ServerPlayerEntity serverPlayer : world.getNonSpectatingEntities(ServerPlayerEntity.class, golem.get().getBoundingBox().expand(5.0D))) {
+                            Criteria.SUMMONED_ENTITY.trigger(serverPlayer, golem.get());
+                        }
 
-                for (ServerPlayerEntity serverPlayer : world.getNonSpectatingEntities(ServerPlayerEntity.class, golem.getBoundingBox().expand(5.0D))) {
-                    Criteria.SUMMONED_ENTITY.trigger(serverPlayer, golem);
-                }
-
-                for (int m = 0; m < width; ++m) {
-                    for (int n = 0; n < height; ++n) {
-                        CachedBlockPosition cachedBlockPosition4 = result.translate(m, n, 0);
-                        world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
+                        for (int m = 0; m < width; ++m) {
+                            for (int n = 0; n < height; ++n) {
+                                CachedBlockPosition cachedBlockPosition4 = result.get().translate(m, n, 0);
+                                world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
+                            }
+                        }
                     }
+
                 }
-            } else if (laser != null) {
+
+            } else if (laser.isPresent()) {
                 if (!player.abilities.creativeMode) {
                     player.getStackInHand(hand).decrement(1);
                 }
@@ -136,32 +140,33 @@ public class MixinCarvedPumkinBlock extends Block {
 
                 for (int k = 0; k < width; ++k) {
                     for (int l = 0; l < height; ++l) {
-                        CachedBlockPosition cachedBlockPosition3 = laser.translate(k, l, 0);
+                        CachedBlockPosition cachedBlockPosition3 = laser.get().translate(k, l, 0);
                         world.setBlockState(cachedBlockPosition3.getBlockPos(), Blocks.AIR.getDefaultState(), 2);
                         world.syncWorldEvent(2001, cachedBlockPosition3.getBlockPos(), Block.getRawIdFromState(cachedBlockPosition3.getBlockState()));
                     }
                 }
+                Optional<LaserGolemEntity> golem = Optional.ofNullable(ModEntities.LASER_GOLEM.create(world));
+                if (golem.isPresent()) {
+                    golem.get().setPlayerCreated(true);
 
-                LaserGolemEntity golem = ModEntities.LASER_GOLEM.create(world);
-                assert golem != null;
-                golem.setPlayerCreated(true);
+                    BlockPos blockPos2 = laser.get().translate(1, 2, 0).getBlockPos();
+                    golem.get().refreshPositionAndAngles((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.05D, (double) blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
+                    world.spawnEntity(golem.get());
 
-                BlockPos blockPos2 = laser.translate(1, 2, 0).getBlockPos();
-                golem.refreshPositionAndAngles((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.05D, (double) blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
-                world.spawnEntity(golem);
-
-                for (ServerPlayerEntity serverPlayer : world.getNonSpectatingEntities(ServerPlayerEntity.class, golem.getBoundingBox().expand(5.0D))) {
-                    Criteria.SUMMONED_ENTITY.trigger(serverPlayer, golem);
-                }
+                    for (ServerPlayerEntity serverPlayer : world.getNonSpectatingEntities(ServerPlayerEntity.class, golem.get().getBoundingBox().expand(5.0D))) {
+                        Criteria.SUMMONED_ENTITY.trigger(serverPlayer, golem.get());
+                    }
 
 
-                for (int m = 0; m < width; ++m) {
-                    for (int n = 0; n < height; ++n) {
-                        CachedBlockPosition cachedBlockPosition4 = laser.translate(m, n, 0);
-                        world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
+                    for (int m = 0; m < width; ++m) {
+                        for (int n = 0; n < height; ++n) {
+                            CachedBlockPosition cachedBlockPosition4 = laser.get().translate(m, n, 0);
+                            world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
+                        }
                     }
                 }
-            } else if (anti_creeper != null) {
+
+            } else if (antiCreeper.isPresent()) {
                 if (!player.abilities.creativeMode) {
                     player.getStackInHand(hand).decrement(1);
                 }
@@ -171,31 +176,33 @@ public class MixinCarvedPumkinBlock extends Block {
 
                 for (int k = 0; k < width; ++k) {
                     for (int l = 0; l < height; ++l) {
-                        CachedBlockPosition cachedBlockPosition3 = anti_creeper.translate(k, l, 0);
+                        CachedBlockPosition cachedBlockPosition3 = antiCreeper.get().translate(k, l, 0);
                         world.setBlockState(cachedBlockPosition3.getBlockPos(), Blocks.AIR.getDefaultState(), 2);
                         world.syncWorldEvent(2001, cachedBlockPosition3.getBlockPos(), Block.getRawIdFromState(cachedBlockPosition3.getBlockState()));
                     }
                 }
 
-                AntiCreeperGolemEntity golem = ModEntities.ANTI_CREEPER_GOLEM.create(world);
-                assert golem != null;
-                golem.setPlayerCreated(true);
+                Optional<AntiCreeperGolemEntity> golem = Optional.ofNullable(ModEntities.ANTI_CREEPER_GOLEM.create(world));
+                if (golem.isPresent()) {
+                    golem.get().setPlayerCreated(true);
 
-                BlockPos blockPos2 = anti_creeper.translate(1, 2, 0).getBlockPos();
-                golem.refreshPositionAndAngles((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.05D, (double) blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
-                world.spawnEntity(golem);
+                    BlockPos blockPos2 = antiCreeper.get().translate(1, 2, 0).getBlockPos();
+                    golem.get().refreshPositionAndAngles((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.05D, (double) blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
+                    world.spawnEntity(golem.get());
 
-                for (ServerPlayerEntity serverPlayer : world.getNonSpectatingEntities(ServerPlayerEntity.class, golem.getBoundingBox().expand(5.0D))) {
-                    Criteria.SUMMONED_ENTITY.trigger(serverPlayer, golem);
-                }
+                    for (ServerPlayerEntity serverPlayer : world.getNonSpectatingEntities(ServerPlayerEntity.class, golem.get().getBoundingBox().expand(5.0D))) {
+                        Criteria.SUMMONED_ENTITY.trigger(serverPlayer, golem.get());
+                    }
 
 
-                for (int m = 0; m < width; ++m) {
-                    for (int n = 0; n < height; ++n) {
-                        CachedBlockPosition cachedBlockPosition4 = anti_creeper.translate(m, n, 0);
-                        world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
+                    for (int m = 0; m < width; ++m) {
+                        for (int n = 0; n < height; ++n) {
+                            CachedBlockPosition cachedBlockPosition4 = antiCreeper.get().translate(m, n, 0);
+                            world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
+                        }
                     }
                 }
+
             }
 
             return ActionResult.CONSUME;

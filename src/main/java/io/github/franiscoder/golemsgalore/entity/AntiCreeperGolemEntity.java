@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
@@ -40,14 +41,20 @@ public class AntiCreeperGolemEntity extends ModGolemEntity {
     }
 
     @Override
-    protected boolean interactMob(PlayerEntity player, Hand hand) {
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         Item handItem = player.getStackInHand(hand).getItem();
 
-        if (handItem.equals(Items.IRON_INGOT)) {
+        if (handItem != Items.IRON_INGOT) {
+            return ActionResult.PASS;
+        } else if (handItem == Items.GLASS_BOTTLE) {
+            this.damage(DamageSource.player(player), this.getMaxHealth());
+            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
+            return ActionResult.PASS;
+        } else {
             float f = this.getHealth();
             this.heal(25.0F);
             if (this.getHealth() == f) {
-                return false;
+                return ActionResult.PASS;
             } else {
                 float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
                 this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0F, g);
@@ -55,14 +62,9 @@ public class AntiCreeperGolemEntity extends ModGolemEntity {
                     player.getStackInHand(hand).decrement(1);
                 }
 
-                return true;
+                return ActionResult.method_29236(this.world.isClient);
             }
-        } else if (handItem == Items.GLASS_BOTTLE) {
-            this.damage(DamageSource.player(player), this.getMaxHealth());
-            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
-            return true;
         }
-        return false;
     }
 
     public boolean canTarget(EntityType<?> type) {

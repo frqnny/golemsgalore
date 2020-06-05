@@ -14,6 +14,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 
+import java.util.Optional;
+
 public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity, ModGolemEntityModel<LaserGolemEntity>> {
     private static final Identifier TEXTURE = GolemsGalore.id("textures/entity/golem/laser_golem.png");
     private static final Identifier EXPLOSION_BEAM_TEXTURE = new Identifier("textures/entity/guardian_beam.png");
@@ -71,27 +73,27 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
         }
     }
 
-    public void render(LaserGolemEntity golem, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        super.render(golem, f, g, matrixStack, vertexConsumerProvider, i);
-        LivingEntity livingEntity = golem.getBeamTarget();
-        if (livingEntity != null) {
-            float h = golem.getBeamProgress(g);
-            float j = (float) golem.world.getTime() + g;
-            float k = j * 0.5F % 1.0F;
-            float l = golem.getStandingEyeHeight();
-            matrixStack.push();
-            matrixStack.translate(0.0D, l, 0.0D);
-            Vec3d vec3d = fromLerpedPosition(livingEntity, (double) livingEntity.getHeight() * 0.5D, g);
-            Vec3d vec3d2 = fromLerpedPosition(golem, l, g);
+    public void render(LaserGolemEntity golem, float f, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i) {
+        super.render(golem, f, tickDelta, matrices, vertexConsumerProvider, i);
+        Optional<LivingEntity> target = Optional.ofNullable(golem.getBeamTarget());
+        if (target.isPresent()) {
+            float progress = golem.getBeamProgress(tickDelta);
+            float exactTime = (float) golem.world.getTime() + tickDelta;
+            float k = exactTime * 0.5F % 1.0F;
+            float eyeHeight = golem.getStandingEyeHeight();
+            matrices.push();
+            matrices.translate(0.0D, eyeHeight, 0.0D);
+            Vec3d vec3d = fromLerpedPosition(target.get(), (double) target.get().getHeight() * 0.5D, tickDelta);
+            Vec3d vec3d2 = fromLerpedPosition(golem, eyeHeight, tickDelta);
             Vec3d vec3d3 = vec3d.subtract(vec3d2);
             float m = (float) (vec3d3.length() + 1.0D);
             vec3d3 = vec3d3.normalize();
             float n = (float) Math.acos(vec3d3.y);
             float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
-            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * (180F / (float) Math.PI)));
-            float q = j * 0.05F * -1.5F;
-            float r = h * h;
+            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
+            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * (180F / (float) Math.PI)));
+            float q = exactTime * 0.05F * -1.5F;
+            float r = progress * progress;
             int s = 64 + (int) (r * 191.0F);
             int t = 32 + (int) (r * 191.0F);
             int u = 128 - (int) (r * 64.0F);
@@ -114,7 +116,7 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             float aq = -1.0F + k;
             float ar = m * 2.5F + aq;
             VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
-            MatrixStack.Entry entry = matrixStack.peek();
+            MatrixStack.Entry entry = matrices.peek();
             Matrix4f matrix4f = entry.getModel();
             Matrix3f matrix3f = entry.getNormal();
             vertexLaser(vertexConsumer, matrix4f, matrix3f, af, m, ag, s, t, u, 0.4999F, ar);
@@ -134,7 +136,7 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             vertexLaser(vertexConsumer, matrix4f, matrix3f, z, m, aa, s, t, u, 1.0F, as + 0.5F);
             vertexLaser(vertexConsumer, matrix4f, matrix3f, ad, m, ae, s, t, u, 1.0F, as);
             vertexLaser(vertexConsumer, matrix4f, matrix3f, ab, m, ac, s, t, u, 0.5F, as);
-            matrixStack.pop();
+            matrices.pop();
         }
 
     }

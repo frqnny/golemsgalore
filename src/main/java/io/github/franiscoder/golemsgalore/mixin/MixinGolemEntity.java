@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +20,7 @@ public class MixinGolemEntity {
 
 
     @Inject(at = @At("HEAD"), method = "interactMob", cancellable = true)
-    protected void interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<Boolean> info) {
+    protected void interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> info) {
         Item item = player.getStackInHand(hand).getItem();
 
         if (item == Items.GLASS_BOTTLE) {
@@ -27,9 +28,9 @@ public class MixinGolemEntity {
             IronGolemEntity entity = ((IronGolemEntity) (Object) this);
             entity.damage(DamageSource.player(player), entity.getMaxHealth() / 3);
             player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
-            info.setReturnValue(true);
+            info.setReturnValue(ActionResult.SUCCESS);
 
         }
-        info.setReturnValue(false);
+        info.setReturnValue(ActionResult.PASS);
     }
 }

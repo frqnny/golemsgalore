@@ -32,6 +32,7 @@ import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -197,14 +198,21 @@ public class ModGolemEntity extends GolemEntity {
         this.setGolemType(Type.fromId(tag.getInt("Type")));
     }
 
-    protected boolean interactMob(PlayerEntity player, Hand hand) {
+    @Override
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         Item handItem = player.getStackInHand(hand).getItem();
 
-        if (handItem.equals(getGolemType().item)) {
+        if (handItem.equals(this.getGolemType().item)) {
+            return ActionResult.PASS;
+        } else if (handItem == Items.GLASS_BOTTLE) {
+            this.damage(DamageSource.player(player), this.getMaxHealth());
+            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
+            return ActionResult.PASS;
+        } else {
             float f = this.getHealth();
             this.heal(25.0F);
             if (this.getHealth() == f) {
-                return false;
+                return ActionResult.PASS;
             } else {
                 float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
                 this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0F, g);
@@ -212,14 +220,9 @@ public class ModGolemEntity extends GolemEntity {
                     player.getStackInHand(hand).decrement(1);
                 }
 
-                return true;
+                return ActionResult.method_29236(this.world.isClient);
             }
-        } else if (handItem == Items.GLASS_BOTTLE) {
-            this.damage(DamageSource.player(player), this.getMaxHealth());
-            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
-            return true;
         }
-        return false;
     }
 
     protected void playStepSound(BlockPos pos, BlockState state) {

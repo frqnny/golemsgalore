@@ -1,5 +1,6 @@
 package io.github.franiscoder.golemsgalore.entity;
 
+import io.github.franiscoder.golemsgalore.GolemsGalore;
 import io.github.franiscoder.golemsgalore.entity.ai.GolemLookGoal;
 import io.github.franiscoder.golemsgalore.entity.ai.TrackGolemTargetGoal;
 import io.github.franiscoder.golemsgalore.entity.ai.laser.FireLaserGoal;
@@ -23,6 +24,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
@@ -31,9 +33,9 @@ import javax.annotation.Nullable;
 public class LaserGolemEntity extends ModGolemEntity {
     protected static final TrackedData<Boolean> IS_FIRING = DataTracker.registerData(LaserGolemEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final TrackedData<Integer> BEAM_TARGET_ID = DataTracker.registerData(LaserGolemEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private final boolean renderLaserFlames = GolemsGalore.getConfig().renderLaserFlames;
     private LivingEntity cachedBeamTarget;
     private int beamTicks;
-
 
     public LaserGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
@@ -78,14 +80,20 @@ public class LaserGolemEntity extends ModGolemEntity {
     }
 
     @Override
-    protected boolean interactMob(PlayerEntity player, Hand hand) {
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         Item handItem = player.getStackInHand(hand).getItem();
 
-        if (handItem.equals(Items.IRON_INGOT)) {
+        if (handItem != Items.IRON_INGOT) {
+            return ActionResult.PASS;
+        } else if (handItem == Items.GLASS_BOTTLE) {
+            this.damage(DamageSource.player(player), this.getMaxHealth());
+            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
+            return ActionResult.PASS;
+        } else {
             float f = this.getHealth();
             this.heal(25.0F);
             if (this.getHealth() == f) {
-                return false;
+                return ActionResult.PASS;
             } else {
                 float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
                 this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0F, g);
@@ -93,15 +101,11 @@ public class LaserGolemEntity extends ModGolemEntity {
                     player.getStackInHand(hand).decrement(1);
                 }
 
-                return true;
+                return ActionResult.method_29236(this.world.isClient);
             }
-        } else if (handItem == Items.GLASS_BOTTLE) {
-            this.damage(DamageSource.player(player), this.getMaxHealth());
-            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
-            return true;
         }
-        return false;
     }
+
 
     @Override
     public void writeCustomDataToTag(CompoundTag tag) {
@@ -173,7 +177,10 @@ public class LaserGolemEntity extends ModGolemEntity {
 
                         while (j < h) {
                             j += 1.8D - d + this.random.nextDouble() * (1.7D - d);
-                            this.world.addParticle(ParticleTypes.BUBBLE, this.getX() + e * j, this.getEyeY() + f * j, this.getZ() + g * j, 0.0D, 0.0D, 0.0D);
+
+                            if (random.nextBoolean() && this.renderLaserFlames) {
+                                this.world.addParticle(ParticleTypes.FLAME, this.getX() + e * j, this.getEyeY() + f * j, this.getZ() + g * j, 0.0D, 0.0D, 0.0D);
+                            }
                         }
                     }
                 }

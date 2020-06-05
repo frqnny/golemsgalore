@@ -41,5 +41,7 @@ public class GolemsGaloreConfig implements ConfigData {
     public double speedCreeper = 0.30D;
     public double knockbackResistanceCreeper = 1D;
     public double attackDamageCreeper = 20;
+    @Comment("Performance")
+    public boolean renderLaserFlames = true;
 
 }

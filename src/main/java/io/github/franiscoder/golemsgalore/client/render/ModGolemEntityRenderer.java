@@ -23,12 +23,12 @@ public class ModGolemEntityRenderer extends MobEntityRenderer<ModGolemEntity, Mo
 
     }
 
-    protected void setupTransforms(ModGolemEntity ironGolemEntity, MatrixStack matrixStack, float f, float g, float h) {
-        super.setupTransforms(ironGolemEntity, matrixStack, f, g, h);
-        if ((double) ironGolemEntity.limbDistance >= 0.01D) {
-            float j = ironGolemEntity.limbAngle - ironGolemEntity.limbDistance * (1.0F - h) + 6.0F;
+    protected void setupTransforms(ModGolemEntity golem, MatrixStack matrices, float f, float g, float h) {
+        super.setupTransforms(golem, matrices, f, g, h);
+        if ((double) golem.limbDistance >= 0.01D) {
+            float j = golem.limbAngle - golem.limbDistance * (1.0F - h) + 6.0F;
             float k = (Math.abs(j % 13.0F - 6.5F) - 3.25F) / 3.25F;
-            matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(6.5F * k));
+            matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(6.5F * k));
         }
     }
 }
