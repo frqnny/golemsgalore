@@ -26,8 +26,10 @@ public class MixinGolemEntity {
         if (item == Items.GLASS_BOTTLE) {
             //noinspection ConstantConditions
             IronGolemEntity entity = ((IronGolemEntity) (Object) this);
-            entity.damage(DamageSource.player(player), entity.getMaxHealth() / 3);
-            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
+            entity.setHealth(entity.getHealth() - (entity.getMaxHealth() / 3));
+
+            player.getStackInHand(hand).decrement(1);
+            player.giveItemStack(new ItemStack(ModItems.GOLEM_SOUL));
             info.setReturnValue(ActionResult.SUCCESS);
 
         }

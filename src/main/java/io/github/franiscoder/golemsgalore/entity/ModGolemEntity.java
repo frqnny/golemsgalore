@@ -55,7 +55,7 @@ public class ModGolemEntity extends GolemEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.add(2, new GoToEntityTargetGoal(this, 0.9D, 32.0F));
+        this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9D, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6D, false));
         this.goalSelector.add(3, new MoveThroughVillageGoal(this, 0.6D, false, 4, () -> false));
         this.goalSelector.add(5, new GolemLookGoal(this));
@@ -203,12 +203,6 @@ public class ModGolemEntity extends GolemEntity {
         Item handItem = player.getStackInHand(hand).getItem();
 
         if (handItem.equals(this.getGolemType().item)) {
-            return ActionResult.PASS;
-        } else if (handItem == Items.GLASS_BOTTLE) {
-            this.damage(DamageSource.player(player), this.getMaxHealth());
-            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
-            return ActionResult.PASS;
-        } else {
             float f = this.getHealth();
             this.heal(25.0F);
             if (this.getHealth() == f) {
@@ -220,8 +214,15 @@ public class ModGolemEntity extends GolemEntity {
                     player.getStackInHand(hand).decrement(1);
                 }
 
-                return ActionResult.method_29236(this.world.isClient);
+                return ActionResult.success(this.world.isClient);
             }
+
+        } else if (handItem == Items.GLASS_BOTTLE) {
+            this.damage(DamageSource.player(player), this.getMaxHealth());
+            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
+            return ActionResult.PASS;
+        } else {
+            return ActionResult.PASS;
         }
     }
 

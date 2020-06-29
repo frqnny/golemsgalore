@@ -27,7 +27,7 @@ public class AntiCreeperGolemEntity extends ModGolemEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.add(2, new GoToEntityTargetGoal(this, 0.9D, 32.0F));
+        this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9D, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6D, false));
         this.goalSelector.add(3, new MoveThroughVillageGoal(this, 0.6D, false, 4, () -> false));
         this.goalSelector.add(5, new GolemLookGoal(this));
@@ -62,7 +62,7 @@ public class AntiCreeperGolemEntity extends ModGolemEntity {
                     player.getStackInHand(hand).decrement(1);
                 }
 
-                return ActionResult.method_29236(this.world.isClient);
+                return ActionResult.success(this.world.isClient);
             }
         }
     }
