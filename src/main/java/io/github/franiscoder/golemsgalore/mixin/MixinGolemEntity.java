@@ -1,7 +1,6 @@
 package io.github.franiscoder.golemsgalore.mixin;
 
 import io.github.franiscoder.golemsgalore.init.ModItems;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

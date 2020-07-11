@@ -9,9 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -36,9 +34,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.*;
-
-import javax.annotation.Nullable;
+import net.minecraft.world.SpawnHelper;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 
 public class ModGolemEntity extends GolemEntity {
     protected static final TrackedData<Byte> PLAYER_CREATED = DataTracker.registerData(ModGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -274,11 +272,5 @@ public class ModGolemEntity extends GolemEntity {
 
             return SpawnHelper.isClearForSpawn(world, blockPos, world.getBlockState(blockPos), Fluids.EMPTY.getDefaultState(), EntityType.IRON_GOLEM) && world.intersectsEntities(this);
         }
-    }
-
-    @Nullable
-    @Override
-    public EntityData initialize(WorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable CompoundTag entityTag) {
-        return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
     }
 }
