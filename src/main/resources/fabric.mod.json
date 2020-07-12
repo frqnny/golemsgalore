@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "golemsgalore",
-  "version": "0.1.3+mc.1.16",
+  "version": "0.2.0+mc.1.16.2",
   "name": "Golems Galore",
   "description": "Adds many more golems that help you protect places in interesting ways!",
   "authors": [
@@ -23,8 +23,14 @@
       "io.github.franiscoder.golemsgalore.GolemsGaloreClient"
     ]
   },
+  "custom": {
+    "modupdater": {
+      "strategy": "json",
+      "url": "https://raw.githubusercontent.com/franiscoder/ModInfo/master/GolemsGalore.json"
+    }
+  },
   "depends": {
-    "fabricloader": ">=0.8.8",
+    "fabricloader": ">=0.8.9",
     "fabric": "*",
     "minecraft": "1.16.x"
   },

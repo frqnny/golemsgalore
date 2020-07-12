@@ -36,6 +36,7 @@ public class AntiCreeperGolemEntity extends ModGolemEntity {
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(1, new TrackGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
         this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false,
                 (livingEntity) -> livingEntity instanceof CreeperEntity));
     }

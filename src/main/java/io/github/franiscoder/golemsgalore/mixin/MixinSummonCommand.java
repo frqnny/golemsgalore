@@ -6,9 +6,11 @@ import io.github.franiscoder.golemsgalore.api.enums.Type;
 import io.github.franiscoder.golemsgalore.entity.ModGolemEntity;
 import io.github.franiscoder.golemsgalore.init.ModEntities;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.SummonCommand;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -52,13 +54,13 @@ public class MixinSummonCommand {
         }
     }
 
-    private static void spawnGolem(ServerCommandSource source, World world, Type type, BlockPos pos) {
+    private static void spawnGolem(ServerCommandSource source, ServerWorld world, Type type, BlockPos pos) {
         ModGolemEntity golem = ModEntities.DIAMOND_GOLEM.create(world);
         assert golem != null;
         golem.setPlayerCreated(false);
         golem.setGolemType(type);
-
         golem.refreshPositionAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.05D, (double) pos.getZ() + 0.5D, 0.0F, 0.0F);
+        golem.initialize(source.getWorld(), source.getWorld().getLocalDifficulty(golem.getBlockPos()), SpawnReason.COMMAND, null, null);
         world.spawnEntity(golem);
         source.sendFeedback(new TranslatableText("commands.summon.success", golem.getDisplayName()), true);
 

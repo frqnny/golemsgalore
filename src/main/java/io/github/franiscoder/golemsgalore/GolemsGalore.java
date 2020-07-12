@@ -10,8 +10,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.pool.SinglePoolElement;
+import net.minecraft.structure.pool.StructurePool;
+import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.util.Identifier;
 
 public class GolemsGalore implements ModInitializer {
@@ -40,9 +40,8 @@ public class GolemsGalore implements ModInitializer {
 
         StructurePoolAddCallback.EVENT.register(structurePool -> {
             if (structurePool.getUnderlying().getId().toString().equals("minecraft:village/common/iron_golem")) {
-                structurePool.addStructurePoolElement(new SinglePoolElement(new Structure()), 1);
-                structurePool.addStructurePoolElement(new SinglePoolElement("golemsgalore:obsidian_golem"), 1);
-                structurePool.addStructurePoolElement(new SinglePoolElement("golemsgalore:quartz_golem"), 1);
+                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:obsidian_golem").apply(StructurePool.Projection.RIGID), 1);
+                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:quartz_golem").apply(StructurePool.Projection.RIGID), 1);
             }
         });
 

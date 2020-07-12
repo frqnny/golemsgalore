@@ -19,8 +19,8 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'com.github.Draylar:structurized:1.0.0'
-	include 'com.github.Draylar:structurized:1.0.0'
+	modImplementation 'com.github.Draylar:structurized:1.1.0'
+	include 'com.github.Draylar:structurized:1.1.0'
 
 	modCompile "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
 	include  "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"

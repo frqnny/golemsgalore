@@ -10,12 +10,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.Durations;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
@@ -28,21 +30,30 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.IntRange;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
-public class ModGolemEntity extends GolemEntity {
+import javax.annotation.Nullable;
+import java.util.UUID;
+
+public class ModGolemEntity extends GolemEntity implements Angerable {
     protected static final TrackedData<Byte> PLAYER_CREATED = DataTracker.registerData(ModGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
     protected static final TrackedData<ItemStack> TYPE_TRACKER = DataTracker.registerData(ModGolemEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
+    private static final IntRange randomIntDuration = Durations.betweenSeconds(20, 39);
     protected int attackTicksLeft;
     private int lookingAtVillagerTicksLeft;
+    private int angerTicks;
+    private UUID angryAt;
 
 
     public ModGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
@@ -62,6 +73,7 @@ public class ModGolemEntity extends GolemEntity {
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(1, new TrackGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
         this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false,
                 (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
     }
@@ -95,6 +107,10 @@ public class ModGolemEntity extends GolemEntity {
             if (!blockState.isAir()) {
                 this.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, blockState), this.getX() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getWidth(), this.getY() + 0.1D, this.getZ() + ((double) this.random.nextFloat() - 0.5D) * (double) this.getWidth(), 4.0D * ((double) this.random.nextFloat() - 0.5D), 0.5D, ((double) this.random.nextFloat() - 0.5D) * 4.0D);
             }
+        }
+
+        if (!this.world.isClient) {
+            this.tickAngerLogic((ServerWorld) this.world, true);
         }
 
     }
@@ -272,5 +288,36 @@ public class ModGolemEntity extends GolemEntity {
 
             return SpawnHelper.isClearForSpawn(world, blockPos, world.getBlockState(blockPos), Fluids.EMPTY.getDefaultState(), EntityType.IRON_GOLEM) && world.intersectsEntities(this);
         }
+    }
+
+    @Override
+    public void chooseRandomAngerTime() {
+        this.angerTicks = randomIntDuration.choose(this.random);
+    }
+
+    @Override
+    public int getAngerTime() {
+        return this.angerTicks;
+    }
+
+    @Override
+    public void setAngerTime(int ticks) {
+        this.angerTicks = ticks;
+    }
+
+    @Override
+    public UUID getAngryAt() {
+        return this.angryAt;
+    }
+
+    @Override
+    public void setAngryAt(@Nullable UUID uuid) {
+        this.angryAt = uuid;
+    }
+
+    //huh
+    @Environment(EnvType.CLIENT)
+    public Vec3d method_29919() {
+        return new Vec3d(0.0D, 0.875F * this.getStandingEyeHeight(), this.getWidth() * 0.4F);
     }
 }
