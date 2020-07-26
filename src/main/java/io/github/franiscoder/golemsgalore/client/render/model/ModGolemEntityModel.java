@@ -45,7 +45,7 @@ public class ModGolemEntityModel<T extends ModGolemEntity> extends CompositeEnti
         return ImmutableList.of(this.head, this.torso, this.rightLeg, this.leftLeg, this.rightArm, this.leftArm);
     }
 
-    public void setAngles(T ironGolemEntity, float f, float g, float h, float i, float j) {
+    public void setAngles(T golem, float f, float g, float h, float i, float j) {
         this.head.yaw = i * 0.017453292F;
         this.head.pitch = j * 0.017453292F;
         this.rightLeg.pitch = -1.5F * MathHelper.method_24504(f, 13.0F) * g;
@@ -54,13 +54,13 @@ public class ModGolemEntityModel<T extends ModGolemEntity> extends CompositeEnti
         this.leftLeg.yaw = 0.0F;
     }
 
-    public void animateModel(T ironGolemEntity, float f, float g, float h) {
-        int i = ironGolemEntity.getAttackTicksLeft();
+    public void animateModel(T golem, float f, float g, float h) {
+        int i = golem.getAttackTicksLeft();
         if (i > 0) {
             this.rightArm.pitch = -2.0F + 1.5F * MathHelper.method_24504((float) i - h, 10.0F);
             this.leftArm.pitch = -2.0F + 1.5F * MathHelper.method_24504((float) i - h, 10.0F);
         } else {
-            int j = ironGolemEntity.getLookingAtVillagerTicks();
+            int j = golem.getLookingAtVillagerTicks();
             if (j > 0) {
                 this.rightArm.pitch = -0.8F + 0.025F * MathHelper.method_24504((float) j, 70.0F);
                 this.leftArm.pitch = 0.0F;

@@ -204,12 +204,14 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         super.writeCustomDataToTag(tag);
         tag.putBoolean("PlayerCreated", this.isPlayerCreated());
         tag.putInt("Type", getGolemType().rawId);
+        this.angerToTag(tag);
     }
 
     public void readCustomDataFromTag(CompoundTag tag) {
         super.readCustomDataFromTag(tag);
         this.setPlayerCreated(tag.getBoolean("PlayerCreated"));
         this.setGolemType(Type.fromId(tag.getInt("Type")));
+        this.angerFromTag((ServerWorld) this.world, tag);
     }
 
     @Override
@@ -267,8 +269,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     }
 
     public void setGolemType(Type golemType) {
-        ItemStack stack = new ItemStack(golemType.item);
-        this.dataTracker.set(TYPE_TRACKER, stack);
+        this.dataTracker.set(TYPE_TRACKER, new ItemStack(golemType.item));
     }
 
     public boolean canSpawn(WorldView world) {

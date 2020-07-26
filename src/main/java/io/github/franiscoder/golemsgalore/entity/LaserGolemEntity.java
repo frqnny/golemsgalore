@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -188,6 +189,9 @@ public class LaserGolemEntity extends ModGolemEntity {
 
             if (this.hasBeamTarget()) {
                 this.yaw = this.headYaw;
+            }
+            if (!this.world.isClient) {
+                this.tickAngerLogic((ServerWorld) this.world, true);
             }
         }
 

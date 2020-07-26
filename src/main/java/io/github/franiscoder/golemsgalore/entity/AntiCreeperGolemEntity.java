@@ -23,7 +23,6 @@ public class AntiCreeperGolemEntity extends ModGolemEntity {
         super(entityType, world);
     }
 
-
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, true));

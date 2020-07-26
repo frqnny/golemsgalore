@@ -7,18 +7,12 @@ import io.github.franiscoder.golemsgalore.init.ModItems;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.util.Identifier;
 
 public class GolemsGalore implements ModInitializer {
     public static final String MODID = "golemsgalore";
-    public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(
-            id("item_group"),
-            () -> new ItemStack(ModItems.GOLEM_SOUL));
     private static GolemsGaloreConfig config;
 
     public static Identifier id(String namespace) {
@@ -34,7 +28,6 @@ public class GolemsGalore implements ModInitializer {
     public void onInitialize() {
         AutoConfig.register(GolemsGaloreConfig.class, JanksonConfigSerializer::new);
         config = AutoConfig.getConfigHolder(GolemsGaloreConfig.class).getConfig();
-
         ModEntities.init();
         ModItems.init();
 

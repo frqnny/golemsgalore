@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "ConstantConditions"})
 @Mixin(IronGolemEntity.class)
 public class MixinGolemEntity {
 
@@ -23,15 +23,12 @@ public class MixinGolemEntity {
         Item item = player.getStackInHand(hand).getItem();
 
         if (item == Items.GLASS_BOTTLE) {
-            //noinspection ConstantConditions
             IronGolemEntity entity = ((IronGolemEntity) (Object) this);
             entity.setHealth(entity.getHealth() - (entity.getMaxHealth() / 3));
 
             player.getStackInHand(hand).decrement(1);
             player.giveItemStack(new ItemStack(ModItems.GOLEM_SOUL));
             info.setReturnValue(ActionResult.SUCCESS);
-
         }
-        info.setReturnValue(ActionResult.PASS);
     }
 }
