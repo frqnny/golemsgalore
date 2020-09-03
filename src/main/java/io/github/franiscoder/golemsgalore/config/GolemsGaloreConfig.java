@@ -31,6 +31,11 @@ public class GolemsGaloreConfig implements ConfigData {
     public double speedQuartz = 0.25D;
     public double knockbackResistanceQuartz = 0.5D;
     public double attackDamageQuartz = 5;
+    @Comment("Hay Golem")
+    public int healthHay = 25;
+    public double speedHay = 0.3D;
+    public double knockbackResistanceHay = 0.1D;
+    public double attackDamageHay = 5;
     @Comment("Laser Golem")
     public int healthLaser = 75;
     public double speedLaser = 0.25D;

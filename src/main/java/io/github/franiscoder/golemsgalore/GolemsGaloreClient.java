@@ -21,6 +21,7 @@ public class GolemsGaloreClient implements ClientModInitializer {
         register(ModEntities.GOLDEN_GOLEM);
         register(ModEntities.QUARTZ_GOLEM);
         register(ModEntities.OBSIDIAN_GOLEM);
+        register(ModEntities.HAY_GOLEM);
 
         EntityRendererRegistry.INSTANCE.register(ModEntities.LASER_GOLEM, (entityRenderDispatcher, context) -> new LaserGolemEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(ModEntities.ANTI_CREEPER_GOLEM, (entityRenderDispatcher, context) -> new AntiCreeperGolemEntityRenderer(entityRenderDispatcher));

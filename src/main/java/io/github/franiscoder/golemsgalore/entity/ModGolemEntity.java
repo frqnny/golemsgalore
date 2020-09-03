@@ -235,7 +235,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
 
         } else if (handItem == Items.GLASS_BOTTLE) {
             this.damage(DamageSource.player(player), this.getMaxHealth());
-            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
+            player.giveItemStack(new ItemStack(ModItems.GOLEM_SOUL));
             return ActionResult.PASS;
         } else {
             return ActionResult.PASS;

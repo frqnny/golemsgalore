@@ -6,8 +6,8 @@ import io.github.franiscoder.golemsgalore.config.GolemsGaloreConfig;
 import io.github.franiscoder.golemsgalore.entity.AntiCreeperGolemEntity;
 import io.github.franiscoder.golemsgalore.entity.LaserGolemEntity;
 import io.github.franiscoder.golemsgalore.entity.ModGolemEntity;
-import net.fabricmc.fabric.api.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -25,6 +25,7 @@ public class ModEntities {
     public static EntityType<ModGolemEntity> GOLDEN_GOLEM;
     public static EntityType<ModGolemEntity> QUARTZ_GOLEM;
     public static EntityType<ModGolemEntity> OBSIDIAN_GOLEM;
+    public static EntityType<ModGolemEntity> HAY_GOLEM;
 
     public static EntityType<LaserGolemEntity> LASER_GOLEM;
     public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
@@ -51,42 +52,49 @@ public class ModEntities {
         attributeContainerMap.put(Type.OBSIDIAN,
                 createDefaultGolemAttributes(config.healthObsidian, config.speedObsidian, config.knockbackResistanceObsidian, config.attackDamageObsidian)
         );
+        attributeContainerMap.put(Type.HAY,
+                createDefaultGolemAttributes(config.healthHay, config.speedHay, config.knockbackResistanceHay, config.attackDamageHay)
+        );
 
 
         DIAMOND_GOLEM = register("diamond_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build());
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build());
         FabricDefaultAttributeRegistry.register(DIAMOND_GOLEM, attributeContainerMap.get(Type.DIAMOND));
 
         NETHERITE_GOLEM = register("netherite_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
         FabricDefaultAttributeRegistry.register(NETHERITE_GOLEM, attributeContainerMap.get(Type.NETHERITE));
 
         GOLDEN_GOLEM = register("golden_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
         FabricDefaultAttributeRegistry.register(GOLDEN_GOLEM, attributeContainerMap.get(Type.GOLD));
 
         QUARTZ_GOLEM = register("quartz_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
         FabricDefaultAttributeRegistry.register(QUARTZ_GOLEM, attributeContainerMap.get(Type.QUARTZ));
 
         OBSIDIAN_GOLEM = register("obsidian_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
         FabricDefaultAttributeRegistry.register(OBSIDIAN_GOLEM, attributeContainerMap.get(Type.OBSIDIAN));
 
+        HAY_GOLEM = register("hay_golem",
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
+        );
+        FabricDefaultAttributeRegistry.register(HAY_GOLEM, attributeContainerMap.get(Type.HAY));
 
         LASER_GOLEM = register("laser_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, LaserGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, LaserGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
         FabricDefaultAttributeRegistry.register(LASER_GOLEM,
                 createDefaultGolemAttributes(config.healthLaser, config.speedLaser, config.knockbackResistanceLaser, config.attackDamageLaser)
         );
 
         ANTI_CREEPER_GOLEM = register("anti_creeper_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, AntiCreeperGolemEntity::new).size(EntityDimensions.fixed(1.4F, 2.7F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, AntiCreeperGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
         FabricDefaultAttributeRegistry.register(ANTI_CREEPER_GOLEM,
                 createDefaultGolemAttributes(config.healthCreeper, config.speedCreeper, config.knockbackResistanceCreeper, config.attackDamageCreeper).add(EntityAttributes.GENERIC_ARMOR, 2D)
@@ -98,6 +106,7 @@ public class ModEntities {
         typeMap.put(Type.GOLD, GOLDEN_GOLEM);
         typeMap.put(Type.QUARTZ, QUARTZ_GOLEM);
         typeMap.put(Type.OBSIDIAN, OBSIDIAN_GOLEM);
+        typeMap.put(Type.HAY, HAY_GOLEM);
     }
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType<T> builder) {

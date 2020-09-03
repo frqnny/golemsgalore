@@ -48,6 +48,7 @@ public class MixinCarvedPumkinBlock extends Block {
                                 || blockState.isOf(Blocks.GOLD_BLOCK)
                                 || blockState.isOf(Blocks.QUARTZ_BLOCK)
                                 || blockState.isOf(Blocks.OBSIDIAN)
+                                || blockState.isOf(Blocks.HAY_BLOCK)
                 );
         IRON_FUCK = (blockState) -> blockState != null && blockState.isOf(Blocks.IRON_BLOCK);
 
