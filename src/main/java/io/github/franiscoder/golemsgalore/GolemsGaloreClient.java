@@ -1,6 +1,7 @@
 package io.github.franiscoder.golemsgalore;
 
 import io.github.franiscoder.golemsgalore.client.render.AntiCreeperGolemEntityRenderer;
+import io.github.franiscoder.golemsgalore.client.render.DiamondLaserGolemEntityRenderer;
 import io.github.franiscoder.golemsgalore.client.render.LaserGolemEntityRenderer;
 import io.github.franiscoder.golemsgalore.client.render.ModGolemEntityRenderer;
 import io.github.franiscoder.golemsgalore.entity.ModGolemEntity;
@@ -25,6 +26,7 @@ public class GolemsGaloreClient implements ClientModInitializer {
 
         EntityRendererRegistry.INSTANCE.register(ModEntities.LASER_GOLEM, (entityRenderDispatcher, context) -> new LaserGolemEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(ModEntities.ANTI_CREEPER_GOLEM, (entityRenderDispatcher, context) -> new AntiCreeperGolemEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(ModEntities.DIAMOND_LASER_GOLEM, (entityRenderDispatcher, context) -> new DiamondLaserGolemEntityRenderer(entityRenderDispatcher));
 
     }
 }

@@ -41,6 +41,11 @@ public class GolemsGaloreConfig implements ConfigData {
     public double speedLaser = 0.25D;
     public double knockbackResistanceLaser = 1D;
     public double attackDamageLaser = 10;
+    @Comment("Diamond Laser Golem")
+    public int healthDiamondLaser = 200;
+    public double speedDiamondLaser = 0.22D;
+    public double knockbackResistanceDiamondLaser = 1D;
+    public double attackDamageDiamondLaser = 20;
     @Comment("Anti-Creeper Golem")
     public int healthCreeper = 75;
     public double speedCreeper = 0.30D;

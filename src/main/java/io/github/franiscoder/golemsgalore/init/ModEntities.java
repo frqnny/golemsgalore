@@ -28,6 +28,7 @@ public class ModEntities {
     public static EntityType<ModGolemEntity> HAY_GOLEM;
 
     public static EntityType<LaserGolemEntity> LASER_GOLEM;
+    public static EntityType<LaserGolemEntity> DIAMOND_LASER_GOLEM;
     public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
 
     public static EnumMap<Type, EntityType<ModGolemEntity>> typeMap;
@@ -98,6 +99,13 @@ public class ModEntities {
         );
         FabricDefaultAttributeRegistry.register(ANTI_CREEPER_GOLEM,
                 createDefaultGolemAttributes(config.healthCreeper, config.speedCreeper, config.knockbackResistanceCreeper, config.attackDamageCreeper).add(EntityAttributes.GENERIC_ARMOR, 2D)
+        );
+
+        DIAMOND_LASER_GOLEM = register("diamond_laser_golem",
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, LaserGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
+        );
+        FabricDefaultAttributeRegistry.register(DIAMOND_LASER_GOLEM,
+                createDefaultGolemAttributes(config.healthDiamondLaser, config.speedDiamondLaser, config.knockbackResistanceDiamondLaser, config.attackDamageDiamondLaser)
         );
 
         typeMap = new EnumMap<>(Type.class);
