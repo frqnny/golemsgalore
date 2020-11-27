@@ -4,6 +4,7 @@ import io.github.franiscoder.golemsgalore.api.enums.Type;
 import io.github.franiscoder.golemsgalore.entity.AntiCreeperGolemEntity;
 import io.github.franiscoder.golemsgalore.entity.LaserGolemEntity;
 import io.github.franiscoder.golemsgalore.entity.ModGolemEntity;
+import io.github.franiscoder.golemsgalore.init.ModBlocks;
 import io.github.franiscoder.golemsgalore.init.ModEntities;
 import io.github.franiscoder.golemsgalore.init.ModItems;
 import net.minecraft.advancement.criterion.Criteria;
@@ -33,10 +34,12 @@ public class MixinCarvedPumkinBlock extends Block {
     private static final Predicate<BlockState> REDSTONE_FUCK;
     private static final Predicate<BlockState> TNT_FUCK;
     private static final Predicate<BlockState> DIAMOND_FUCK;
+    private static final Predicate<BlockState> OBAMA_FUCK;
     private static final BlockPattern commonPattern;
     private static final BlockPattern laserPattern;
     private static final BlockPattern antiCreeperPattern;
     private static final BlockPattern diamondLaserPattern;
+    private static final BlockPattern obamaPattern;
 
     static {
         IS_PUMPKIN_PREDICATE = (blockState) -> blockState != null &&
@@ -58,6 +61,8 @@ public class MixinCarvedPumkinBlock extends Block {
         TNT_FUCK = (blockState) -> blockState != null && blockState.isOf(Blocks.TNT);
 
         DIAMOND_FUCK = (blockState) -> blockState != null && blockState.isOf(Blocks.DIAMOND_BLOCK);
+
+        OBAMA_FUCK = (blockState) -> blockState != null && blockState.isOf(ModBlocks.OBAMIUM_BLOCK);
 
 
         commonPattern = BlockPatternBuilder.start().aisle("~^~", "###", "~#~")
@@ -83,6 +88,11 @@ public class MixinCarvedPumkinBlock extends Block {
                 .where('%', CachedBlockPosition.matchesBlockState(REDSTONE_FUCK))
                 .where('~', CachedBlockPosition.matchesBlockState(MaterialPredicate.create(Material.AIR)))
                 .build();
+        obamaPattern = BlockPatternBuilder.start().aisle("~^~", "###", "~#~")
+                .where('^', CachedBlockPosition.matchesBlockState(IS_PUMPKIN_PREDICATE))
+                .where('#', CachedBlockPosition.matchesBlockState(OBAMA_FUCK))
+                .where('~', CachedBlockPosition.matchesBlockState(MaterialPredicate.create(Material.AIR)))
+                .build();
 
     }
 
@@ -97,6 +107,7 @@ public class MixinCarvedPumkinBlock extends Block {
             Optional<BlockPattern.Result> laser = Optional.ofNullable(laserPattern.searchAround(world, pos));
             Optional<BlockPattern.Result> antiCreeper = Optional.ofNullable(antiCreeperPattern.searchAround(world, pos));
             Optional<BlockPattern.Result> diamondLaser = Optional.ofNullable(diamondLaserPattern.searchAround(world, pos));
+            Optional<BlockPattern.Result> obama = Optional.ofNullable(obamaPattern.searchAround(world, pos));
             if (result.isPresent()) {
                 if (!player.abilities.creativeMode) {
                     player.getStackInHand(hand).decrement(1);
@@ -250,9 +261,45 @@ public class MixinCarvedPumkinBlock extends Block {
                         }
                     }
                 }
-            }
+            } else if (obama.isPresent()) {
+                if (!player.abilities.creativeMode) {
+                    player.getStackInHand(hand).decrement(1);
+                }
 
-            return ActionResult.CONSUME;
+                int width = commonPattern.getWidth();
+                int height = commonPattern.getHeight();
+
+                for (int k = 0; k < width; ++k) {
+                    for (int l = 0; l < height; ++l) {
+                        CachedBlockPosition cachedBlockPosition3 = obama.get().translate(k, l, 0);
+                        world.setBlockState(cachedBlockPosition3.getBlockPos(), Blocks.AIR.getDefaultState(), 2);
+                        world.syncWorldEvent(2001, cachedBlockPosition3.getBlockPos(), Block.getRawIdFromState(cachedBlockPosition3.getBlockState()));
+                    }
+                }
+
+                Optional<LaserGolemEntity> golem = Optional.ofNullable(ModEntities.OBAMA_PRISM_GOLEM.create(world));
+                if (golem.isPresent()) {
+                    golem.get().setPlayerCreated(true);
+
+                    BlockPos blockPos2 = obama.get().translate(1, 2, 0).getBlockPos();
+                    golem.get().refreshPositionAndAngles((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.05D, (double) blockPos2.getZ() + 0.5D, 0.0F, 0.0F);
+                    world.spawnEntity(golem.get());
+
+                    for (ServerPlayerEntity serverPlayer : world.getNonSpectatingEntities(ServerPlayerEntity.class, golem.get().getBoundingBox().expand(5.0D))) {
+                        Criteria.SUMMONED_ENTITY.trigger(serverPlayer, golem.get());
+                    }
+
+
+                    for (int m = 0; m < width; ++m) {
+                        for (int n = 0; n < height; ++n) {
+                            CachedBlockPosition cachedBlockPosition4 = obama.get().translate(m, n, 0);
+                            world.updateNeighbors(cachedBlockPosition4.getBlockPos(), Blocks.AIR);
+                        }
+                    }
+                }
+
+                return ActionResult.CONSUME;
+            }
         }
         return ActionResult.PASS;
     }

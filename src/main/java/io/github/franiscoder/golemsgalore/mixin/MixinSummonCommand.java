@@ -30,7 +30,7 @@ public class MixinSummonCommand {
     @Inject(method = "execute", at = @At(value = "HEAD"), cancellable = true)
     private static void executeSpecialGolems(ServerCommandSource source, Identifier entity, Vec3d pos, CompoundTag nbt, boolean initialize, CallbackInfoReturnable<Integer> info) throws CommandSyntaxException {
         BlockPos blockPos = new BlockPos(pos);
-        if (!World.method_25953(blockPos)) {
+        if (!World.isValid(blockPos)) {
             throw INVALID_POSITION_EXCEPTIONN.create();
         } else {
             CompoundTag compoundTag = nbt.copy();

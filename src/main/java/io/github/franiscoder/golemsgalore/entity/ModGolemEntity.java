@@ -42,8 +42,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class ModGolemEntity extends GolemEntity implements Angerable {

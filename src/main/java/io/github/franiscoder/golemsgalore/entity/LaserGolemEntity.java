@@ -28,8 +28,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class LaserGolemEntity extends ModGolemEntity {
     protected static final TrackedData<Boolean> IS_FIRING = DataTracker.registerData(LaserGolemEntity.class, TrackedDataHandlerRegistry.BOOLEAN);

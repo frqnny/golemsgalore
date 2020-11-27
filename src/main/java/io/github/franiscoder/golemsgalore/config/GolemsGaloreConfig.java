@@ -51,7 +51,14 @@ public class GolemsGaloreConfig implements ConfigData {
     public double speedCreeper = 0.30D;
     public double knockbackResistanceCreeper = 1D;
     public double attackDamageCreeper = 20;
+    @Comment("Obama Prism Golem")
+    public int healthObama = 420;
+    public double speedObama = 0.25D;
+    public double knockbackResistanceObama = 1D;
+    public double attackDamageObama = 20.1;
     @Comment("Performance")
     public boolean renderLaserFlames = true;
+    @Comment("Generate Obamium Ore?")
+    public boolean generateObamiumOre = true;
 
 }

@@ -1,31 +1,33 @@
 package io.github.franiscoder.golemsgalore.client.render;
 
-import io.github.franiscoder.golemsgalore.GolemsGalore;
-import io.github.franiscoder.golemsgalore.client.render.feature.ModGolemCrackFeatureRenderer;
-import io.github.franiscoder.golemsgalore.client.render.feature.ModGolemFlowerFeatureRenderer;
-import io.github.franiscoder.golemsgalore.client.render.model.ModGolemEntityModel;
 import io.github.franiscoder.golemsgalore.entity.LaserGolemEntity;
+import io.github.franiscoder.golemsgalore.init.ModItems;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.LivingEntityRenderer;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix3f;
+import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.Optional;
 
-public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity, ModGolemEntityModel<LaserGolemEntity>> {
-    private static final Identifier TEXTURE = GolemsGalore.id("textures/entity/golem/laser_golem.png");
+public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEntity> {
+    public static final ItemStack OBAMAPRISM = new ItemStack(ModItems.OBAMA_PRISM);
     private static final Identifier EXPLOSION_BEAM_TEXTURE = new Identifier("textures/entity/guardian_beam.png");
     private static final RenderLayer LAYER = RenderLayer.getEntityCutoutNoCull(EXPLOSION_BEAM_TEXTURE);
 
-
-    public LaserGolemEntityRenderer(EntityRenderDispatcher e) {
-        super(e, new ModGolemEntityModel<>(), 1);
-        this.addFeature(new ModGolemCrackFeatureRenderer<>(this));
-        this.addFeature(new ModGolemFlowerFeatureRenderer<>(this));
+    public ObamaPyramidGolemEntityRenderer(EntityRenderDispatcher dispatcher) {
+        super(dispatcher);
     }
 
     private static Vec3d fromLerpedPosition(LivingEntity entity, double yOffset, float delta) {
@@ -41,37 +43,24 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
 
     @Override
     public Identifier getTexture(LaserGolemEntity entity) {
-        return TEXTURE;
+        return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE;
     }
 
-    protected void setupTransforms(LaserGolemEntity ironGolemEntity, MatrixStack matrixStack, float f, float g, float h) {
-        super.setupTransforms(ironGolemEntity, matrixStack, f, g, h);
-        if ((double) ironGolemEntity.limbDistance >= 0.01D) {
-            float j = ironGolemEntity.limbAngle - ironGolemEntity.limbDistance * (1.0F - h) + 6.0F;
-            float k = (Math.abs(j % 13.0F - 6.5F) - 3.25F) / 3.25F;
-            matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(6.5F * k));
-        }
-    }
+    @Override
+    public void render(LaserGolemEntity golem, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        matrices.push();
 
-    public boolean shouldRender(LaserGolemEntity guardianEntity, Frustum frustum, double d, double e, double f) {
-        if (super.shouldRender(guardianEntity, frustum, d, e, f)) {
-            return true;
-        } else {
-            if (guardianEntity.hasBeamTarget()) {
-                LivingEntity livingEntity = guardianEntity.getBeamTarget();
-                if (livingEntity != null) {
-                    Vec3d vec3d = fromLerpedPosition(livingEntity, (double) livingEntity.getHeight() * 0.5D, 1.0F);
-                    Vec3d vec3d2 = fromLerpedPosition(guardianEntity, guardianEntity.getStandingEyeHeight(), 1.0F);
-                    return frustum.isVisible(new Box(vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y, vec3d.z));
-                }
-            }
+        matrices.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion((golem.world.getTime() + tickDelta) * 4));
+        int lightAbove = WorldRenderer.getLightmapCoordinates(golem.world, golem.getBlockPos().up());
+        matrices.translate(0.5, 2.0, 0.5);
 
-            return false;
-        }
-    }
+        int overlay = LivingEntityRenderer.getOverlay(golem, 0.0F);
 
-    public void render(LaserGolemEntity golem, float f, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i) {
-        super.render(golem, f, tickDelta, matrices, vertexConsumerProvider, i);
+        MinecraftClient.getInstance().getItemRenderer().renderItem(OBAMAPRISM, ModelTransformation.Mode.GROUND, lightAbove, overlay, matrices, vertexConsumers);
+
+        matrices.pop();
+        super.render(golem, yaw, tickDelta, matrices, vertexConsumers, light);
+
         Optional<LivingEntity> target = Optional.ofNullable(golem.getBeamTarget());
         if (target.isPresent()) {
             float progress = golem.getBeamProgress(tickDelta);
@@ -112,7 +101,7 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             float am = MathHelper.sin(q + ((float) Math.PI * 1.5F)) * 0.2F;
             float aq = -1.0F + k;
             float ar = m * 2.5F + aq;
-            VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
+            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(LAYER);
             MatrixStack.Entry entry = matrices.peek();
             Matrix4f matrix4f = entry.getModel();
             Matrix3f matrix3f = entry.getNormal();
@@ -135,6 +124,5 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             vertexLaser(vertexConsumer, matrix4f, matrix3f, ab, m, ac, s, t, u, 0.5F, as);
             matrices.pop();
         }
-
     }
 }

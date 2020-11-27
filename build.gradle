@@ -24,17 +24,19 @@ dependencies {
 	modImplementation 'com.github.Draylar:structurized:1.1.0'
 	include 'com.github.Draylar:structurized:1.1.0'
 
-	modCompile "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
+	modImplementation "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
 	include  "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
 
-	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
-
-	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-	// You may need to force-disable transitiveness on them.
+	modImplementation "dev.onyxstudios:FOML:${project.foml_version}"
+	include "dev.onyxstudios:FOML:${project.foml_version}"
 }
 repositories {
 
 	maven { url 'https://jitpack.io' }
+	maven {
+		name = "OnyxStudios"
+		url = "https://maven.abusedmaster.xyz"
+	}
 }
 processResources {
 	inputs.property "version", project.version

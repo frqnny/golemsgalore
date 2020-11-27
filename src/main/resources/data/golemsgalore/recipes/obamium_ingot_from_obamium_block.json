@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "obamium_ingot",
+  "ingredients": [
+    {
+      "item": "golemsgalore:obamium_block"
+    }
+  ],
+  "result": {
+    "item": "golemsgalore:obamium_ingot",
+    "count": 9
+  }
+}

@@ -1,5 +1,6 @@
 {
   "item.golemsgalore.golem_soul": "Golem Soul",
+  "item.golemsgalore.obamium_ingot": "Obamium Ingot",
   "entity.golemsgalore.diamond_golem": "Diamond Golem",
   "entity.golemsgalore.netherite_golem": "Netherite Golem",
   "entity.golemsgalore.golden_golem": "Golden Golem",
@@ -7,5 +8,8 @@
   "entity.golemsgalore.laser_golem": "Laser Golem",
   "entity.golemsgalore.anti_creeper_golem": "Anti-Creeper Golem",
   "entity.golemsgalore.obsdian_golem": "Obsidian Golem",
-  "itemGroup.golemsgalore.item_group": "Golems Galore"
+  "entity.golemsgalore.obama_prism_golem": "Obamium Golem",
+  "itemGroup.golemsgalore.item_group": "Golems Galore",
+  "block.golemsgalore.obamium_block": "Obamium Block",
+  "block.golemsgalore.obamium_ore": "Obamium Ore"
 }
