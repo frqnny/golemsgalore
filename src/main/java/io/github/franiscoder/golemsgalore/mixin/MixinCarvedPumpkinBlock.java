@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 @Mixin(CarvedPumpkinBlock.class)
-public class MixinCarvedPumkinBlock extends Block {
+public class MixinCarvedPumpkinBlock extends Block {
     private static final Predicate<BlockState> IS_VALID_BLOCK;
     private static final Predicate<BlockState> IS_PUMPKIN_PREDICATE;
     private static final Predicate<BlockState> IRON_FUCK;
@@ -96,7 +96,7 @@ public class MixinCarvedPumkinBlock extends Block {
 
     }
 
-    public MixinCarvedPumkinBlock(Settings settings) {
+    public MixinCarvedPumpkinBlock(Settings settings) {
         super(settings);
     }
 
