@@ -36,6 +36,7 @@ public class LaserGolemEntity extends ModGolemEntity {
     private final boolean renderLaserFlames = GolemsGalore.getConfig().renderLaserFlames;
     private LivingEntity cachedBeamTarget;
     private int beamTicks;
+    private byte particleId;
 
     public LaserGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);

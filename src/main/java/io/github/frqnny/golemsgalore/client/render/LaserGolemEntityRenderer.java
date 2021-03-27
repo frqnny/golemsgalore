@@ -14,11 +14,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 
-import java.util.Optional;
-
 public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity, ModGolemEntityModel<LaserGolemEntity>> {
     private static final Identifier TEXTURE = GolemsGalore.id("textures/entity/golem/laser_golem.png");
-    private static final Identifier EXPLOSION_BEAM_TEXTURE = new Identifier("textures/entity/guardian_beam.png");
+    private static final Identifier EXPLOSION_BEAM_TEXTURE = GolemsGalore.id("textures/entity/laser_beam.png");
     private static final RenderLayer LAYER = RenderLayer.getEntityCutoutNoCull(EXPLOSION_BEAM_TEXTURE);
 
 
@@ -29,14 +27,14 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
     }
 
     private static Vec3d fromLerpedPosition(LivingEntity entity, double yOffset, float delta) {
-        double d = MathHelper.lerp(delta, entity.lastRenderX, entity.getX());
-        double e = MathHelper.lerp(delta, entity.lastRenderY, entity.getY()) + yOffset;
-        double f = MathHelper.lerp(delta, entity.lastRenderZ, entity.getZ());
-        return new Vec3d(d, e, f);
+        double x = MathHelper.lerp(delta, entity.lastRenderX, entity.getX() - 0);
+        double y = MathHelper.lerp(delta, entity.lastRenderY, entity.getY()) + yOffset;
+        double z = MathHelper.lerp(delta, entity.lastRenderZ, entity.getZ());
+        return new Vec3d(x, y, z);
     }
 
-    private static void vertexLaser(VertexConsumer vertexConsumer, Matrix4f matrix4f, Matrix3f matrix3f, float f, float g, float h, int i, int j, int k, float l, float m) {
-        vertexConsumer.vertex(matrix4f, f, g, h).color(i, j, k, 255).texture(l, m).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).next();
+    private static void vertexLaser(VertexConsumer vertexConsumer, Matrix4f matrix4f, Matrix3f matrix3f, float x, float y, float z, float u, float v) {
+        vertexConsumer.vertex(matrix4f, x, y, z).color(255, 1, 1, 255).texture(u, v).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).next();
     }
 
     @Override
@@ -72,28 +70,23 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
 
     public void render(LaserGolemEntity golem, float f, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i) {
         super.render(golem, f, tickDelta, matrices, vertexConsumerProvider, i);
-        Optional<LivingEntity> target = Optional.ofNullable(golem.getBeamTarget());
-        if (target.isPresent()) {
-            float progress = golem.getBeamProgress(tickDelta);
+        LivingEntity target = golem.getBeamTarget();
+        if (target != null) {
             float exactTime = (float) golem.world.getTime() + tickDelta;
             float k = exactTime * 0.5F % 1.0F;
-            float eyeHeight = golem.getStandingEyeHeight();
+            float eyeHeight = golem.getStandingEyeHeight() + 0.06F;
             matrices.push();
             matrices.translate(0.0D, eyeHeight, 0.0D);
-            Vec3d vec3d = fromLerpedPosition(target.get(), (double) target.get().getHeight() * 0.5D, tickDelta);
-            Vec3d vec3d2 = fromLerpedPosition(golem, eyeHeight, tickDelta);
-            Vec3d vec3d3 = vec3d.subtract(vec3d2);
-            float m = (float) (vec3d3.length() + 1.0D);
+            Vec3d targetVec = fromLerpedPosition(target, (double) target.getHeight() * 0.5D, tickDelta);
+            Vec3d originVec = fromLerpedPosition(golem, eyeHeight, tickDelta);
+            Vec3d vec3d3 = targetVec.subtract(originVec);
+            float m = (float) (vec3d3.length());
             vec3d3 = vec3d3.normalize();
             float n = (float) Math.acos(vec3d3.y);
             float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
             matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
             matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * (180F / (float) Math.PI)));
             float q = exactTime * 0.05F * -1.5F;
-            float r = progress * progress;
-            int s = 64 + (int) (r * 191.0F);
-            int t = 32 + (int) (r * 191.0F);
-            int u = 128 - (int) (r * 64.0F);
             float x = MathHelper.cos(q + 2.3561945F) * 0.282F;
             float y = MathHelper.sin(q + 2.3561945F) * 0.282F;
             float z = MathHelper.cos(q + ((float) Math.PI / 4F)) * 0.282F;
@@ -116,23 +109,25 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             MatrixStack.Entry entry = matrices.peek();
             Matrix4f matrix4f = entry.getModel();
             Matrix3f matrix3f = entry.getNormal();
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, af, m, ag, s, t, u, 0.4999F, ar);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, af, 0.0F, ag, s, t, u, 0.4999F, aq);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, ah, 0.0F, ai, s, t, u, 0.0F, aq);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, ah, m, ai, s, t, u, 0.0F, ar);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, aj, m, ak, s, t, u, 0.4999F, ar);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, aj, 0.0F, ak, s, t, u, 0.4999F, aq);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, al, 0.0F, am, s, t, u, 0.0F, aq);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, al, m, am, s, t, u, 0.0F, ar);
+
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, af, m, ag, 0.4999F, ar);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, af, 0.0F, ag, 0.4999F, aq);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, ah, 0.0F, ai, 0.0F, aq);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, ah, m, ai, 0.0F, ar);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, aj, m, ak, 0.4999F, ar);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, aj, 0.0F, ak, 0.4999F, aq);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, al, 0.0F, am, 0.0F, aq);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, al, m, am, 0.0F, ar);
             float as = 0.0F;
             if (golem.age % 2 == 0) {
                 as = 0.5F;
             }
 
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, x, m, y, s, t, u, 0.5F, as + 0.5F);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, z, m, aa, s, t, u, 1.0F, as + 0.5F);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, ad, m, ae, s, t, u, 1.0F, as);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, ab, m, ac, s, t, u, 0.5F, as);
+
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, x, m, y, 0.5F, as + 0.5F);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, z, m, aa, 1.0F, as + 0.5F);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, ad, m, ae, 1.0F, as);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, ab, m, ac, 0.5F, as);
             matrices.pop();
         }
 
