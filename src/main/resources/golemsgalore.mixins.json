@@ -1,14 +1,12 @@
 {
   "required": true,
-  "package": "io.github.franiscoder.golemsgalore.mixin",
+  "package": "io.github.frqnny.golemsgalore.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinGolemEntity",
     "MixinCarvedPumpkinBlock",
     "MixinHostiles",
     "MixinSummonCommand"
-  ],
-  "client": [
   ],
   "injectors": {
     "defaultRequire": 1

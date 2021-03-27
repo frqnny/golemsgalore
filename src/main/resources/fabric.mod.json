@@ -1,37 +1,29 @@
 {
   "schemaVersion": 1,
   "id": "golemsgalore",
-  "version": "0.2.0+mc.1.16.2",
+  "version": "1.0.0+mc.1.16.5",
   "name": "Golems Galore",
   "description": "Adds many more golems that help you protect places in interesting ways!",
   "authors": [
-    "ffrann"
+    "Frqnny"
   ],
   "contact": {
-    "homepage": "https://github.com/franiscoder/golemsgalore",
-    "sources": "https://github.com/franiscoder/golemsgalore",
-    "issues": "https://github.com/franiscoder/golemsgalore"
+    "homepage": "https://github.com/frqnny/golemsgalore",
+    "sources": "https://github.com/frqnny/golemsgalore",
+    "issues": "https://github.com/frqnny/golemsgalore"
   },
   "license": "LGPL-3.0",
   "icon": "assets/golemsgalore/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.franiscoder.golemsgalore.GolemsGalore"
+      "io.github.frqnny.golemsgalore.GolemsGalore"
     ],
     "client": [
-      "io.github.franiscoder.golemsgalore.GolemsGaloreClient"
+      "io.github.frqnny.golemsgalore.GolemsGaloreClient"
     ]
   },
-  "custom": {
-    "modupdater": {
-      "strategy": "json",
-      "url": "https://raw.githubusercontent.com/franiscoder/ModInfo/master/GolemsGalore.json"
-    }
-  },
   "depends": {
-    "fabricloader": ">=0.8.9",
-    "fabric": "*",
     "minecraft": "1.16.x"
   },
   "mixins": [

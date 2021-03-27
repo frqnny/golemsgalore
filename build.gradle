@@ -2,7 +2,7 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 plugins {
-	id 'fabric-loom' version '0.5-SNAPSHOT'
+	id 'fabric-loom' version '0.6-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -21,14 +21,13 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'com.github.Draylar:structurized:1.1.0'
-	include 'com.github.Draylar:structurized:1.1.0'
+	modImplementation 'com.github.Draylar:structurized:1.2.0-1.16.5'
+	include 'com.github.Draylar:structurized:1.2.0-1.16.5'
 
-	modImplementation "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
-	include  "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
+	modImplementation include("com.github.shedaniel:AutoConfig:1.16-SNAPSHOT")
 
-	modImplementation "dev.onyxstudios:FOML:${project.foml_version}"
-	include "dev.onyxstudios:FOML:${project.foml_version}"
+	modImplementation include("dev.monarkhes:myron:1.5.1")
+
 }
 repositories {
 
@@ -37,21 +36,9 @@ repositories {
 		name = "OnyxStudios"
 		url = "https://maven.abusedmaster.xyz"
 	}
+	maven { url = "https://hephaestus.dev/release" }
 }
 processResources {
-	inputs.property "version", project.version
-
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
-		expand "version": project.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
-	}
-
-	// Minifies all .json files when building the mod.
-	// Source files are not minified, only the jar copies.
 	doLast {
 
 		def jsonMinifyStart = System.currentTimeMillis()
@@ -76,14 +63,6 @@ processResources {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
-}
-
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
 }
 
 jar {
