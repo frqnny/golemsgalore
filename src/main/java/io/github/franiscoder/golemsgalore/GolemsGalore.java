@@ -32,7 +32,7 @@ public class GolemsGalore implements ModInitializer {
         ModItems.init();
 
         StructurePoolAddCallback.EVENT.register(structurePool -> {
-            if (structurePool.getUnderlying().getId().getPath().equals("village/common/iron_golem")) {
+            if (structurePool.getStructurePool().getId().getPath().equals("village/common/iron_golem")) {
                 System.out.println("Called. ");
                 structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:obsidian_golem").apply(StructurePool.Projection.RIGID), 2);
                 structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:quartz_golem").apply(StructurePool.Projection.RIGID), 2);

@@ -2,7 +2,7 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 plugins {
-	id 'fabric-loom' version '0.5-SNAPSHOT'
+	id 'fabric-loom' version '0.6-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -21,13 +21,12 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'com.github.Draylar:structurized:1.1.0'
-	include 'com.github.Draylar:structurized:1.1.0'
+	modImplementation 'com.github.Draylar:structurized:1.2.0-1.16.5'
+	include 'com.github.Draylar:structurized:1.2.0-1.16.5'
 
 	modCompile "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
 	include  "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
 
-	compileOnly ("com.google.code.findbugs:jsr305:3.0.2") { transitive = false }
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
