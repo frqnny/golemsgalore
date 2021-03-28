@@ -59,8 +59,6 @@ public class GolemsGaloreConfig implements Config {
     public double attackDamageObama = 20.1;
     @Comment("Performance")
     public boolean renderLaserFlames = true;
-    @Comment("Generate Obamium Ore?")
-    public boolean generateObamiumOre = false;
 
     @Override
     public String getName() {

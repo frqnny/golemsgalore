@@ -1,9 +1,14 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "group": "obamium_ingot",
   "ingredients": [
     {
-      "item": "golemsgalore:obamium_block"
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "minecraft:netherite_ingot"
     }
   ],
   "result": {

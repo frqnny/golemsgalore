@@ -5,7 +5,7 @@
   "mixins": [
     "MixinGolemEntity",
     "MixinCarvedPumpkinBlock",
-    "MixinHostiles",
+    "MixinMobEntity",
     "MixinSummonCommand"
   ],
   "injectors": {

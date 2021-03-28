@@ -46,14 +46,28 @@ public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEn
     @Override
     public void render(LaserGolemEntity golem, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         VertexConsumer consumer = vertexConsumers.getBuffer(TexturedRenderLayers.getEntityTranslucentCull());
+        LivingEntity target = golem.getBeamTarget();
+        float eyeHeight = golem.getStandingEyeHeight() + 0.06F;
 
         BakedModel model = Myron.getModel(MODEL);
 
         if (model != null) {
             matrices.push();
 
-            matrices.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion((golem.world.getTime() + tickDelta) * 4));
-            matrices.translate(0.5, 2.0, 0.5);
+            if (target != null) {
+                Vec3d targetVec = fromLerpedPosition(target, (double) target.getHeight() * 0.5D, tickDelta);
+                Vec3d originVec = fromLerpedPosition(golem, eyeHeight, tickDelta);
+                Vec3d vec3d3 = targetVec.subtract(originVec);
+                vec3d3 = vec3d3.normalize();
+                float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
+                float angle = (((float) Math.PI / 2F) - o) * (180F / (float) Math.PI) + 90;
+                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));
+                //matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * (180F / (float) Math.PI)));
+            } else {
+                matrices.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion((golem.world.getTime() + tickDelta) * 4));
+
+            }
+            matrices.translate(0, 2.0, 0);
 
             MatrixStack.Entry entry = matrices.peek();
 
@@ -64,11 +78,9 @@ public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEn
         }
 
         super.render(golem, yaw, tickDelta, matrices, vertexConsumers, light);
-        LivingEntity target = golem.getBeamTarget();
         if (target != null) {
             float exactTime = (float) golem.world.getTime() + tickDelta;
             float k = exactTime * 0.5F % 1.0F;
-            float eyeHeight = golem.getStandingEyeHeight() + 0.06F;
             matrices.push();
             matrices.translate(0.0D, eyeHeight, 0.0D);
             Vec3d targetVec = fromLerpedPosition(target, (double) target.getHeight() * 0.5D, tickDelta);
