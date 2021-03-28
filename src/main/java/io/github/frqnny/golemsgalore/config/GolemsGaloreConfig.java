@@ -1,11 +1,12 @@
 package io.github.frqnny.golemsgalore.config;
 
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
 
-@Config(name = "golemsgalore")
-public class GolemsGaloreConfig implements ConfigData {
+import draylar.omegaconfig.api.Comment;
+import draylar.omegaconfig.api.Config;
+import io.github.frqnny.golemsgalore.GolemsGalore;
+import org.jetbrains.annotations.Nullable;
+
+public class GolemsGaloreConfig implements Config {
     @Comment("Diamond Golem")
     public int healthDiamond = 230;
     public double speedDiamond = 0.2D;
@@ -59,6 +60,15 @@ public class GolemsGaloreConfig implements ConfigData {
     @Comment("Performance")
     public boolean renderLaserFlames = true;
     @Comment("Generate Obamium Ore?")
-    public boolean generateObamiumOre = true;
+    public boolean generateObamiumOre = false;
 
+    @Override
+    public String getName() {
+        return "golemsgalore";
+    }
+
+    @Override
+    public @Nullable String getModid() {
+        return GolemsGalore.MODID;
+    }
 }

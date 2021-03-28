@@ -1,12 +1,11 @@
 package io.github.frqnny.golemsgalore;
 
+import draylar.omegaconfig.OmegaConfig;
 import draylar.structurized.api.StructurePoolAddCallback;
 import io.github.frqnny.golemsgalore.config.GolemsGaloreConfig;
 import io.github.frqnny.golemsgalore.init.ModBlocks;
 import io.github.frqnny.golemsgalore.init.ModEntities;
 import io.github.frqnny.golemsgalore.init.ModItems;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -41,15 +40,12 @@ public class GolemsGalore implements ModInitializer {
     }
 
     public static GolemsGaloreConfig getConfig() {
-        config = AutoConfig.getConfigHolder(GolemsGaloreConfig.class).getConfig();
         return config;
     }
 
     @Override
     public void onInitialize() {
-        AutoConfig.register(GolemsGaloreConfig.class, JanksonConfigSerializer::new);
-        config = AutoConfig.getConfigHolder(GolemsGaloreConfig.class).getConfig();
-
+        config = OmegaConfig.register(GolemsGaloreConfig.class);
 
         ModEntities.init();
         ModItems.init();

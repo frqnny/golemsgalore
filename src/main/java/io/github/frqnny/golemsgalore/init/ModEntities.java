@@ -3,9 +3,7 @@ package io.github.frqnny.golemsgalore.init;
 import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.api.enums.Type;
 import io.github.frqnny.golemsgalore.config.GolemsGaloreConfig;
-import io.github.frqnny.golemsgalore.entity.AntiCreeperGolemEntity;
-import io.github.frqnny.golemsgalore.entity.LaserGolemEntity;
-import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
+import io.github.frqnny.golemsgalore.entity.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.Entity;
@@ -28,8 +26,8 @@ public class ModEntities {
     public static EntityType<ModGolemEntity> HAY_GOLEM;
 
     public static EntityType<LaserGolemEntity> LASER_GOLEM;
-    public static EntityType<LaserGolemEntity> DIAMOND_LASER_GOLEM;
-    public static EntityType<LaserGolemEntity> OBAMA_PRISM_GOLEM;
+    public static EntityType<DiamondLaserGolemEntity> DIAMOND_LASER_GOLEM;
+    public static EntityType<ObamaPyramidGolemEntity> OBAMA_PRISM_GOLEM;
     public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
 
 
@@ -104,14 +102,14 @@ public class ModEntities {
         );
 
         DIAMOND_LASER_GOLEM = register("diamond_laser_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, LaserGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, DiamondLaserGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
         FabricDefaultAttributeRegistry.register(DIAMOND_LASER_GOLEM,
                 createDefaultGolemAttributes(config.healthDiamondLaser, config.speedDiamondLaser, config.knockbackResistanceDiamondLaser, config.attackDamageDiamondLaser)
         );
 
         OBAMA_PRISM_GOLEM = register("obama_prism_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, LaserGolemEntity::new).dimensions(EntityDimensions.fixed(2F, 3F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ObamaPyramidGolemEntity::new).dimensions(EntityDimensions.fixed(3F, 3.2F)).build()
         );
         FabricDefaultAttributeRegistry.register(OBAMA_PRISM_GOLEM,
                 createDefaultGolemAttributes(config.healthObama, config.speedObama, config.knockbackResistanceObama, config.attackDamageObama)

@@ -50,6 +50,8 @@ public class MixinSummonCommand {
             } else if (EntityType.getId(ModEntities.OBSIDIAN_GOLEM).equals(entity)) {
                 spawnGolem(source, source.getWorld(), Type.OBSIDIAN, blockPos);
                 info.setReturnValue(1);
+            } else if (EntityType.getId(ModEntities.HAY_GOLEM).equals(entity)) {
+                spawnGolem(source, source.getWorld(), Type.HAY, blockPos);
             }
         }
     }

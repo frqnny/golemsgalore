@@ -24,7 +24,11 @@ dependencies {
 	modImplementation 'com.github.Draylar:structurized:1.2.0-1.16.5'
 	include 'com.github.Draylar:structurized:1.2.0-1.16.5'
 
-	modImplementation include("com.github.shedaniel:AutoConfig:1.16-SNAPSHOT")
+	modImplementation "com.github.Draylar.omega-config:omega-config-base:${project.config_version}"
+	include "com.github.Draylar.omega-config:omega-config-base:${project.config_version}:min"
+
+	modImplementation "com.github.Draylar.omega-config:omega-config-gui:${project.config_version}"
+	include "com.github.Draylar.omega-config:omega-config-gui:${project.config_version}:min"
 
 	modImplementation include("dev.monarkhes:myron:1.5.1")
 
