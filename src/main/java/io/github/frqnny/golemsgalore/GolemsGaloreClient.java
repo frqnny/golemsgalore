@@ -4,8 +4,13 @@ import draylar.omegaconfiggui.OmegaConfigGui;
 import io.github.frqnny.golemsgalore.client.render.*;
 import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import io.github.frqnny.golemsgalore.init.ModEntities;
+import io.github.frqnny.golemsgalore.init.ModParticles;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.entity.EntityType;
 
 public class GolemsGaloreClient implements ClientModInitializer {
@@ -29,5 +34,14 @@ public class GolemsGaloreClient implements ClientModInitializer {
 
         OmegaConfigGui.registerConfigScreen(GolemsGalore.getConfig());
 
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE).register(((atlasTexture, registry) -> {
+            registry.register(GolemsGalore.id("particle/laser_particle"));
+        }));
+
+        ParticleFactoryRegistry.getInstance().register(ModParticles.LASER, FlameParticle.Factory::new);
+
+        //if (FabricLoader.getInstance().isModLoaded("frex")) {
+        //    Renderer.get().registerMaterial(GolemsGalore.id("laser_material"), Renderer.get().)
+        //}
     }
 }

@@ -4,6 +4,7 @@ import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.GoalSelector;
+import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.world.World;
@@ -23,7 +24,7 @@ public class MixinMobEntity {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     protected void addGolemsToTarget(EntityType<? extends MobEntity> entityType, World world, CallbackInfo info) {
-        if (this instanceof Monster) {
+        if (this instanceof Monster && !(((MobEntity) (Object) this) instanceof CreeperEntity)) {
             this.targetSelector.add(3, new FollowTargetGoal<>(((MobEntity) (Object) this), ModGolemEntity.class, true));
         }
     }

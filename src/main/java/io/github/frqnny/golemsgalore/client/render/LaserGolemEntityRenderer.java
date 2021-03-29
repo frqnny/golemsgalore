@@ -102,8 +102,8 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             float ae = MathHelper.sin(q + 5.4977875F) * 0.282F;
             float af = MathHelper.cos(q + (float) Math.PI) * 0.2F;
             float ag = MathHelper.sin(q + (float) Math.PI) * 0.2F;
-            float ah = MathHelper.cos(q + 0.0F) * 0.2F;
-            float ai = MathHelper.sin(q + 0.0F) * 0.2F;
+            float ah = MathHelper.cos(q) * 0.2F;
+            float ai = MathHelper.sin(q) * 0.2F;
             float aj = MathHelper.cos(q + ((float) Math.PI / 2F)) * 0.2F;
             float ak = MathHelper.sin(q + ((float) Math.PI / 2F)) * 0.2F;
             float al = MathHelper.cos(q + ((float) Math.PI * 1.5F)) * 0.2F;
@@ -111,6 +111,15 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             float aq = -1.0F + k;
             float ar = length * 2.5F + aq;
             VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
+            /*
+            if (FabricLoader.getInstance().isModLoaded("frex")) {
+                vertexConsumer = ((FrexVertexConsumerProvider) vertexConsumerProvider).getConsumer(Renderer.get().materialFinder().emissive(true).texture(EXPLOSION_BEAM_TEXTURE).cutout(true).cull(false).transparency(0).find());
+            } else {
+                vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
+            }
+
+             */
+
             MatrixStack.Entry entry = matrices.peek();
             Matrix4f matrix4f = entry.getModel();
             Matrix3f matrix3f = entry.getNormal();

@@ -6,6 +6,7 @@ import io.github.frqnny.golemsgalore.entity.ai.TrackGolemTargetGoal;
 import io.github.frqnny.golemsgalore.entity.ai.laser.FireLaserGoal;
 import io.github.frqnny.golemsgalore.entity.ai.laser.TrackLaserGolemTargetGoal;
 import io.github.frqnny.golemsgalore.init.ModItems;
+import io.github.frqnny.golemsgalore.init.ModParticles;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -22,11 +23,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -166,22 +167,34 @@ public class LaserGolemEntity extends ModGolemEntity {
                     if (target != null) {
                         this.getLookControl().lookAt(target, 90.0F, 90.0F);
                         this.getLookControl().tick();
-                        double d = this.getBeamProgress(0.0F);
-                        double e = target.getX() - this.getX();
-                        double f = target.getBodyY(0.5D) - this.getEyeY();
-                        double g = target.getZ() - this.getZ();
-                        double h = Math.sqrt(e * e + f * f + g * g);
-                        e /= h;
-                        f /= h;
-                        g /= h;
+                        double beamProgress = this.getBeamProgress(0.0F);
+                        double distanceX = target.getX() - this.getX();
+                        double distanceY = target.getBodyY(0.5D) - this.getEyeY();
+                        double distanceZ = target.getZ() - this.getZ();
+                        double length = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+                        distanceX /= length;
+                        distanceY /= length;
+                        distanceZ /= length;
                         double j = this.random.nextDouble();
 
-                        while (j < h) {
-                            j += 1.8D - d + this.random.nextDouble() * (1.7D - d);
+                        Vec3d vec = target.getPos().subtract(this.getPos()).normalize();
+
+                        float speed = 0.25F;
+                        while (j < length) {
+                            j += 1.8D - beamProgress + this.random.nextDouble() * (1.7D - beamProgress);
 
                             if (random.nextBoolean() && this.renderLaserFlames) {
-                                this.world.addParticle(ParticleTypes.FLAME, this.getX() + e * j, this.getEyeY() + f * j, this.getZ() + g * j, 0.0D, 0.0D, 0.0D);
+                                this.world.addParticle(
+                                        ModParticles.LASER,
+                                        this.getX() + distanceX * j,
+                                        this.getEyeY() + distanceY * j,
+                                        this.getZ() + distanceZ * j,
+                                        vec.getX() * speed,
+                                        vec.getY() * speed,
+                                        vec.getZ() * speed
+                                );
                             }
+
                         }
                     }
                 }
