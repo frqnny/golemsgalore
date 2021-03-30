@@ -53,7 +53,7 @@ public class FireLaserGoal extends Goal {
                 if (!this.golem.isSilent()) {
                     this.golem.world.sendEntityStatus(this.golem, (byte) 4);
                 }
-            } else if (this.beamTicks >= LaserGolemEntity.getWarmupTime()) {
+            } else if (this.beamTicks >= 20) {
                 float f = 1.0F;
                 if (this.golem.world.getDifficulty() == Difficulty.HARD) {
                     f -= 0.5F;

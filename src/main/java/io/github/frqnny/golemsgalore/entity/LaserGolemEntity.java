@@ -5,13 +5,11 @@ import io.github.frqnny.golemsgalore.entity.ai.GolemLookGoal;
 import io.github.frqnny.golemsgalore.entity.ai.TrackGolemTargetGoal;
 import io.github.frqnny.golemsgalore.entity.ai.laser.FireLaserGoal;
 import io.github.frqnny.golemsgalore.entity.ai.laser.TrackLaserGolemTargetGoal;
-import io.github.frqnny.golemsgalore.init.ModItems;
 import io.github.frqnny.golemsgalore.init.ModParticles;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -20,13 +18,10 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -37,14 +32,9 @@ public class LaserGolemEntity extends ModGolemEntity {
     private final boolean renderLaserFlames = GolemsGalore.getConfig().renderLaserFlames;
     private LivingEntity cachedBeamTarget;
     private int beamTicks;
-    private byte particleId;
 
     public LaserGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
-    }
-
-    public static int getWarmupTime() {
-        return 20;
     }
 
     @Override
@@ -82,32 +72,9 @@ public class LaserGolemEntity extends ModGolemEntity {
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        Item handItem = player.getStackInHand(hand).getItem();
-
-        if (handItem != Items.IRON_INGOT) {
-            return ActionResult.PASS;
-        } else if (handItem == Items.GLASS_BOTTLE) {
-            this.damage(DamageSource.player(player), this.getMaxHealth());
-            player.setStackInHand(hand, new ItemStack(ModItems.GOLEM_SOUL));
-            return ActionResult.PASS;
-        } else {
-            float f = this.getHealth();
-            this.heal(25.0F);
-            if (this.getHealth() == f) {
-                return ActionResult.PASS;
-            } else {
-                float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-                this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0F, g);
-                if (!player.abilities.creativeMode) {
-                    player.getStackInHand(hand).decrement(1);
-                }
-
-                return ActionResult.success(this.world.isClient);
-            }
-        }
+    protected Item getHealItem() {
+        return Items.IRON_INGOT;
     }
-
 
     @Override
     public void writeCustomDataToTag(CompoundTag tag) {
@@ -155,11 +122,12 @@ public class LaserGolemEntity extends ModGolemEntity {
         this.dataTracker.set(BEAM_TARGET_ID, progress);
     }
 
+    @Override
     public void tickMovement() {
         if (this.isAlive()) {
             if (this.world.isClient) {
                 if (this.hasBeamTarget()) {
-                    if (this.beamTicks < getWarmupTime()) {
+                    if (this.beamTicks < 20) {
                         ++this.beamTicks;
                     }
 
@@ -217,9 +185,10 @@ public class LaserGolemEntity extends ModGolemEntity {
     }
 
     public float getBeamProgress(float tickDelta) {
-        return ((float) this.beamTicks + tickDelta) / (float) getWarmupTime();
+        return ((float) this.beamTicks + tickDelta) / (float) 20;
     }
 
+    @Override
     public void onTrackedDataSet(TrackedData<?> data) {
         super.onTrackedDataSet(data);
         if (BEAM_TARGET_ID.equals(data)) {

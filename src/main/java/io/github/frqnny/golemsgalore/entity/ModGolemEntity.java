@@ -85,10 +85,12 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         this.dataTracker.startTracking(TYPE_TRACKER, new ItemStack(Items.DIRT));
     }
 
+    @Override
     protected int getNextAirUnderwater(int air) {
         return air;
     }
 
+    @Override
     public void tickMovement() {
         super.tickMovement();
         if (this.attackTicksLeft > 0) {
@@ -115,6 +117,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
 
     }
 
+    @Override
     public boolean canTarget(EntityType<?> type) {
         if (this.isPlayerCreated() && type == EntityType.PLAYER) {
             return false;
@@ -127,6 +130,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         return (float) this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
     }
 
+    @Override
     public boolean tryAttack(Entity target) {
         this.attackTicksLeft = 10;
         this.world.sendEntityStatus(this, (byte) 4);
@@ -143,6 +147,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         return bl;
     }
 
+    @Override
     public boolean damage(DamageSource source, float amount) {
         Crack crack = this.getCrack();
         boolean bl = super.damage(source, amount);
@@ -192,14 +197,17 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
 
     }
 
+    @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         return SoundEvents.ENTITY_IRON_GOLEM_HURT;
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_IRON_GOLEM_DEATH;
     }
 
+    @Override
     public void writeCustomDataToTag(CompoundTag tag) {
         super.writeCustomDataToTag(tag);
         tag.putBoolean("PlayerCreated", this.isPlayerCreated());
@@ -207,6 +215,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         this.angerToTag(tag);
     }
 
+    @Override
     public void readCustomDataFromTag(CompoundTag tag) {
         super.readCustomDataFromTag(tag);
         this.setPlayerCreated(tag.getBoolean("PlayerCreated"));
@@ -218,7 +227,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         Item handItem = player.getStackInHand(hand).getItem();
 
-        if (handItem.equals(this.getGolemType().item)) {
+        if (handItem.equals(this.getHealItem())) {
             float f = this.getHealth();
             this.heal(25.0F);
             if (this.getHealth() == f) {
@@ -243,6 +252,11 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         }
     }
 
+    protected Item getHealItem() {
+        return this.getGolemType().item;
+    }
+
+    @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.ENTITY_IRON_GOLEM_STEP, 1.0F, 1.0F);
     }
@@ -273,6 +287,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         this.dataTracker.set(TYPE_TRACKER, new ItemStack(golemType.item));
     }
 
+    @Override
     public boolean canSpawn(WorldView world) {
         BlockPos blockPos = this.getBlockPos();
         BlockPos blockPos2 = blockPos.down();
@@ -317,7 +332,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         this.angryAt = uuid;
     }
 
-    //huh
+    @Override
     @Environment(EnvType.CLIENT)
     public Vec3d method_29919() {
         return new Vec3d(0.0D, 0.875F * this.getStandingEyeHeight(), this.getWidth() * 0.4F);
