@@ -42,8 +42,7 @@ public class GolemsGalore implements ModInitializer {
 
         StructurePoolAddCallback.EVENT.register(structurePool -> {
             if (structurePool.getStructurePool().getId().toString().equals("minecraft:village/common/iron_golem")) {
-                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:obsidian_golem").apply(StructurePool.Projection.RIGID), 2);
-                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:quartz_golem").apply(StructurePool.Projection.RIGID), 2);
+                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:variation_1").apply(StructurePool.Projection.RIGID), 2);
             }
         });
 
