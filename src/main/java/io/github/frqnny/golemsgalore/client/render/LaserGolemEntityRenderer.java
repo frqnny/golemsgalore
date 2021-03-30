@@ -75,8 +75,9 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             //some simple variables we need to get out of the way
             float exactTime = (float) golem.world.getTime() + tickDelta;
             float k = exactTime * 0.5F % 1.0F;
-            float eyeHeight = golem.getStandingEyeHeight() + 0.06F;
+            float eyeHeight = golem.getStandingEyeHeight() + 0.08F;
             matrices.push();
+
             //translates this to the starting eyeheight
             matrices.translate(0.0D, eyeHeight, 0.0D);
             //the following is used to point the matrix towards the target
@@ -87,6 +88,10 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             vec3d3 = vec3d3.normalize();
             float arc_cosine_y = (float) Math.acos(vec3d3.y);
             float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
+
+            //Vector3f uh = new Vector3f(0, 0, 1);
+            //uh.rotate(Vector3f.POSITIVE_Y.getDegreesQuaternion(golem.getHeadYaw()));
+            //matrices.translate(uh.getX(), uh.getY(), uh.getZ());
             matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
             matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(arc_cosine_y * (180F / (float) Math.PI)));
 

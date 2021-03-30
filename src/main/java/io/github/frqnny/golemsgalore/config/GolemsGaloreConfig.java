@@ -53,7 +53,7 @@ public class GolemsGaloreConfig implements Config {
     public double knockbackResistanceCreeper = 1D;
     public double attackDamageCreeper = 20;
     @Comment("Obama Prism Golem")
-    public int healthObama = 420;
+    public int healthObama = 400;
     public double speedObama = 0.25D;
     public double knockbackResistanceObama = 1D;
     public double attackDamageObama = 20.1;

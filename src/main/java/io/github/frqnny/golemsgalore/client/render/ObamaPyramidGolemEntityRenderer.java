@@ -79,19 +79,29 @@ public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEn
 
         super.render(golem, yaw, tickDelta, matrices, vertexConsumers, light);
         if (target != null) {
+            //some simple variables we need to get out of the way
             float exactTime = (float) golem.world.getTime() + tickDelta;
             float k = exactTime * 0.5F % 1.0F;
             matrices.push();
+
+            //translates this to the starting eyeheight
             matrices.translate(0.0D, eyeHeight, 0.0D);
+            //the following is used to point the matrix towards the target
             Vec3d targetVec = fromLerpedPosition(target, (double) target.getHeight() * 0.5D, tickDelta);
             Vec3d originVec = fromLerpedPosition(golem, eyeHeight, tickDelta);
             Vec3d vec3d3 = targetVec.subtract(originVec);
-            float m = (float) (vec3d3.length());
+            float length = (float) (vec3d3.length());
             vec3d3 = vec3d3.normalize();
-            float n = (float) Math.acos(vec3d3.y);
+            float arc_cosine_y = (float) Math.acos(vec3d3.y);
             float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
+
+            //Vector3f uh = new Vector3f(0, 0, 1);
+            //uh.rotate(Vector3f.POSITIVE_Y.getDegreesQuaternion(golem.getHeadYaw()));
+            //matrices.translate(uh.getX(), uh.getY(), uh.getZ());
             matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * (180F / (float) Math.PI)));
+            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(arc_cosine_y * (180F / (float) Math.PI)));
+
+            //???
             float q = exactTime * 0.05F * -1.5F;
             float x = MathHelper.cos(q + 2.3561945F) * 0.282F;
             float y = MathHelper.sin(q + 2.3561945F) * 0.282F;
@@ -103,37 +113,46 @@ public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEn
             float ae = MathHelper.sin(q + 5.4977875F) * 0.282F;
             float af = MathHelper.cos(q + (float) Math.PI) * 0.2F;
             float ag = MathHelper.sin(q + (float) Math.PI) * 0.2F;
-            float ah = MathHelper.cos(q + 0.0F) * 0.2F;
-            float ai = MathHelper.sin(q + 0.0F) * 0.2F;
+            float ah = MathHelper.cos(q) * 0.2F;
+            float ai = MathHelper.sin(q) * 0.2F;
             float aj = MathHelper.cos(q + ((float) Math.PI / 2F)) * 0.2F;
             float ak = MathHelper.sin(q + ((float) Math.PI / 2F)) * 0.2F;
             float al = MathHelper.cos(q + ((float) Math.PI * 1.5F)) * 0.2F;
             float am = MathHelper.sin(q + ((float) Math.PI * 1.5F)) * 0.2F;
             float aq = -1.0F + k;
-            float ar = m * 2.5F + aq;
+            float ar = length * 2.5F + aq;
             VertexConsumer vertexConsumer = vertexConsumers.getBuffer(LAYER);
+            /*
+            if (FabricLoader.getInstance().isModLoaded("frex")) {
+                vertexConsumer = ((FrexVertexConsumerProvider) vertexConsumerProvider).getConsumer(Renderer.get().materialFinder().emissive(true).texture(EXPLOSION_BEAM_TEXTURE).cutout(true).cull(false).transparency(0).find());
+            } else {
+                vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
+            }
+
+             */
+
             MatrixStack.Entry entry = matrices.peek();
             Matrix4f matrix4f = entry.getModel();
             Matrix3f matrix3f = entry.getNormal();
 
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, af, m, ag, 0.4999F, ar);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, af, length, ag, 0.4999F, ar);
             vertexLaser(vertexConsumer, matrix4f, matrix3f, af, 0.0F, ag, 0.4999F, aq);
             vertexLaser(vertexConsumer, matrix4f, matrix3f, ah, 0.0F, ai, 0.0F, aq);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, ah, m, ai, 0.0F, ar);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, aj, m, ak, 0.4999F, ar);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, ah, length, ai, 0.0F, ar);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, aj, length, ak, 0.4999F, ar);
             vertexLaser(vertexConsumer, matrix4f, matrix3f, aj, 0.0F, ak, 0.4999F, aq);
             vertexLaser(vertexConsumer, matrix4f, matrix3f, al, 0.0F, am, 0.0F, aq);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, al, m, am, 0.0F, ar);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, al, length, am, 0.0F, ar);
             float as = 0.0F;
             if (golem.age % 2 == 0) {
                 as = 0.5F;
             }
 
 
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, x, m, y, 0.5F, as + 0.5F);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, z, m, aa, 1.0F, as + 0.5F);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, ad, m, ae, 1.0F, as);
-            vertexLaser(vertexConsumer, matrix4f, matrix3f, ab, m, ac, 0.5F, as);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, x, length, y, 0.5F, as + 0.5F);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, z, length, aa, 1.0F, as + 0.5F);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, ad, length, ae, 1.0F, as);
+            vertexLaser(vertexConsumer, matrix4f, matrix3f, ab, length, ac, 0.5F, as);
             matrices.pop();
         }
     }

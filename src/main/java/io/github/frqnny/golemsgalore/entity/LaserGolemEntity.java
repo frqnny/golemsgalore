@@ -183,7 +183,7 @@ public class LaserGolemEntity extends ModGolemEntity {
                         while (j < length) {
                             j += 1.8D - beamProgress + this.random.nextDouble() * (1.7D - beamProgress);
 
-                            if (random.nextBoolean() && this.renderLaserFlames) {
+                            if (this.renderLaserFlames) {
                                 this.world.addParticle(
                                         ModParticles.LASER,
                                         this.getX() + distanceX * j,

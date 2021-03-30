@@ -58,8 +58,7 @@ public class MixinSummonCommand {
     }
 
     private static void spawnGolem(ServerCommandSource source, ServerWorld world, Type type, BlockPos pos) {
-        ModGolemEntity golem = ModEntities.DIAMOND_GOLEM.create(world);
-        assert golem != null;
+        ModGolemEntity golem = ModEntities.typeMap.get(type).create(world);
         golem.setPlayerCreated(false);
         golem.setGolemType(type);
         golem.refreshPositionAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.05D, (double) pos.getZ() + 0.5D, 0.0F, 0.0F);
