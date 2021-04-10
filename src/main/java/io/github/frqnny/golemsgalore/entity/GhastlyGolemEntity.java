@@ -3,10 +3,12 @@ package io.github.frqnny.golemsgalore.entity;
 import io.github.frqnny.golemsgalore.entity.ai.GolemLookGoal;
 import io.github.frqnny.golemsgalore.entity.ai.TrackGolemTargetGoal;
 import io.github.frqnny.golemsgalore.entity.ai.ghastly.BowAttackGoal;
+import io.github.frqnny.golemsgalore.entity.ai.ghastly.IronGolemWanderAroundGoalFix;
+import io.github.frqnny.golemsgalore.entity.ai.ghastly.WanderAroundPOIGoalFix;
+import io.github.frqnny.golemsgalore.entity.ai.ghastly.WanderNearTargetGoalFix;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
@@ -16,7 +18,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -30,20 +31,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.EnumSet;
-
 public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMob {
-    private final MeleeAttackGoal meleeAttackGoal = new MeleeAttackGoal(this, 1.2D, false) {
-        public void stop() {
-            super.stop();
-            GhastlyGolemEntity.this.setAttacking(false);
-        }
-
-        public void start() {
-            super.start();
-            GhastlyGolemEntity.this.setAttacking(true);
-        }
-    };
 
     public GhastlyGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
         super(entityType, world);
@@ -108,95 +96,6 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
 
     protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
         return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier);
-    }
-
-
-    static class WanderNearTargetGoalFix extends Goal {
-        private final PathAwareEntity mob;
-        private final double speed;
-        private final float maxDistance;
-        private LivingEntity target;
-        private double x;
-        private double y;
-        private double z;
-
-        public WanderNearTargetGoalFix(PathAwareEntity mob, double speed, float maxDistance) {
-            this.mob = mob;
-            this.speed = speed;
-            this.maxDistance = maxDistance;
-            this.setControls(EnumSet.of(Goal.Control.MOVE));
-        }
-
-        public boolean canStart() {
-            this.target = this.mob.getTarget();
-            if (this.target == null) {
-                return false;
-            } else if (this.target.squaredDistanceTo(this.mob) > (double) (this.maxDistance * this.maxDistance)) {
-                return false;
-            } else {
-                Vec3d vec3d = TargetFinder.findTargetTowards(this.mob, 16, 7, this.target.getPos());
-                if (vec3d == null) {
-                    return false;
-                } else {
-                    this.x = vec3d.x;
-                    this.y = vec3d.y;
-                    this.z = vec3d.z;
-                    return true;
-                }
-            }
-        }
-
-        public boolean shouldContinue() {
-            return this.mob.getMoveControl().isMoving() && this.target.isAlive() && this.target.squaredDistanceTo(this.mob) < (double) (this.maxDistance * this.maxDistance);
-        }
-
-        public void stop() {
-            this.mob.getNavigation().stop();
-            this.target = null;
-
-        }
-
-        public void start() {
-            this.mob.getMoveControl().moveTo(this.x, this.y, this.z, this.speed);
-        }
-    }
-
-    private static class WanderAroundPOIGoalFix extends WanderAroundPointOfInterestGoal {
-        public WanderAroundPOIGoalFix(PathAwareEntity pathAwareEntity, double d, boolean bl) {
-            super(pathAwareEntity, d, bl);
-        }
-
-        public boolean shouldContinue() {
-            return this.mob.getMoveControl().isMoving() && !this.mob.hasPassengers();
-        }
-
-        public void start() {
-            this.mob.getMoveControl().moveTo(this.targetX, this.targetY, this.targetZ, this.speed);
-        }
-
-        public void stop() {
-            this.mob.getNavigation().stop();
-            super.stop();
-        }
-    }
-
-    private static class IronGolemWanderAroundGoalFix extends IronGolemWanderAroundGoal {
-        public IronGolemWanderAroundGoalFix(PathAwareEntity pathAwareEntity, double d) {
-            super(pathAwareEntity, d);
-        }
-
-        public boolean shouldContinue() {
-            return this.mob.getMoveControl().isMoving() && !this.mob.hasPassengers();
-        }
-
-        public void start() {
-            this.mob.getMoveControl().moveTo(this.targetX, this.targetY, this.targetZ, this.speed);
-        }
-
-        public void stop() {
-            this.mob.getNavigation().stop();
-            super.stop();
-        }
     }
 
 
