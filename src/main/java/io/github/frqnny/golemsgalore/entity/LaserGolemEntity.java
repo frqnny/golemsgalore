@@ -52,6 +52,22 @@ public class LaserGolemEntity extends ModGolemEntity {
                 (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
         this.targetSelector.add(2, new RevengeGoal(this));
         this.targetSelector.add(2, new TrackGolemTargetGoal(this));
+
+        this.goalSelector.add(1, new FireLaserGoal(this));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9D, 32.0F));
+        this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6D, false));
+        this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6D));
+        this.goalSelector.add(5, new GolemLookGoal(this));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.add(8, new LookAroundGoal(this));
+        this.targetSelector.add(1, new TrackGolemTargetGoal(this));
+        this.targetSelector.add(2, new RevengeGoal(this));
+        this.targetSelector.add(1, new TrackLaserGolemTargetGoal<>(this, LivingEntity.class, 10, true, false,
+                (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
+        this.targetSelector.add(2, new RevengeGoal(this));
+        this.targetSelector.add(2, new TrackGolemTargetGoal(this));
+        this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 
     @Override
@@ -116,7 +132,6 @@ public class LaserGolemEntity extends ModGolemEntity {
             return this.getTarget();
         }
     }
-
 
     public void setBeamTarget(int progress) {
         this.dataTracker.set(BEAM_TARGET_ID, progress);

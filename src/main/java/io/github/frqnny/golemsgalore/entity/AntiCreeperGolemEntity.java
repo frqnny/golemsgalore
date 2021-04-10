@@ -22,16 +22,15 @@ public class AntiCreeperGolemEntity extends ModGolemEntity {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9D, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6D, false));
-        this.goalSelector.add(3, new MoveThroughVillageGoal(this, 0.6D, false, 4, () -> false));
+        this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6D));
         this.goalSelector.add(5, new GolemLookGoal(this));
-        this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.6D));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(1, new TrackGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
         this.targetSelector.add(3, new FollowTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
-        this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false,
-                (livingEntity) -> livingEntity instanceof CreeperEntity));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false, (livingEntity) -> livingEntity instanceof CreeperEntity));
+        this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 
     @Override

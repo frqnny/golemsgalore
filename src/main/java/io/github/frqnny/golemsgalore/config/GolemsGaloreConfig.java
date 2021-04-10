@@ -57,6 +57,11 @@ public class GolemsGaloreConfig implements Config {
     public double speedObama = 0.25D;
     public double knockbackResistanceObama = 1D;
     public double attackDamageObama = 20.1;
+    @Comment("Ghostly Golem")
+    public int healthGhostly = 250;
+    public double speedGhostly = 0.3D;
+    public double knockbackResistanceGhostly = 1D;
+    public double attackDamageGhostly = 15;
     @Comment("Performance")
     public boolean renderLaserFlames = true;
 

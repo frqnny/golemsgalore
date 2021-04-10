@@ -29,6 +29,7 @@ public class ModEntities {
     public static EntityType<DiamondLaserGolemEntity> DIAMOND_LASER_GOLEM;
     public static EntityType<ObamaPyramidGolemEntity> OBAMA_PRISM_GOLEM;
     public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
+    public static EntityType<GhastlyGolemEntity> GHASTLY_GOLEM;
 
 
     public static EnumMap<Type, EntityType<ModGolemEntity>> typeMap;
@@ -113,6 +114,13 @@ public class ModEntities {
         );
         FabricDefaultAttributeRegistry.register(OBAMA_PRISM_GOLEM,
                 createDefaultGolemAttributes(config.healthObama, config.speedObama, config.knockbackResistanceObama, config.attackDamageObama)
+        );
+
+        GHASTLY_GOLEM = register("ghastly_golem",
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, GhastlyGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).fireImmune().build()
+        );
+        FabricDefaultAttributeRegistry.register(GHASTLY_GOLEM,
+                createDefaultGolemAttributes(config.healthGhostly, config.speedGhostly, config.knockbackResistanceGhostly, config.attackDamageGhostly)
         );
 
         typeMap = new EnumMap<>(Type.class);

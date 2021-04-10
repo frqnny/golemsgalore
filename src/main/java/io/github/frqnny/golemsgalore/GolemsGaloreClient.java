@@ -31,6 +31,7 @@ public class GolemsGaloreClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(ModEntities.ANTI_CREEPER_GOLEM, (entityRenderDispatcher, context) -> new AntiCreeperGolemEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(ModEntities.DIAMOND_LASER_GOLEM, (entityRenderDispatcher, context) -> new DiamondLaserGolemEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(ModEntities.OBAMA_PRISM_GOLEM, (entityRenderDispatcher, context) -> new ObamaPyramidGolemEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(ModEntities.GHASTLY_GOLEM, (entityRenderDispatcher, context) -> new GhastlyGolemEntityRenderer(entityRenderDispatcher));
 
         OmegaConfigGui.registerConfigScreen(GolemsGalore.getConfig());
 

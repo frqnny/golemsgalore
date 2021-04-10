@@ -10,6 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.Durations;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -66,16 +67,15 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9D, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6D, false));
-        this.goalSelector.add(3, new MoveThroughVillageGoal(this, 0.6D, false, 4, () -> false));
+        this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6D));
         this.goalSelector.add(5, new GolemLookGoal(this));
-        this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.6D));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(1, new TrackGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
         this.targetSelector.add(3, new FollowTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
-        this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false,
-                (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false, (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
+        this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 
     @Override
@@ -88,6 +88,14 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     @Override
     protected int getNextAirUnderwater(int air) {
         return air;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        //System.out.println(this.getEntityName() + " :" + this.getPos().toString());
+        //this.goalSelector.getRunningGoals().forEach(goal -> System.out.println(goal.getGoal().toString()));
+        //System.out.println();
     }
 
     @Override
@@ -330,6 +338,15 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     @Override
     public void setAngryAt(@Nullable UUID uuid) {
         this.angryAt = uuid;
+    }
+
+    @Override
+    protected void pushAway(Entity entity) {
+        if (entity instanceof Monster && !(entity instanceof CreeperEntity) && this.getRandom().nextInt(20) == 0) {
+            this.setTarget((LivingEntity) entity);
+        }
+
+        super.pushAway(entity);
     }
 
     @Override

@@ -25,13 +25,13 @@ public class TrackGolemTargetGoal extends TrackTargetGoal {
 
     public boolean canStart() {
         Box box = this.golem.getBoundingBox().expand(10.0D, 8.0D, 10.0D);
-        List<LivingEntity> villagers = this.golem.world.getTargets(VillagerEntity.class, this.targetPredicate, this.golem, box);
-        List<PlayerEntity> players = this.golem.world.getPlayers(this.targetPredicate, this.golem, box);
+        List<LivingEntity> list = this.golem.world.getTargets(VillagerEntity.class, this.targetPredicate, this.golem, box);
+        List<PlayerEntity> list2 = this.golem.world.getPlayers(this.targetPredicate, this.golem, box);
 
-        for (LivingEntity livingEntity : villagers) {
+        for (LivingEntity livingEntity : list) {
             VillagerEntity villagerEntity = (VillagerEntity) livingEntity;
 
-            for (PlayerEntity playerEntity : players) {
+            for (PlayerEntity playerEntity : list2) {
                 int i = villagerEntity.getReputation(playerEntity);
                 if (i <= -100) {
                     this.target = playerEntity;

@@ -2,7 +2,7 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 plugins {
-	id 'fabric-loom' version '0.6-SNAPSHOT'
+	id 'fabric-loom' version '0.7-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -30,7 +30,7 @@ dependencies {
 	modImplementation "com.github.Draylar.omega-config:omega-config-gui:${project.config_version}"
 	include "com.github.Draylar.omega-config:omega-config-gui:${project.config_version}:min"
 
-	modImplementation include("dev.monarkhes:myron:1.5.1")
+	modImplementation include("dev.monarkhes:myron:${project.myron_version}")
 
 	//modImplementation "grondag:frex-mc116:${project.frex_version}"
 
@@ -43,10 +43,7 @@ repositories {
 		url = "https://maven.abusedmaster.xyz"
 	}
 	maven { url = "https://hephaestus.dev/release" }
-	maven {
-		name = "dblsaiko"
-		url = "https://maven.dblsaiko.net/"
-	}
+
 }
 processResources {
 	doLast {
