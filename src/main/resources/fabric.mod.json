@@ -23,6 +23,7 @@
       "io.github.frqnny.golemsgalore.GolemsGaloreClient"
     ]
   },
+  "accessWidener": "golemsgalore.accesswidener",
   "depends": {
     "minecraft": "1.16.x"
   },

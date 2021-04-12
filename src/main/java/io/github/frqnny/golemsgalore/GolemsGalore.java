@@ -3,10 +3,7 @@ package io.github.frqnny.golemsgalore;
 import draylar.omegaconfig.OmegaConfig;
 import draylar.structurized.api.StructurePoolAddCallback;
 import io.github.frqnny.golemsgalore.config.GolemsGaloreConfig;
-import io.github.frqnny.golemsgalore.init.ModBlocks;
-import io.github.frqnny.golemsgalore.init.ModEntities;
-import io.github.frqnny.golemsgalore.init.ModItems;
-import io.github.frqnny.golemsgalore.init.ModParticles;
+import io.github.frqnny.golemsgalore.init.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.ItemGroup;
@@ -38,11 +35,11 @@ public class GolemsGalore implements ModInitializer {
         ModItems.init();
         ModBlocks.init();
         ModParticles.register();
-
-
+        ModSounds.init();
+        ModPackets.init();
         StructurePoolAddCallback.EVENT.register(structurePool -> {
             if (structurePool.getStructurePool().getId().toString().equals("minecraft:village/common/iron_golem")) {
-                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:variation_1").apply(StructurePool.Projection.RIGID), 2);
+                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:variation_1").apply(StructurePool.Projection.RIGID), 6);
             }
         });
 

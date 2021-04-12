@@ -4,6 +4,7 @@ import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.api.enums.Type;
 import io.github.frqnny.golemsgalore.config.GolemsGaloreConfig;
 import io.github.frqnny.golemsgalore.entity.*;
+import io.github.frqnny.golemsgalore.entity.projectile.PumpkinProjectileEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,7 @@ public class ModEntities {
     public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
     public static EntityType<GhastlyGolemEntity> GHASTLY_GOLEM;
 
+    public static EntityType<PumpkinProjectileEntity> PUMPKIN_PROJECTILE;
 
     public static EnumMap<Type, EntityType<ModGolemEntity>> typeMap;
     public static EnumMap<Type, DefaultAttributeContainer.Builder> attributeContainerMap;
@@ -121,6 +123,10 @@ public class ModEntities {
         );
         FabricDefaultAttributeRegistry.register(GHASTLY_GOLEM,
                 createDefaultGolemAttributes(config.healthGhostly, config.speedGhostly, config.knockbackResistanceGhostly, config.attackDamageGhostly)
+        );
+
+        PUMPKIN_PROJECTILE = register("pumpkin_projectile",
+                FabricEntityTypeBuilder.<PumpkinProjectileEntity>create(SpawnGroup.MISC, PumpkinProjectileEntity::new).dimensions(EntityDimensions.fixed(1F, 1F)).trackRangeBlocks(10).build()
         );
 
         typeMap = new EnumMap<>(Type.class);

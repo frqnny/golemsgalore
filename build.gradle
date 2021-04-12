@@ -76,3 +76,7 @@ jar {
 	from "LICENSE"
 }
 
+minecraft {
+	accessWidener "src/main/resources/golemsgalore.accesswidener"
+}
+

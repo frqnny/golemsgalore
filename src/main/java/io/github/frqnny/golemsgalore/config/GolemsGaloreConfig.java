@@ -64,10 +64,17 @@ public class GolemsGaloreConfig implements Config {
     public double attackDamageGhostly = 15;
     @Comment("Performance")
     public boolean renderLaserFlames = true;
+    @Comment("Misc")
+    public boolean playLaserSound = true;
 
     @Override
     public String getName() {
         return "golemsgalore";
+    }
+
+    @Override
+    public String getExtension() {
+        return "json5";
     }
 
     @Override

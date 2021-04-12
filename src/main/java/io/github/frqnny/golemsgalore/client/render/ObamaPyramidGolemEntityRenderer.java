@@ -11,6 +11,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -27,7 +28,7 @@ public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEn
         super(dispatcher);
     }
 
-    private static Vec3d fromLerpedPosition(LivingEntity entity, double yOffset, float delta) {
+    public static Vec3d fromLerpedPosition(Entity entity, double yOffset, float delta) {
         double d = MathHelper.lerp(delta, entity.lastRenderX, entity.getX());
         double e = MathHelper.lerp(delta, entity.lastRenderY, entity.getY()) + yOffset;
         double f = MathHelper.lerp(delta, entity.lastRenderZ, entity.getZ());

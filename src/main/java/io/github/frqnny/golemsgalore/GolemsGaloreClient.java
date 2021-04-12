@@ -2,8 +2,10 @@ package io.github.frqnny.golemsgalore;
 
 import draylar.omegaconfiggui.OmegaConfigGui;
 import io.github.frqnny.golemsgalore.client.render.*;
+import io.github.frqnny.golemsgalore.client.render.projectile.GhastlyPumpkinProjectileEntityRenderer;
 import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import io.github.frqnny.golemsgalore.init.ModEntities;
+import io.github.frqnny.golemsgalore.init.ModPackets;
 import io.github.frqnny.golemsgalore.init.ModParticles;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -32,6 +34,7 @@ public class GolemsGaloreClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(ModEntities.DIAMOND_LASER_GOLEM, (entityRenderDispatcher, context) -> new DiamondLaserGolemEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(ModEntities.OBAMA_PRISM_GOLEM, (entityRenderDispatcher, context) -> new ObamaPyramidGolemEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(ModEntities.GHASTLY_GOLEM, (entityRenderDispatcher, context) -> new GhastlyGolemEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(ModEntities.PUMPKIN_PROJECTILE, (entityRenderDispatcher, context) -> new GhastlyPumpkinProjectileEntityRenderer(entityRenderDispatcher));
 
         OmegaConfigGui.registerConfigScreen(GolemsGalore.getConfig());
 
@@ -41,6 +44,7 @@ public class GolemsGaloreClient implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(ModParticles.LASER, FlameParticle.Factory::new);
 
+        ModPackets.clientInit();
         //if (FabricLoader.getInstance().isModLoaded("frex")) {
         //    Renderer.get().registerMaterial(GolemsGalore.id("laser_material"), Renderer.get().)
         //}

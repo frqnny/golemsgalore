@@ -1,6 +1,8 @@
 package io.github.frqnny.golemsgalore.entity.ai.laser;
 
+import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.entity.LaserGolemEntity;
+import io.github.frqnny.golemsgalore.init.ModSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -52,6 +54,12 @@ public class FireLaserGoal extends Goal {
                 this.golem.setBeamTarget(this.golem.getTarget().getEntityId());
                 if (!this.golem.isSilent()) {
                     this.golem.world.sendEntityStatus(this.golem, (byte) 4);
+
+                    if (GolemsGalore.getConfig().playLaserSound) {
+                        this.golem.playSound(ModSounds.LASER, 0.5F, 5.0F + golem.getRandom().nextFloat());
+
+                    }
+
                 }
             } else if (this.beamTicks >= 20) {
                 float f = 1.0F;

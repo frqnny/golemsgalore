@@ -1,0 +1,8 @@
+{
+  "laser": {
+    "category": "ambient",
+    "sounds": [
+      "golemsgalore:laser"
+    ]
+  }
+}

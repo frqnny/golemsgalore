@@ -6,6 +6,7 @@ import io.github.frqnny.golemsgalore.entity.ai.TrackGolemTargetGoal;
 import io.github.frqnny.golemsgalore.entity.ai.laser.FireLaserGoal;
 import io.github.frqnny.golemsgalore.entity.ai.laser.TrackLaserGolemTargetGoal;
 import io.github.frqnny.golemsgalore.init.ModParticles;
+import io.github.frqnny.golemsgalore.init.ModSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +22,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -81,7 +81,7 @@ public class LaserGolemEntity extends ModGolemEntity {
     public void handleStatus(byte status) {
         if (status == 4) {
             this.attackTicksLeft = 10;
-            this.playSound(SoundEvents.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
+            this.playSound(ModSounds.LASER, 1.0F, 1.0F);
         } else {
             super.handleStatus(status);
         }

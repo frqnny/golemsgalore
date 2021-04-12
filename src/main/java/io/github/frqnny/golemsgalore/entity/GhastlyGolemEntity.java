@@ -2,10 +2,11 @@ package io.github.frqnny.golemsgalore.entity;
 
 import io.github.frqnny.golemsgalore.entity.ai.GolemLookGoal;
 import io.github.frqnny.golemsgalore.entity.ai.TrackGolemTargetGoal;
-import io.github.frqnny.golemsgalore.entity.ai.ghastly.BowAttackGoal;
 import io.github.frqnny.golemsgalore.entity.ai.ghastly.IronGolemWanderAroundGoalFix;
+import io.github.frqnny.golemsgalore.entity.ai.ghastly.PumpkingProjectileAttack;
 import io.github.frqnny.golemsgalore.entity.ai.ghastly.WanderAroundPOIGoalFix;
 import io.github.frqnny.golemsgalore.entity.ai.ghastly.WanderNearTargetGoalFix;
+import io.github.frqnny.golemsgalore.entity.projectile.PumpkinProjectileEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -20,13 +21,8 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -40,7 +36,7 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(1, new BowAttackGoal<>(this, 1.0D, 20, 15.0F));
+        this.goalSelector.add(1, new PumpkingProjectileAttack<>(this));
         //this.goalSelector.add(1, new ProjectileAttackGoal(0.2, ));
         //this.goalSelector.add(2, new FlyRandomlyGoal());
         this.goalSelector.add(2, new WanderNearTargetGoalFix(this, 0.9D, 32.0F));
@@ -77,27 +73,19 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
         //this.noClip = true;
         super.tick();
 
-        this.goalSelector.getRunningGoals().forEach(goal -> System.out.println(goal.getGoal().toString()));
-        System.out.println();
+        if (this.isAlive()) {
+            if (this.world.isClient) {
+
+            }
+        }
+
     }
 
     @Override
     public void attack(LivingEntity target, float pullProgress) {
-        ItemStack stack = new ItemStack(Items.SPECTRAL_ARROW);
-        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(stack, pullProgress);
-        double d = target.getX() - this.getX();
-        double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
-        double f = target.getZ() - this.getZ();
-        double g = MathHelper.sqrt(d * d + f * f);
-        persistentProjectileEntity.setVelocity(d, e + g * 0.20000000298023224D, f, 1.6F, (float) (14 - (this.world.getDifficulty().getId() << 2)));
-        this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.world.spawnEntity(persistentProjectileEntity);
-    }
+        this.world.spawnEntity(new PumpkinProjectileEntity(this.world, this, this.getTarget()));
 
-    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
-        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier);
     }
-
 
     private static class GhostMoveControl extends MoveControl {
         public GhostMoveControl(MobEntity entity) {

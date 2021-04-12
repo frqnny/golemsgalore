@@ -150,7 +150,6 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
             target.setVelocity(target.getVelocity().add(0.0D, 0.4000000059604645D, 0.0D));
             this.dealDamage(this, target);
         }
-
         this.playSound(SoundEvents.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
         return bl;
     }
