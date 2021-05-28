@@ -1,7 +1,7 @@
 package io.github.frqnny.golemsgalore.entity.ai.ghastly;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetFinder;
+import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.Vec3d;
@@ -31,7 +31,7 @@ public class WanderNearTargetGoalFix extends Goal {
         } else if (this.target.squaredDistanceTo(this.mob) > (double) (this.maxDistance * this.maxDistance)) {
             return false;
         } else {
-            Vec3d vec3d = TargetFinder.findTargetTowards(this.mob, 16, 7, this.target.getPos());
+            Vec3d vec3d = NoPenaltyTargeting.find(this.mob, 16, 7, this.target.getPos());
             if (vec3d == null) {
                 return false;
             } else {

@@ -12,7 +12,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public class ModGolemFlowerFeatureRenderer<T extends ModGolemEntity, M extends ModGolemEntityModel<T>> extends FeatureRenderer<T, M> {
@@ -30,7 +30,7 @@ public class ModGolemFlowerFeatureRenderer<T extends ModGolemEntity, M extends M
             matrices.translate(-1.1875D, 1.0625D, -0.9375D);
             matrices.translate(0.5D, 0.5D, 0.5D);
             matrices.scale(0.5F, 0.5F, 0.5F);
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.0F));
             matrices.translate(-0.5D, -0.5D, -0.5D);
             MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(Blocks.POPPY.getDefaultState(), matrices, vertexConsumers, light, OverlayTexture.DEFAULT_UV);
             matrices.pop();

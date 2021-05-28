@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TrackGolemTargetGoal extends TrackTargetGoal {
     private final ModGolemEntity golem;
-    private final TargetPredicate targetPredicate = (new TargetPredicate()).setBaseMaxDistance(64.0D);
+    private final TargetPredicate targetPredicate = TargetPredicate.createAttackable().setBaseMaxDistance(64.0D);
     private LivingEntity target;
 
     public TrackGolemTargetGoal(ModGolemEntity golem) {
@@ -25,7 +25,7 @@ public class TrackGolemTargetGoal extends TrackTargetGoal {
 
     public boolean canStart() {
         Box box = this.golem.getBoundingBox().expand(10.0D, 8.0D, 10.0D);
-        List<LivingEntity> list = this.golem.world.getTargets(VillagerEntity.class, this.targetPredicate, this.golem, box);
+        List<? extends LivingEntity> list = this.golem.world.getTargets(VillagerEntity.class, this.targetPredicate, this.golem, box);
         List<PlayerEntity> list2 = this.golem.world.getPlayers(this.targetPredicate, this.golem, box);
 
         for (LivingEntity livingEntity : list) {

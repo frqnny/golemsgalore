@@ -7,17 +7,17 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 
 public class GhastlyPumpkinProjectileEntityRenderer extends EntityRenderer<PumpkinProjectileEntity> {
-    public GhastlyPumpkinProjectileEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher);
+    public GhastlyPumpkinProjectileEntityRenderer(EntityRendererFactory.Context context) {
+        super(context);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class GhastlyPumpkinProjectileEntityRenderer extends EntityRenderer<Pumpk
             vec3d3 = vec3d3.normalize();
             float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
             float angle = (((float) Math.PI / 2F) - o) * (180F / (float) Math.PI) + 90;
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(angle));
         }
 
         MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(state, matrices, vertexConsumers, 15, OverlayTexture.DEFAULT_UV);

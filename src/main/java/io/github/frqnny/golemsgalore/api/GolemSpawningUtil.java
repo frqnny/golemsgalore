@@ -28,7 +28,8 @@ public class GolemSpawningUtil {
                     blockState.isOf(Blocks.GOLD_BLOCK) ||
                     blockState.isOf(Blocks.QUARTZ_BLOCK) ||
                     blockState.isOf(Blocks.OBSIDIAN) ||
-                    blockState.isOf(Blocks.HAY_BLOCK)
+                    blockState.isOf(Blocks.HAY_BLOCK) ||
+                    blockState.isOf(Blocks.AMETHYST_BLOCK)
     );
     public static final BlockPattern commonPattern = getSingleBlockPattern(IS_VALID_BLOCK);
     public static final Predicate<BlockState> IRON_BLOCK_PREDICATE = getPredicateFromBlock(Blocks.IRON_BLOCK);
@@ -64,7 +65,7 @@ public class GolemSpawningUtil {
     }
 
     public static <T extends ModGolemEntity> void spawnGolem(World world, PlayerEntity player, Hand hand, BlockPattern.Result resultPattern, T golem) {
-        if (!player.abilities.creativeMode) {
+        if (!player.isCreative()) {
             player.getStackInHand(hand).decrement(1);
         }
 

@@ -32,8 +32,8 @@ public class ModPackets {
             UUID targetUUID = buf.readUuid();
             client.execute(() -> {
                 PumpkinProjectileEntity entity = new PumpkinProjectileEntity(world, x, y, z, velocityX, velocityY, velocityZ);
-                entity.yaw = (yaw);
-                entity.pitch = pitch;
+                entity.setYaw(yaw);
+                entity.setPitch(pitch);
                 entity.setUuid(uuid);
                 entity.setEntityId(id);
                 entity.setTargetUUID(targetUUID);

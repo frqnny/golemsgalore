@@ -8,7 +8,7 @@ import net.minecraft.entity.passive.VillagerEntity;
 import java.util.EnumSet;
 
 public class GolemLookGoal extends Goal {
-    private static final TargetPredicate CLOSE_VILLAGER_PREDICATE = (new TargetPredicate()).setBaseMaxDistance(6.0D).includeTeammates().includeInvulnerable();
+    private static final TargetPredicate CLOSE_VILLAGER_PREDICATE = TargetPredicate.createNonAttackable().setBaseMaxDistance(6.0D);
     private final ModGolemEntity golem;
     private VillagerEntity targetVillager;
     private int lookCountdown;

@@ -20,7 +20,7 @@ import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -93,14 +93,14 @@ public class LaserGolemEntity extends ModGolemEntity {
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putBoolean("IsFiring", getIsFiring());
     }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         this.setIsFiring(tag.getBoolean("IsFiring"));
     }
 
@@ -184,7 +184,7 @@ public class LaserGolemEntity extends ModGolemEntity {
             }
 
             if (this.hasBeamTarget()) {
-                this.yaw = this.headYaw;
+                this.setYaw(this.headYaw);
             }
             if (!this.world.isClient) {
                 this.tickAngerLogic((ServerWorld) this.world, true);

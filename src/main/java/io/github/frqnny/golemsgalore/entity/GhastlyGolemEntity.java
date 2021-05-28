@@ -22,7 +22,7 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -58,13 +58,13 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
     }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
     }
 
     @Override
@@ -104,13 +104,13 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
                     entity.setVelocity(entity.getVelocity().add(vec3d.multiply(this.speed * 0.05D / d)));
                     if (entity.getTarget() == null) {
                         Vec3d vec3d2 = entity.getVelocity();
-                        entity.yaw = -((float) MathHelper.atan2(vec3d2.x, vec3d2.z)) * 57.295776F;
+                        entity.setYaw(-((float) MathHelper.atan2(vec3d2.x, vec3d2.z)) * 57.295776F);
                     } else {
                         double e = entity.getTarget().getX() - entity.getX();
                         double f = entity.getTarget().getZ() - entity.getZ();
-                        entity.yaw = -((float) MathHelper.atan2(e, f)) * 57.295776F;
+                        entity.setYaw(-((float) MathHelper.atan2(e, f)) * 57.295776F);
                     }
-                    entity.bodyYaw = entity.yaw;
+                    entity.bodyYaw = entity.getYaw();
                 }
 
             } else if (this.state == MoveControl.State.STRAFE) {
@@ -127,8 +127,8 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
                 j = g / j;
                 h *= j;
                 i *= j;
-                float k = MathHelper.sin(this.entity.yaw * 0.017453292F);
-                float l = MathHelper.cos(this.entity.yaw * 0.017453292F);
+                float k = MathHelper.sin(this.entity.getYaw() * 0.017453292F);
+                float l = MathHelper.cos(this.entity.getYaw() * 0.017453292F);
                 float m = h * l - i * k;
                 q = i * l + h * k;
                 if (!this.method_25946(m, q)) {

@@ -34,7 +34,7 @@ public class MixinCarvedPumpkinBlock {
             BlockPattern.Result diamondLaser = GolemSpawningUtil.diamondLaserPattern.searchAround(world, pos);
             BlockPattern.Result obama = GolemSpawningUtil.obamaPattern.searchAround(world, pos);
             if (common != null) {
-                if (!player.abilities.creativeMode) {
+                if (!player.isCreative()) {
                     player.getStackInHand(hand).decrement(1);
                 }
 

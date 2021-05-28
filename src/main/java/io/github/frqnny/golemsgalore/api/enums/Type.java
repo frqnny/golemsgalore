@@ -1,63 +1,55 @@
 package io.github.frqnny.golemsgalore.api.enums;
 
+import com.google.common.collect.Sets;
 import io.github.frqnny.golemsgalore.GolemsGalore;
+import io.github.frqnny.golemsgalore.init.ModEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
-public enum Type {
-    DIAMOND(Blocks.DIAMOND_BLOCK, Items.DIAMOND, GolemsGalore.id("textures/entity/golem/diamond_golem.png")),
-    GOLD(Blocks.GOLD_BLOCK, Items.GOLD_INGOT, GolemsGalore.id("textures/entity/golem/golden_golem.png")),
-    NETHERITE(Blocks.NETHERITE_BLOCK, Items.NETHERITE_INGOT, GolemsGalore.id("textures/entity/golem/netherite_golem.png")),
-    QUARTZ(Blocks.QUARTZ_BLOCK, Items.QUARTZ, GolemsGalore.id("textures/entity/golem/quartz_golem.png")),
-    OBSIDIAN(Blocks.OBSIDIAN, Items.OBSIDIAN, GolemsGalore.id("textures/entity/golem/obsidian_golem.png")),
-    HAY(Blocks.HAY_BLOCK, Items.WHEAT, GolemsGalore.id("textures/entity/golem/hay_golem.png")),
-    NULL(Blocks.DIRT, Items.DIRT, GolemsGalore.id("textures/entity/golem/quartz_golem.png"));
+import java.util.Set;
 
-    public final Block block;
-    public final Item item;
-    public final int rawId;
-    public final Identifier texture;
+public final record Type(Block material, Item item, Identifier texture, byte rawId) {
+    public static final Type DIAMOND = new Type(Blocks.DIAMOND_BLOCK, Items.DIAMOND, GolemsGalore.id("textures/entity/golem/diamond_golem.png"), (byte) 1);
+    public static final Type GOLD = new Type(Blocks.GOLD_BLOCK, Items.GOLD_INGOT, GolemsGalore.id("textures/entity/golem/golden_golem.png"), (byte) 2);
+    public static final Type NETHERITE = new Type(Blocks.NETHERITE_BLOCK, Items.NETHERITE_INGOT, GolemsGalore.id("textures/entity/golem/netherite_golem.png"), (byte) 3);
+    public static final Type QUARTZ = new Type(Blocks.QUARTZ_BLOCK, Items.QUARTZ, GolemsGalore.id("textures/entity/golem/quartz_golem.png"), (byte) 4);
+    public static final Type OBSIDIAN = new Type(Blocks.OBSIDIAN, Items.OBSIDIAN, GolemsGalore.id("textures/entity/golem/obsidian_golem.png"), (byte) 5);
+    public static final Type HAY = new Type(Blocks.HAY_BLOCK, Items.WHEAT, GolemsGalore.id("textures/entity/golem/hay_golem.png"), (byte) 6);
+    public static final Type AMETHYST = new Type(Blocks.AMETHYST_BLOCK, Items.AMETHYST_SHARD, GolemsGalore.id("textures/entity/golem/amethyst_golem.png"), (byte) 7);
+    public static final Type NULL = new Type(Blocks.DIRT, Items.DIRT, GolemsGalore.id("textures/entity/golem/quartz_golem.png"), (byte) 0);
 
-    Type(Block material, Item item, Identifier texture) {
-        this.item = item;
-        this.block = material;
-        this.texture = texture;
-        this.rawId = Registry.ITEM.getRawId(item);
-
-    }
+    public static final Set<Type> values = Sets.newHashSet(DIAMOND, GOLD, NETHERITE, QUARTZ, OBSIDIAN, HAY, AMETHYST);
 
     public static Type fromId(int id) {
-        for (Type type : Type.values()) {
-            if (type.rawId == id) {
+        for (Type type : Type.values) {
+            if (type.rawId() == id) {
                 return type;
             }
         }
         return NULL;
     }
+
 
     public static Type fromBlock(Block block) {
-        Item item = block.asItem();
-        for (Type type : Type.values()) {
-            if (type.block.asItem().equals(item)) {
+        for (Type type : Type.values) {
+            if (type.material.equals(block)) {
                 return type;
             }
         }
         return NULL;
     }
 
-    //this is a fucking nightmare
-    public static Type fromItemStack(ItemStack itemStack) {
-        Item item = itemStack.getItem();
-        for (Type type : Type.values()) {
-            if (type.item.equals(item)) {
+    public static Type getTypeForEntityType(EntityType<?> entityType) {
+        for (Type type : values) {
+            if (ModEntities.typeMap.get(type).equals(entityType)) {
                 return type;
             }
         }
+
         return NULL;
     }
 }

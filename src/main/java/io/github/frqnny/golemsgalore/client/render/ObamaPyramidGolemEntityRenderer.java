@@ -4,28 +4,24 @@ import dev.monarkhes.myron.api.Myron;
 import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.entity.LaserGolemEntity;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 
 public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEntity> {
     private static final Identifier EXPLOSION_BEAM_TEXTURE = GolemsGalore.id("textures/entity/laser_beam.png");
     private static final Identifier MODEL = GolemsGalore.id("models/misc/final");
     private static final RenderLayer LAYER = RenderLayer.getEntityCutoutNoCull(EXPLOSION_BEAM_TEXTURE);
 
-    public ObamaPyramidGolemEntityRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    public ObamaPyramidGolemEntityRenderer(EntityRendererFactory.Context c) {
+        super(c);
     }
 
     public static Vec3d fromLerpedPosition(Entity entity, double yOffset, float delta) {
@@ -62,10 +58,10 @@ public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEn
                 vec3d3 = vec3d3.normalize();
                 float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
                 float angle = (((float) Math.PI / 2F) - o) * (180F / (float) Math.PI) + 90;
-                matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));
+                matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(angle));
                 //matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * (180F / (float) Math.PI)));
             } else {
-                matrices.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion((golem.world.getTime() + tickDelta) * 4));
+                matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion((golem.world.getTime() + tickDelta) * 4));
 
             }
             matrices.translate(0, 2.0, 0);
@@ -99,8 +95,8 @@ public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEn
             //Vector3f uh = new Vector3f(0, 0, 1);
             //uh.rotate(Vector3f.POSITIVE_Y.getDegreesQuaternion(golem.getHeadYaw()));
             //matrices.translate(uh.getX(), uh.getY(), uh.getZ());
-            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(arc_cosine_y * (180F / (float) Math.PI)));
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(arc_cosine_y * (180F / (float) Math.PI)));
 
             //???
             float q = exactTime * 0.05F * -1.5F;

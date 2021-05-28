@@ -17,7 +17,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
@@ -68,7 +68,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         double d = (double) blockPos.getX() + 0.5D;
         double e = (double) blockPos.getY() + 2.0D;
         double f = (double) blockPos.getZ() + 0.5D;
-        this.refreshPositionAndAngles(d, e, f, this.yaw, this.pitch);
+        this.refreshPositionAndAngles(d, e, f, this.getYaw(), this.getPitch());
         this.updateTrackedPosition(d, e, f);
         this.target = target;
         this.targetUuid = target.getUuid();
@@ -107,7 +107,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
                 this.setVelocity(vec3d.add((this.targetX - vec3d.x) * 0.2D, (this.targetY - vec3d.y) * 0.2D, (this.targetZ - vec3d.z) * 0.2D));
             }
 
-            HitResult hitResult = ProjectileUtil.getCollision(this, this::method_26958);
+            HitResult hitResult = ProjectileUtil.getCollision(this, this::canHit);
             if (hitResult.getType() != HitResult.Type.MISS) {
                 this.onCollision(hitResult);
             }
@@ -119,7 +119,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         ProjectileUtil.method_7484(this, 0.5F);
         if (this.world.isClient) {
             this.world.addParticle(ParticleTypes.END_ROD, this.getX() - vec3d.x, this.getY() - vec3d.y + 0.15D, this.getZ() - vec3d.z, 0.0D, 0.0D, 0.0D);
-        } else if (this.target != null && !this.target.removed) {
+        } else if (this.target != null && this.target.isAlive()) {
             if (this.stepCount > 0) {
                 --this.stepCount;
                 if (this.stepCount == 0) {
@@ -202,7 +202,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         double h = e - this.getX();
         double j = f - this.getY();
         double k = g - this.getZ();
-        double l = MathHelper.sqrt(h * h + j * j + k * k);
+        double l = MathHelper.sqrt((float) (h * h + j * j + k * k));
         if (l == 0.0D) {
             this.targetX = 0.0D;
             this.targetY = 0.0D;
@@ -220,14 +220,14 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
     @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        this.remove();
+        this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
         super.onBlockHit(blockHitResult);
         ((ServerWorld) this.world).spawnParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY(), this.getZ(), 2, 0.2D, 0.2D, 0.2D, 0.0D);
-        this.remove();
+        this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         boolean bl = entity.damage(DamageSource.mobProjectile(this, livingEntity).setProjectile(), 4.0F);
         if (bl) {
             this.dealDamage(livingEntity, entity);
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -254,8 +254,8 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
     }
 
     @Override
-    protected void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    protected void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putBoolean("IsSpawning", this.isSpawning());
         if (isSpawning()) {
             tag.putInt("SpawningTicks", this.spawningTicks);
@@ -270,8 +270,8 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
     }
 
     @Override
-    protected void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    protected void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         this.setIsSpawning(tag.getBoolean("IsSpawning"));
         if (isSpawning()) {
             this.spawningTicks = tag.getInt("SpawningTicks");
@@ -288,13 +288,13 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
     public Packet<?> createSpawnPacket() {
         final PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
-        buf.writeVarInt(this.getEntityId());
+        buf.writeVarInt(this.getId());
         buf.writeUuid(this.uuid);
         buf.writeDouble(this.getX());
         buf.writeDouble(this.getY());
         buf.writeDouble(this.getZ());
-        buf.writeByte(MathHelper.floor(this.pitch * 256.0F / 360.0F));
-        buf.writeByte(MathHelper.floor(this.yaw * 256.0F / 360.0F));
+        buf.writeByte(MathHelper.floor(this.getPitch() * 256.0F / 360.0F));
+        buf.writeByte(MathHelper.floor(this.getYaw() * 256.0F / 360.0F));
         buf.writeDouble(this.getVelocity().x);
         buf.writeDouble(this.getVelocity().y);
         buf.writeDouble(this.getVelocity().z);
@@ -303,8 +303,8 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
     }
 
     @Override
-    protected boolean method_26958(Entity entity) {
-        return super.method_26958(entity) && !entity.noClip;
+    protected boolean canHit(Entity entity) {
+        return super.canHit(entity) && !entity.noClip;
     }
 
     @Override
@@ -312,7 +312,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         if (!this.world.isClient) {
             this.playSound(SoundEvents.ENTITY_SHULKER_BULLET_HURT, 1.0F, 1.0F);
             ((ServerWorld) this.world).spawnParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 15, 0.2D, 0.2D, 0.2D, 0.0D);
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
 
         return true;

@@ -7,7 +7,7 @@ import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import io.github.frqnny.golemsgalore.init.ModEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.SummonCommand;
 import net.minecraft.server.world.ServerWorld;
@@ -28,12 +28,12 @@ public class MixinSummonCommand {
     private static final SimpleCommandExceptionType INVALID_POSITION_EXCEPTIONN = new SimpleCommandExceptionType(new TranslatableText("commands.summon.invalidPosition"));
 
     @Inject(method = "execute", at = @At(value = "HEAD"), cancellable = true)
-    private static void executeSpecialGolems(ServerCommandSource source, Identifier entity, Vec3d pos, CompoundTag nbt, boolean initialize, CallbackInfoReturnable<Integer> info) throws CommandSyntaxException {
+    private static void executeSpecialGolems(ServerCommandSource source, Identifier entity, Vec3d pos, NbtCompound nbt, boolean initialize, CallbackInfoReturnable<Integer> info) throws CommandSyntaxException {
         BlockPos blockPos = new BlockPos(pos);
         if (!World.isValid(blockPos)) {
             throw INVALID_POSITION_EXCEPTIONN.create();
         } else {
-            CompoundTag compoundTag = nbt.copy();
+            NbtCompound compoundTag = nbt.copy();
             compoundTag.putString("id", entity.toString());
             if (EntityType.getId(ModEntities.DIAMOND_GOLEM).equals(entity)) {
                 spawnGolem(source, source.getWorld(), Type.DIAMOND, blockPos);

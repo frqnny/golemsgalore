@@ -28,7 +28,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
@@ -37,9 +37,9 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.IntRange;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
@@ -49,8 +49,8 @@ import java.util.UUID;
 
 public class ModGolemEntity extends GolemEntity implements Angerable {
     protected static final TrackedData<Byte> PLAYER_CREATED = DataTracker.registerData(ModGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
-    protected static final TrackedData<ItemStack> TYPE_TRACKER = DataTracker.registerData(ModGolemEntity.class, TrackedDataHandlerRegistry.ITEM_STACK);
-    private static final IntRange randomIntDuration = Durations.betweenSeconds(20, 39);
+    protected static final TrackedData<Byte> TYPE = DataTracker.registerData(ModGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final UniformIntProvider randomIntDuration = Durations.betweenSeconds(20, 39);
     protected int attackTicksLeft;
     private int lookingAtVillagerTicksLeft;
     private int angerTicks;
@@ -82,20 +82,12 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(PLAYER_CREATED, (byte) 0);
-        this.dataTracker.startTracking(TYPE_TRACKER, new ItemStack(Items.DIRT));
+        this.dataTracker.startTracking(TYPE, (byte) 0);
     }
 
     @Override
     protected int getNextAirUnderwater(int air) {
         return air;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        //System.out.println(this.getEntityName() + " :" + this.getPos().toString());
-        //this.goalSelector.getRunningGoals().forEach(goal -> System.out.println(goal.getGoal().toString()));
-        //System.out.println();
     }
 
     @Override
@@ -109,7 +101,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
             --this.lookingAtVillagerTicksLeft;
         }
 
-        if (squaredHorizontalLength(this.getVelocity()) > 2.500000277905201E-7D && this.random.nextInt(5) == 0) {
+        if (this.getVelocity().method_37268() > 2.500000277905201E-7D && this.random.nextInt(5) == 0) {
             int i = MathHelper.floor(this.getX());
             int j = MathHelper.floor(this.getY() - 0.20000000298023224D);
             int k = MathHelper.floor(this.getZ());
@@ -172,19 +164,13 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     @Environment(EnvType.CLIENT)
     public void handleStatus(byte status) {
         switch (status) {
-            case 4:
+            case 4 -> {
                 this.attackTicksLeft = 10;
                 this.playSound(SoundEvents.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
-                break;
-            case 11:
-                this.lookingAtVillagerTicksLeft = 400;
-                break;
-            case 34:
-                this.lookingAtVillagerTicksLeft = 0;
-                break;
-            default:
-                super.handleStatus(status);
-                break;
+            }
+            case 11 -> this.lookingAtVillagerTicksLeft = 400;
+            case 34 -> this.lookingAtVillagerTicksLeft = 0;
+            default -> super.handleStatus(status);
         }
     }
 
@@ -206,7 +192,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_IRON_GOLEM_HURT;
+        return this.getGolemType().equals(Type.AMETHYST) ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : SoundEvents.ENTITY_IRON_GOLEM_HURT;
     }
 
     @Override
@@ -215,19 +201,23 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putBoolean("PlayerCreated", this.isPlayerCreated());
-        tag.putInt("Type", getGolemType().rawId);
-        this.angerToTag(tag);
+        tag.putByte("Type", getGolemType().rawId());
+        this.writeAngerToNbt(tag);
     }
 
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         this.setPlayerCreated(tag.getBoolean("PlayerCreated"));
-        this.setGolemType(Type.fromId(tag.getInt("Type")));
-        this.angerFromTag((ServerWorld) this.world, tag);
+        this.setGolemType(tag.getByte("Type"));
+        this.readAngerFromNbt(this.world, tag);
+        //Attempt to save old golems by Entity Type
+        if (this.getGolemType().equals(Type.NULL)) {
+            this.setGolemType(Type.getTypeForEntityType(this.getType()));
+        }
     }
 
     @Override
@@ -241,8 +231,9 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
                 return ActionResult.PASS;
             } else {
                 float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-                this.playSound(SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0F, g);
-                if (!player.abilities.creativeMode) {
+                //Too lazy to not hardcode this
+                this.playSound(this.getGolemType().equals(Type.AMETHYST) ? SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK : SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0F, g);
+                if (!player.isCreative()) {
                     player.getStackInHand(hand).decrement(1);
                 }
 
@@ -260,7 +251,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     }
 
     protected Item getHealItem() {
-        return this.getGolemType().item;
+        return this.getGolemType().item();
     }
 
     @Override
@@ -287,11 +278,15 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     }
 
     public Type getGolemType() {
-        return Type.fromItemStack(this.dataTracker.get(TYPE_TRACKER));
+        return Type.fromId(this.dataTracker.get(TYPE));
     }
 
     public void setGolemType(Type golemType) {
-        this.dataTracker.set(TYPE_TRACKER, new ItemStack(golemType.item));
+        this.setGolemType(golemType.rawId());
+    }
+
+    public void setGolemType(byte id) {
+        this.dataTracker.set(TYPE, id);
     }
 
     @Override
@@ -316,7 +311,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
 
     @Override
     public void chooseRandomAngerTime() {
-        this.angerTicks = randomIntDuration.choose(this.random);
+        this.angerTicks = randomIntDuration.get(this.random);
     }
 
     @Override
@@ -350,7 +345,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public Vec3d method_29919() {
+    public Vec3d getLeashOffset() {
         return new Vec3d(0.0D, 0.875F * this.getStandingEyeHeight(), this.getWidth() * 0.4F);
     }
 }

@@ -24,7 +24,7 @@ public class TrackLaserGolemTargetGoal<T extends LivingEntity> extends TrackTarg
         this.targetClass = targetClass;
         this.reciprocalChance = reciprocalChance;
         this.setControls(EnumSet.of(Control.LOOK, Control.TARGET));
-        this.targetPredicate = (new TargetPredicate()).setBaseMaxDistance(this.getFollowRange()).setPredicate(targetPredicate);
+        this.targetPredicate = TargetPredicate.createAttackable().setPredicate(targetPredicate).setBaseMaxDistance(this.getFollowRange());
     }
 
     public boolean canStart() {
@@ -42,7 +42,7 @@ public class TrackLaserGolemTargetGoal<T extends LivingEntity> extends TrackTarg
 
     protected void findClosestTarget() {
         if (this.targetClass != PlayerEntity.class && this.targetClass != ServerPlayerEntity.class) {
-            this.targetEntity = this.mob.world.getClosestEntityIncludingUngeneratedChunks(this.targetClass, this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ(), this.getSearchBox(this.getFollowRange()));
+            this.targetEntity = this.mob.world.getClosestEntity(this.targetClass, this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ(), this.getSearchBox(this.getFollowRange()));
         } else {
             this.targetEntity = this.mob.world.getClosestPlayer(this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
         }

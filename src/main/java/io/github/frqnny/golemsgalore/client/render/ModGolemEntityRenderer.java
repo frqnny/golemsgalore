@@ -1,25 +1,26 @@
 package io.github.frqnny.golemsgalore.client.render;
 
+import io.github.frqnny.golemsgalore.GolemsGaloreClient;
 import io.github.frqnny.golemsgalore.client.render.feature.ModGolemCrackFeatureRenderer;
 import io.github.frqnny.golemsgalore.client.render.feature.ModGolemFlowerFeatureRenderer;
 import io.github.frqnny.golemsgalore.client.render.model.ModGolemEntityModel;
 import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3f;
 
 public class ModGolemEntityRenderer extends MobEntityRenderer<ModGolemEntity, ModGolemEntityModel<ModGolemEntity>> {
-    public ModGolemEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher, new ModGolemEntityModel<>(), 1);
+    public ModGolemEntityRenderer(EntityRendererFactory.Context ctx) {
+        super(ctx, new ModGolemEntityModel<>(ctx.getPart(GolemsGaloreClient.MOD_GOLEM)), 1);
         this.addFeature(new ModGolemCrackFeatureRenderer<>(this));
         this.addFeature(new ModGolemFlowerFeatureRenderer<>(this));
     }
 
     @Override
     public Identifier getTexture(ModGolemEntity entity) {
-        return entity.getGolemType().texture;
+        return entity.getGolemType().texture();
 
     }
 
@@ -28,7 +29,7 @@ public class ModGolemEntityRenderer extends MobEntityRenderer<ModGolemEntity, Mo
         if ((double) golem.limbDistance >= 0.01D) {
             float j = golem.limbAngle - golem.limbDistance * (1.0F - h) + 6.0F;
             float k = (Math.abs(j % 13.0F - 6.5F) - 3.25F) / 3.25F;
-            matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(6.5F * k));
+            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(6.5F * k));
         }
     }
 }

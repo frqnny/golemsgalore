@@ -1,12 +1,13 @@
 package io.github.frqnny.golemsgalore.client.render;
 
 import io.github.frqnny.golemsgalore.GolemsGalore;
+import io.github.frqnny.golemsgalore.GolemsGaloreClient;
 import io.github.frqnny.golemsgalore.client.render.model.GhastlyGolemEntityModel;
 import io.github.frqnny.golemsgalore.entity.GhastlyGolemEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -18,8 +19,8 @@ public class GhastlyGolemEntityRenderer extends MobEntityRenderer<GhastlyGolemEn
     public static final Identifier EMPTY = new Identifier("minecraft", "textures/block/redstone_dust_overlay.png");
     public static final RenderLayer RENDER_LAYER = RenderLayer.getEntityTranslucent(TEXTURE);
 
-    public GhastlyGolemEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher, new GhastlyGolemEntityModel(), 0);
+    public GhastlyGolemEntityRenderer(EntityRendererFactory.Context ctx) {
+        super(ctx, new GhastlyGolemEntityModel(ctx.getPart(GolemsGaloreClient.GHASTLY_GOLEM)), 0);
         addFeature(new FeatureRenderer<GhastlyGolemEntity, GhastlyGolemEntityModel>(this) {
             @Override
             public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, GhastlyGolemEntity golem, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {

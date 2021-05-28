@@ -37,6 +37,11 @@ public class GolemsGaloreConfig implements Config {
     public double speedHay = 0.3D;
     public double knockbackResistanceHay = 0.1D;
     public double attackDamageHay = 5;
+    @Comment("Amethyst Golem")
+    public int healthAmethyst = 120;
+    public double speedAmethyst = 0.29D;
+    public double knockbackResistanceAmethyst = 0.7D;
+    public double attackDamageAmethyst = 24D;
     @Comment("Laser Golem")
     public int healthLaser = 75;
     public double speedLaser = 0.25D;
@@ -57,7 +62,7 @@ public class GolemsGaloreConfig implements Config {
     public double speedObama = 0.25D;
     public double knockbackResistanceObama = 1D;
     public double attackDamageObama = 20.1;
-    @Comment("Ghostly Golem")
+    @Comment("Ghastly Golem (NOT IN GAME YET!)")
     public int healthGhostly = 250;
     public double speedGhostly = 0.3D;
     public double knockbackResistanceGhostly = 1D;

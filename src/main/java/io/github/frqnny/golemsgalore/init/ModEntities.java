@@ -16,7 +16,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.registry.Registry;
 
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModEntities {
     public static EntityType<ModGolemEntity> DIAMOND_GOLEM;
@@ -25,6 +26,7 @@ public class ModEntities {
     public static EntityType<ModGolemEntity> QUARTZ_GOLEM;
     public static EntityType<ModGolemEntity> OBSIDIAN_GOLEM;
     public static EntityType<ModGolemEntity> HAY_GOLEM;
+    public static EntityType<ModGolemEntity> AMETHYST_GOLEM;
 
     public static EntityType<LaserGolemEntity> LASER_GOLEM;
     public static EntityType<DiamondLaserGolemEntity> DIAMOND_LASER_GOLEM;
@@ -34,12 +36,11 @@ public class ModEntities {
 
     public static EntityType<PumpkinProjectileEntity> PUMPKIN_PROJECTILE;
 
-    public static EnumMap<Type, EntityType<ModGolemEntity>> typeMap;
-    public static EnumMap<Type, DefaultAttributeContainer.Builder> attributeContainerMap;
+    public static Map<Type, EntityType<ModGolemEntity>> typeMap = new HashMap<>(7);
+    public static Map<Type, DefaultAttributeContainer.Builder> attributeContainerMap = new HashMap<>(7);
 
     public static void init() {
         GolemsGaloreConfig config = GolemsGalore.getConfig();
-        attributeContainerMap = new EnumMap<>(Type.class);
         // base is 100 hp, speed .25d, knockback resistance 1,  attack damage 15
         attributeContainerMap.put(Type.DIAMOND,
                 createDefaultGolemAttributes(config.healthDiamond, config.speedDiamond, config.knockbackResistanceDiamond, config.attackDamageDiamond)
@@ -59,36 +60,51 @@ public class ModEntities {
         attributeContainerMap.put(Type.HAY,
                 createDefaultGolemAttributes(config.healthHay, config.speedHay, config.knockbackResistanceHay, config.attackDamageHay)
         );
-
+        attributeContainerMap.put(Type.AMETHYST,
+                createDefaultGolemAttributes(config.healthAmethyst, config.speedAmethyst, config.knockbackResistanceAmethyst, config.attackDamageAmethyst)
+        );
 
         DIAMOND_GOLEM = register("diamond_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build());
-        FabricDefaultAttributeRegistry.register(DIAMOND_GOLEM, attributeContainerMap.get(Type.DIAMOND));
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
+        );
 
         NETHERITE_GOLEM = register("netherite_golem",
                 FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
-        FabricDefaultAttributeRegistry.register(NETHERITE_GOLEM, attributeContainerMap.get(Type.NETHERITE));
 
         GOLDEN_GOLEM = register("golden_golem",
                 FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
-        FabricDefaultAttributeRegistry.register(GOLDEN_GOLEM, attributeContainerMap.get(Type.GOLD));
 
         QUARTZ_GOLEM = register("quartz_golem",
                 FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
-        FabricDefaultAttributeRegistry.register(QUARTZ_GOLEM, attributeContainerMap.get(Type.QUARTZ));
 
         OBSIDIAN_GOLEM = register("obsidian_golem",
                 FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
-        FabricDefaultAttributeRegistry.register(OBSIDIAN_GOLEM, attributeContainerMap.get(Type.OBSIDIAN));
 
         HAY_GOLEM = register("hay_golem",
                 FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
-        FabricDefaultAttributeRegistry.register(HAY_GOLEM, attributeContainerMap.get(Type.HAY));
+
+        AMETHYST_GOLEM = register("amethyst_golem",
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
+        );
+
+        typeMap.put(Type.DIAMOND, DIAMOND_GOLEM);
+        typeMap.put(Type.NETHERITE, NETHERITE_GOLEM);
+        typeMap.put(Type.GOLD, GOLDEN_GOLEM);
+        typeMap.put(Type.QUARTZ, QUARTZ_GOLEM);
+        typeMap.put(Type.OBSIDIAN, OBSIDIAN_GOLEM);
+        typeMap.put(Type.HAY, HAY_GOLEM);
+        typeMap.put(Type.AMETHYST, AMETHYST_GOLEM);
+
+        for (Map.Entry<Type, DefaultAttributeContainer.Builder> entry : attributeContainerMap.entrySet()) {
+            Type type = entry.getKey();
+            EntityType<ModGolemEntity> entityType = typeMap.get(type);
+            FabricDefaultAttributeRegistry.register(entityType, attributeContainerMap.get(type));
+        }
 
         LASER_GOLEM = register("laser_golem",
                 FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, LaserGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
@@ -129,13 +145,7 @@ public class ModEntities {
                 FabricEntityTypeBuilder.<PumpkinProjectileEntity>create(SpawnGroup.MISC, PumpkinProjectileEntity::new).dimensions(EntityDimensions.fixed(1F, 1F)).trackRangeBlocks(10).build()
         );
 
-        typeMap = new EnumMap<>(Type.class);
-        typeMap.put(Type.DIAMOND, DIAMOND_GOLEM);
-        typeMap.put(Type.NETHERITE, NETHERITE_GOLEM);
-        typeMap.put(Type.GOLD, GOLDEN_GOLEM);
-        typeMap.put(Type.QUARTZ, QUARTZ_GOLEM);
-        typeMap.put(Type.OBSIDIAN, OBSIDIAN_GOLEM);
-        typeMap.put(Type.HAY, HAY_GOLEM);
+
     }
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType<T> builder) {
@@ -145,4 +155,5 @@ public class ModEntities {
     private static DefaultAttributeContainer.Builder createDefaultGolemAttributes(int health, double speed, double knockbackResistance, double attackDamage) {
         return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, health).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, speed).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, knockbackResistance).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, attackDamage);
     }
+
 }

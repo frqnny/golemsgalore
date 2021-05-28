@@ -51,7 +51,7 @@ public class FireLaserGoal extends Goal {
         } else {
             ++this.beamTicks;
             if (this.beamTicks == 0) {
-                this.golem.setBeamTarget(this.golem.getTarget().getEntityId());
+                this.golem.setBeamTarget(this.golem.getTarget().getId());
                 if (!this.golem.isSilent()) {
                     this.golem.world.sendEntityStatus(this.golem, (byte) 4);
 
