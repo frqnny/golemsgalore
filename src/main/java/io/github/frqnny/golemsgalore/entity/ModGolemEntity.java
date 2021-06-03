@@ -49,12 +49,12 @@ import java.util.UUID;
 
 public class ModGolemEntity extends GolemEntity implements Angerable {
     protected static final TrackedData<Byte> PLAYER_CREATED = DataTracker.registerData(ModGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
-    protected static final TrackedData<Byte> TYPE = DataTracker.registerData(ModGolemEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final UniformIntProvider randomIntDuration = Durations.betweenSeconds(20, 39);
     protected int attackTicksLeft;
     private int lookingAtVillagerTicksLeft;
     private int angerTicks;
     private UUID angryAt;
+    private Type type;
 
 
     public ModGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
@@ -82,7 +82,6 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(PLAYER_CREATED, (byte) 0);
-        this.dataTracker.startTracking(TYPE, (byte) 0);
     }
 
     @Override
@@ -101,7 +100,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
             --this.lookingAtVillagerTicksLeft;
         }
 
-        if (this.getVelocity().method_37268() > 2.500000277905201E-7D && this.random.nextInt(5) == 0) {
+        if (this.getVelocity().horizontalLengthSquared() > 2.500000277905201E-7D && this.random.nextInt(5) == 0) {
             int i = MathHelper.floor(this.getX());
             int j = MathHelper.floor(this.getY() - 0.20000000298023224D);
             int k = MathHelper.floor(this.getZ());
@@ -140,7 +139,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
         if (bl) {
 
             target.setVelocity(target.getVelocity().add(0.0D, 0.4000000059604645D, 0.0D));
-            this.dealDamage(this, target);
+            this.applyDamageEffects(this, target);
         }
         this.playSound(SoundEvents.ENTITY_IRON_GOLEM_ATTACK, 1.0F, 1.0F);
         return bl;
@@ -204,7 +203,6 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     public void writeCustomDataToNbt(NbtCompound tag) {
         super.writeCustomDataToNbt(tag);
         tag.putBoolean("PlayerCreated", this.isPlayerCreated());
-        tag.putByte("Type", getGolemType().rawId());
         this.writeAngerToNbt(tag);
     }
 
@@ -212,12 +210,7 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     public void readCustomDataFromNbt(NbtCompound tag) {
         super.readCustomDataFromNbt(tag);
         this.setPlayerCreated(tag.getBoolean("PlayerCreated"));
-        this.setGolemType(tag.getByte("Type"));
         this.readAngerFromNbt(this.world, tag);
-        //Attempt to save old golems by Entity Type
-        if (this.getGolemType().equals(Type.NULL)) {
-            this.setGolemType(Type.getTypeForEntityType(this.getType()));
-        }
     }
 
     @Override
@@ -278,16 +271,16 @@ public class ModGolemEntity extends GolemEntity implements Angerable {
     }
 
     public Type getGolemType() {
-        return Type.fromId(this.dataTracker.get(TYPE));
+        if (type == null) {
+            this.type = Type.getTypeForEntityType(this.getType());
+        }
+        return type;
     }
 
     public void setGolemType(Type golemType) {
-        this.setGolemType(golemType.rawId());
+        this.type = golemType;
     }
 
-    public void setGolemType(byte id) {
-        this.dataTracker.set(TYPE, id);
-    }
 
     @Override
     public boolean canSpawn(WorldView world) {

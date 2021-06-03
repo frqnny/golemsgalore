@@ -238,7 +238,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         LivingEntity livingEntity = entity2 instanceof LivingEntity ? (LivingEntity) entity2 : null;
         boolean bl = entity.damage(DamageSource.mobProjectile(this, livingEntity).setProjectile(), 4.0F);
         if (bl) {
-            this.dealDamage(livingEntity, entity);
+            this.applyDamageEffects(livingEntity, entity);
             this.remove(RemovalReason.DISCARDED);
         }
     }
