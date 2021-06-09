@@ -23,9 +23,15 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(CarvedPumpkinBlock.class)
-public class MixinCarvedPumpkinBlock {
+public abstract class MixinCarvedPumpkinBlock extends Block {
 
+    public MixinCarvedPumpkinBlock(Settings settings) {
+        super(settings);
+    }
+
+    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+
         ItemStack stack = player.getStackInHand(hand);
         if (stack.getItem() == ModItems.GOLEM_SOUL) {
             BlockPattern.Result common = GolemSpawningUtil.commonPattern.searchAround(world, pos);
