@@ -35,7 +35,6 @@ public class GolemsGalore implements ModInitializer {
         ModBlocks.init();
         ModParticles.register();
         ModSounds.init();
-        ModPackets.init();
         StructurePoolAddCallback.EVENT.register(structurePool -> {
             if (structurePool.getStructurePool().getId().toString().contains("village/common/iron_golem")) {
                 structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:variation_1").apply(StructurePool.Projection.RIGID), 4);
