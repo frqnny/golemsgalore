@@ -1,10 +1,7 @@
 package io.github.frqnny.golemsgalore.entity;
 
 import io.github.frqnny.golemsgalore.GolemsGalore;
-import io.github.frqnny.golemsgalore.entity.ai.GolemLookGoal;
-import io.github.frqnny.golemsgalore.entity.ai.TrackGolemTargetGoal;
 import io.github.frqnny.golemsgalore.entity.ai.laser.FireLaserGoal;
-import io.github.frqnny.golemsgalore.entity.ai.laser.TrackLaserGolemTargetGoal;
 import io.github.frqnny.golemsgalore.init.ModParticles;
 import io.github.frqnny.golemsgalore.init.ModSounds;
 import net.minecraft.entity.Entity;
@@ -15,8 +12,9 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -33,40 +31,23 @@ public class LaserGolemEntity extends ModGolemEntity {
     private LivingEntity cachedBeamTarget;
     private int beamTicks;
 
-    public LaserGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
+    public LaserGolemEntity(EntityType<? extends IronGolemEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new FireLaserGoal(this));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, true));
-        this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9D, 32.0F));
-        this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6D, false));
-        this.goalSelector.add(3, new MoveThroughVillageGoal(this, 0.6D, false, 4, () -> false));
-        this.goalSelector.add(5, new GolemLookGoal(this));
-        this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.6D));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(1, new TrackLaserGolemTargetGoal<>(this, LivingEntity.class, 10, true, false,
-                (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
-        this.targetSelector.add(2, new RevengeGoal(this));
-        this.targetSelector.add(2, new TrackGolemTargetGoal(this));
-
-        this.goalSelector.add(1, new FireLaserGoal(this));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0D, true));
         this.goalSelector.add(2, new WanderNearTargetGoal(this, 0.9D, 32.0F));
         this.goalSelector.add(2, new WanderAroundPointOfInterestGoal(this, 0.6D, false));
         this.goalSelector.add(4, new IronGolemWanderAroundGoal(this, 0.6D));
-        this.goalSelector.add(5, new GolemLookGoal(this));
+        this.goalSelector.add(5, new IronGolemLookGoal(this));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(1, new TrackGolemTargetGoal(this));
+        this.targetSelector.add(1, new TrackIronGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
-        this.targetSelector.add(1, new TrackLaserGolemTargetGoal<>(this, LivingEntity.class, 10, true, false,
-                (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
-        this.targetSelector.add(2, new RevengeGoal(this));
-        this.targetSelector.add(2, new TrackGolemTargetGoal(this));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
         this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 

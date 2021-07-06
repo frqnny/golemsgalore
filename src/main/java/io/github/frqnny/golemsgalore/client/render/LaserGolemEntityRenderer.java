@@ -89,9 +89,6 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             float arc_cosine_y = (float) Math.acos(vec3d3.y);
             float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
 
-            //Vector3f uh = new Vector3f(0, 0, 1);
-            //uh.rotate(Vector3f.POSITIVE_Y.getDegreesQuaternion(golem.getHeadYaw()));
-            //matrices.translate(uh.getX(), uh.getY(), uh.getZ());
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((((float) Math.PI / 2F) - o) * (180F / (float) Math.PI)));
             matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(arc_cosine_y * (180F / (float) Math.PI)));
 
@@ -116,14 +113,6 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             float aq = -1.0F + k;
             float ar = length * 2.5F + aq;
             VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
-            /*
-            if (FabricLoader.getInstance().isModLoaded("frex")) {
-                vertexConsumer = ((FrexVertexConsumerProvider) vertexConsumerProvider).getConsumer(Renderer.get().materialFinder().emissive(true).texture(EXPLOSION_BEAM_TEXTURE).cutout(true).cull(false).transparency(0).find());
-            } else {
-                vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
-            }
-
-             */
 
             MatrixStack.Entry entry = matrices.peek();
             Matrix4f matrix4f = entry.getModel();

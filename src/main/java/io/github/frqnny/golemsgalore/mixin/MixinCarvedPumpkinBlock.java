@@ -1,7 +1,7 @@
 package io.github.frqnny.golemsgalore.mixin;
 
 import io.github.frqnny.golemsgalore.api.GolemSpawningUtil;
-import io.github.frqnny.golemsgalore.api.enums.Type;
+import io.github.frqnny.golemsgalore.api.Type;
 import io.github.frqnny.golemsgalore.entity.*;
 import io.github.frqnny.golemsgalore.init.ModEntities;
 import io.github.frqnny.golemsgalore.init.ModItems;

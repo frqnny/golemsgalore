@@ -3,6 +3,7 @@ package io.github.frqnny.golemsgalore.entity.ai.ghastly;
 import net.minecraft.entity.ai.goal.IronGolemWanderAroundGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 
+//Uses move control instead of navigation
 public class IronGolemWanderAroundGoalFix extends IronGolemWanderAroundGoal {
     public IronGolemWanderAroundGoalFix(PathAwareEntity pathAwareEntity, double d) {
         super(pathAwareEntity, d);

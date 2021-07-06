@@ -21,7 +21,7 @@ public class GhastlyGolemEntityRenderer extends MobEntityRenderer<GhastlyGolemEn
 
     public GhastlyGolemEntityRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new GhastlyGolemEntityModel(ctx.getPart(GolemsGaloreClient.GHASTLY_GOLEM)), 0);
-        addFeature(new FeatureRenderer<GhastlyGolemEntity, GhastlyGolemEntityModel>(this) {
+        addFeature(new FeatureRenderer<>(this) {
             @Override
             public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, GhastlyGolemEntity golem, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
                 VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RENDER_LAYER);

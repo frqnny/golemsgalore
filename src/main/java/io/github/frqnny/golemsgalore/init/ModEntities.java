@@ -1,7 +1,7 @@
 package io.github.frqnny.golemsgalore.init;
 
 import io.github.frqnny.golemsgalore.GolemsGalore;
-import io.github.frqnny.golemsgalore.api.enums.Type;
+import io.github.frqnny.golemsgalore.api.Type;
 import io.github.frqnny.golemsgalore.config.GolemsGaloreConfig;
 import io.github.frqnny.golemsgalore.entity.*;
 import io.github.frqnny.golemsgalore.entity.projectile.PumpkinProjectileEntity;

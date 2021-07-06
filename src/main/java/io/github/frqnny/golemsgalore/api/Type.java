@@ -1,4 +1,4 @@
-package io.github.frqnny.golemsgalore.api.enums;
+package io.github.frqnny.golemsgalore.api;
 
 import com.google.common.collect.Sets;
 import io.github.frqnny.golemsgalore.GolemsGalore;

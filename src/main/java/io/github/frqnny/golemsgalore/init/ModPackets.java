@@ -11,9 +11,7 @@ import java.util.UUID;
 public class ModPackets {
     public static final Identifier PUMPKING_PROJECTILE_SPAWN = GolemsGalore.id("pumpkin_spawn");
 
-    public static void init() {
 
-    }
 
     public static void clientInit() {
         ClientPlayNetworking.registerGlobalReceiver(PUMPKING_PROJECTILE_SPAWN, (client, handler, buf, responseSender) -> {

@@ -1,7 +1,5 @@
 package io.github.frqnny.golemsgalore.entity;
 
-import io.github.frqnny.golemsgalore.entity.ai.GolemLookGoal;
-import io.github.frqnny.golemsgalore.entity.ai.TrackGolemTargetGoal;
 import io.github.frqnny.golemsgalore.entity.ai.ghastly.IronGolemWanderAroundGoalFix;
 import io.github.frqnny.golemsgalore.entity.ai.ghastly.PumpkingProjectileAttack;
 import io.github.frqnny.golemsgalore.entity.ai.ghastly.WanderAroundPOIGoalFix;
@@ -19,9 +17,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.passive.GolemEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -29,7 +26,7 @@ import net.minecraft.world.World;
 
 public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMob {
 
-    public GhastlyGolemEntity(EntityType<? extends GolemEntity> entityType, World world) {
+    public GhastlyGolemEntity(EntityType<? extends IronGolemEntity> entityType, World world) {
         super(entityType, world);
         moveControl = new GhostMoveControl(this);
     }
@@ -42,19 +39,14 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
         this.goalSelector.add(2, new WanderNearTargetGoalFix(this, 0.9D, 32.0F));
         this.goalSelector.add(2, new WanderAroundPOIGoalFix(this, 0.6D, false));
         this.goalSelector.add(4, new IronGolemWanderAroundGoalFix(this, 0.6D));
-        this.goalSelector.add(5, new GolemLookGoal(this));
+        this.goalSelector.add(5, new IronGolemLookGoal(this));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(1, new TrackGolemTargetGoal(this));
+        this.targetSelector.add(1, new TrackIronGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
         this.targetSelector.add(3, new FollowTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
         this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false, (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
         this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
-    }
-
-    @Override
-    protected Item getHealItem() {
-        return super.getHealItem();
     }
 
     @Override
@@ -73,11 +65,7 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
         //this.noClip = true;
         super.tick();
 
-        if (this.isAlive()) {
-            if (this.world.isClient) {
-
-            }
-        }
+        this.isAlive();
 
     }
 

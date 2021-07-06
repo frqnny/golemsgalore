@@ -31,7 +31,6 @@ public class GolemsGalore implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
         ModEntities.init();
         ModItems.init();
         ModBlocks.init();
@@ -39,8 +38,8 @@ public class GolemsGalore implements ModInitializer {
         ModSounds.init();
         StructurePoolAddCallback.EVENT.register(structurePool -> {
             if (structurePool.getStructurePool().getId().toString().contains("village/common/iron_golem")) {
-                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:variation_1").apply(StructurePool.Projection.RIGID), 4);
-                structurePool.addStructurePoolElement(StructurePoolElement.method_30425("golemsgalore:variation_2").apply(StructurePool.Projection.RIGID), 6);
+                structurePool.addStructurePoolElement(StructurePoolElement.ofLegacySingle("golemsgalore:variation_1").apply(StructurePool.Projection.RIGID), 4);
+                structurePool.addStructurePoolElement(StructurePoolElement.ofLegacySingle("golemsgalore:variation_2").apply(StructurePool.Projection.RIGID), 6);
 
             }
         });

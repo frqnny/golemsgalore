@@ -2,7 +2,7 @@ package io.github.frqnny.golemsgalore.mixin;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import io.github.frqnny.golemsgalore.api.enums.Type;
+import io.github.frqnny.golemsgalore.api.Type;
 import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import io.github.frqnny.golemsgalore.init.ModEntities;
 import net.minecraft.entity.EntityType;

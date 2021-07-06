@@ -46,15 +46,10 @@ public class GolemsGaloreClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(MOD_GOLEM, ModGolemEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(GHASTLY_GOLEM, GhastlyGolemEntityModel::getTexturedModelData);
 
-        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE).register(((atlasTexture, registry) -> {
-            registry.register(GolemsGalore.id("particle/laser_particle"));
-        }));
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE).register(((atlasTexture, registry) -> registry.register(GolemsGalore.id("particle/laser_particle"))));
 
         ParticleFactoryRegistry.getInstance().register(ModParticles.LASER, FlameParticle.Factory::new);
 
         ModPackets.clientInit();
-        //if (FabricLoader.getInstance().isModLoaded("frex")) {
-        //    Renderer.get().registerMaterial(GolemsGalore.id("laser_material"), Renderer.get().)
-        //}
     }
 }
