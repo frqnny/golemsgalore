@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModEntities {
+    public static final Map<Type, EntityType<ModGolemEntity>> typeMap = new HashMap<>(7);
+    public static final Map<Type, DefaultAttributeContainer.Builder> attributeContainerMap = new HashMap<>(7);
     public static EntityType<ModGolemEntity> DIAMOND_GOLEM;
     public static EntityType<ModGolemEntity> NETHERITE_GOLEM;
     public static EntityType<ModGolemEntity> GOLDEN_GOLEM;
@@ -27,17 +29,12 @@ public class ModEntities {
     public static EntityType<ModGolemEntity> OBSIDIAN_GOLEM;
     public static EntityType<ModGolemEntity> HAY_GOLEM;
     public static EntityType<ModGolemEntity> AMETHYST_GOLEM;
-
     public static EntityType<LaserGolemEntity> LASER_GOLEM;
     public static EntityType<DiamondLaserGolemEntity> DIAMOND_LASER_GOLEM;
     public static EntityType<ObamaPyramidGolemEntity> OBAMA_PRISM_GOLEM;
     public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
     public static EntityType<GhastlyGolemEntity> GHASTLY_GOLEM;
-
     public static EntityType<PumpkinProjectileEntity> PUMPKIN_PROJECTILE;
-
-    public static Map<Type, EntityType<ModGolemEntity>> typeMap = new HashMap<>(7);
-    public static Map<Type, DefaultAttributeContainer.Builder> attributeContainerMap = new HashMap<>(7);
 
     public static void init() {
         GolemsGaloreConfig config = GolemsGalore.getConfig();

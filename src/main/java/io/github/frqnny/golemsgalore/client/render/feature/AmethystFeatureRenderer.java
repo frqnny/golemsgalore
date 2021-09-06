@@ -23,11 +23,11 @@ public class AmethystFeatureRenderer<T extends ModGolemEntity, M extends ModGole
         super(c);
     }
 
-    private static void method_37314(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, boolean bl, BlockRenderManager blockRenderManager, BlockState blockState, int j, BakedModel bakedModel) {
+    private static void method_37314(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, boolean bl, BlockRenderManager blockRenderManager, int j, BakedModel bakedModel) {
         if (bl) {
-            blockRenderManager.getModelRenderer().render(matrixStack.peek(), vertexConsumerProvider.getBuffer(RenderLayer.getOutline(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)), blockState, bakedModel, 0.0F, 0.0F, 0.0F, i, j);
+            blockRenderManager.getModelRenderer().render(matrixStack.peek(), vertexConsumerProvider.getBuffer(RenderLayer.getOutline(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)), AmethystFeatureRenderer.state, bakedModel, 0.0F, 0.0F, 0.0F, i, j);
         } else {
-            blockRenderManager.renderBlockAsEntity(blockState, matrixStack, vertexConsumerProvider, i, j);
+            blockRenderManager.renderBlockAsEntity(AmethystFeatureRenderer.state, matrixStack, vertexConsumerProvider, i, j);
         }
 
     }
@@ -47,7 +47,7 @@ public class AmethystFeatureRenderer<T extends ModGolemEntity, M extends ModGole
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-78.0F));
             matrices.scale(-0.75F, -0.75F, 0.75F);
             matrices.translate(-0.5D, -0.5D, -0.5D);
-            AmethystFeatureRenderer.method_37314(matrices, vertexConsumers, light, bl, blockRenderManager, state, m, bakedModel);
+            AmethystFeatureRenderer.method_37314(matrices, vertexConsumers, light, bl, blockRenderManager, m, bakedModel);
             matrices.pop();
 
 
@@ -57,7 +57,7 @@ public class AmethystFeatureRenderer<T extends ModGolemEntity, M extends ModGole
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-78.0F));
             matrices.scale(-0.35F, -0.35F, 0.35F);
             matrices.translate(-0.5D, -0.5D, -0.5D);
-            AmethystFeatureRenderer.method_37314(matrices, vertexConsumers, light, bl, blockRenderManager, state, m, bakedModel);
+            AmethystFeatureRenderer.method_37314(matrices, vertexConsumers, light, bl, blockRenderManager, m, bakedModel);
             matrices.pop();
 
             matrices.push();
@@ -66,7 +66,7 @@ public class AmethystFeatureRenderer<T extends ModGolemEntity, M extends ModGole
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-78.0F));
             matrices.scale(-0.4F, -0.4F, 0.4F);
             matrices.translate(-0.5D, -0.5D, -0.5D);
-            AmethystFeatureRenderer.method_37314(matrices, vertexConsumers, light, bl, blockRenderManager, state, m, bakedModel);
+            AmethystFeatureRenderer.method_37314(matrices, vertexConsumers, light, bl, blockRenderManager, m, bakedModel);
             matrices.pop();
 
 
