@@ -31,7 +31,7 @@ public class WanderNearTargetGoalFix extends Goal {
         } else if (this.target.squaredDistanceTo(this.mob) > (double) (this.maxDistance * this.maxDistance)) {
             return false;
         } else {
-            Vec3d vec3d = NoPenaltyTargeting.find(this.mob, 16, 7, this.target.getPos());
+            Vec3d vec3d = NoPenaltyTargeting.find(this.mob, 16, 7);
             if (vec3d == null) {
                 return false;
             } else {

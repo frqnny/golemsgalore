@@ -1,7 +1,6 @@
 package io.github.frqnny.golemsgalore;
 
 import draylar.omegaconfig.OmegaConfig;
-import draylar.structurized.api.StructurePoolAddCallback;
 import io.github.frqnny.golemsgalore.config.GolemsGaloreConfig;
 import io.github.frqnny.golemsgalore.init.*;
 import net.fabricmc.api.ModInitializer;
@@ -36,6 +35,7 @@ public class GolemsGalore implements ModInitializer {
         ModBlocks.init();
         ModParticles.register();
         ModSounds.init();
+        /*
         StructurePoolAddCallback.EVENT.register(structurePool -> {
             if (structurePool.getStructurePool().getId().toString().contains("village/common/iron_golem")) {
                 structurePool.addStructurePoolElement(StructurePoolElement.ofLegacySingle("golemsgalore:variation_1").apply(StructurePool.Projection.RIGID), 4);
@@ -43,6 +43,7 @@ public class GolemsGalore implements ModInitializer {
 
             }
         });
+         */
         TradeOfferHelper.registerWanderingTraderOffers(1, factories -> factories.add(((entity, random) -> new TradeOffers.SellItemFactory(ModItems.GOLEM_SOUL, 1, 1, 5, 2).create(entity, random))));
 
     }

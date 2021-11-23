@@ -115,8 +115,8 @@ public class LaserGolemEntityRenderer extends MobEntityRenderer<LaserGolemEntity
             VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(LAYER);
 
             MatrixStack.Entry entry = matrices.peek();
-            Matrix4f matrix4f = entry.getModel();
-            Matrix3f matrix3f = entry.getNormal();
+            Matrix4f matrix4f = entry.getPositionMatrix();
+            Matrix3f matrix3f = entry.getNormalMatrix();
 
             vertexLaser(vertexConsumer, matrix4f, matrix3f, af, length, ag, 0.4999F, ar);
             vertexLaser(vertexConsumer, matrix4f, matrix3f, af, 0.0F, ag, 0.4999F, aq);

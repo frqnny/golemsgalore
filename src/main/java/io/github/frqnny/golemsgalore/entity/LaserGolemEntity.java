@@ -46,8 +46,8 @@ public class LaserGolemEntity extends ModGolemEntity {
         this.goalSelector.add(8, new LookAroundGoal(this));
         this.targetSelector.add(1, new TrackIronGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
-        this.targetSelector.add(3, new FollowTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
-        this.targetSelector.add(3, new FollowTargetGoal<>(this, MobEntity.class, 5, false, false, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
+        this.targetSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
+        this.targetSelector.add(3, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, (entity) -> entity instanceof Monster && !(entity instanceof CreeperEntity)));
         this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 
