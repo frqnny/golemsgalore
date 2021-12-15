@@ -59,7 +59,6 @@ public class ObamaPyramidGolemEntityRenderer extends EntityRenderer<LaserGolemEn
                 float o = (float) Math.atan2(vec3d3.z, vec3d3.x);
                 float angle = (((float) Math.PI / 2F) - o) * (180F / (float) Math.PI) + 90;
                 matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(angle));
-                //matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(n * (180F / (float) Math.PI)));
             } else {
                 matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion((golem.world.getTime() + tickDelta) * 4));
 
