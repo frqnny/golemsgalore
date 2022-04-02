@@ -56,7 +56,7 @@ public class FireLaserGoal extends Goal {
                     this.golem.world.sendEntityStatus(this.golem, (byte) 4);
 
                     if (GolemsGalore.getConfig().playLaserSound) {
-                        this.golem.playSound(ModSounds.LASER, 0.5F, 5.0F + golem.getRandom().nextFloat());
+                        this.golem.playSound(ModSounds.LASER, 0.7F, 5.0F + golem.getRandom().nextFloat());
 
                     }
 
