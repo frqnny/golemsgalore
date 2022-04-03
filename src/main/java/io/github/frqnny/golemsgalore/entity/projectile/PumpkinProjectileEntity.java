@@ -3,7 +3,6 @@ package io.github.frqnny.golemsgalore.entity.projectile;
 import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import io.github.frqnny.golemsgalore.init.ModEntities;
-import io.github.frqnny.golemsgalore.init.ModPackets;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,6 +24,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -41,6 +41,8 @@ import java.util.function.Predicate;
 //TODO Request owner for more targets
 //TODO Keep adjusting
 public class PumpkinProjectileEntity extends ProjectileEntity {
+    //Identifier moved to PumpkinProjectileEntity for safety
+    public static final Identifier PUMPKING_PROJECTILE_SPAWN = GolemsGalore.id("pumpkin_spawn");
     protected static final TrackedData<Boolean> IS_SPAWNING = DataTracker.registerData(PumpkinProjectileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     protected int spawningTicks = 20;
     protected Entity target;
@@ -280,7 +282,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         buf.writeDouble(this.getVelocity().y);
         buf.writeDouble(this.getVelocity().z);
         buf.writeUuid(this.targetUuid);
-        return ServerPlayNetworking.createS2CPacket(ModPackets.PUMPKING_PROJECTILE_SPAWN, buf);
+        return ServerPlayNetworking.createS2CPacket(PUMPKING_PROJECTILE_SPAWN, buf);
     }
 
     @Override

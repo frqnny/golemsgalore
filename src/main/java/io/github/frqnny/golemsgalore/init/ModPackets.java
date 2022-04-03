@@ -1,19 +1,16 @@
 package io.github.frqnny.golemsgalore.init;
 
-import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.entity.projectile.PumpkinProjectileEntity;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
 public class ModPackets {
-    public static final Identifier PUMPKING_PROJECTILE_SPAWN = GolemsGalore.id("pumpkin_spawn");
 
 
     public static void clientInit() {
-        ClientPlayNetworking.registerGlobalReceiver(PUMPKING_PROJECTILE_SPAWN, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(PumpkinProjectileEntity.PUMPKING_PROJECTILE_SPAWN, (client, handler, buf, responseSender) -> {
             final ClientWorld world = client.world;
             int id = buf.readVarInt();
             UUID uuid = buf.readUuid();
