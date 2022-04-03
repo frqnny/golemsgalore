@@ -1,28 +1,28 @@
 package io.github.frqnny.golemsgalore.entity;
 
-import io.github.frqnny.golemsgalore.entity.ai.ghastly.IronGolemWanderAroundGoalFix;
+import io.github.frqnny.golemsgalore.entity.ai.ghastly.FlyAroundPOIGoal;
+import io.github.frqnny.golemsgalore.entity.ai.ghastly.GhastlyGolemFlyAroundGoal;
 import io.github.frqnny.golemsgalore.entity.ai.ghastly.PumpkingProjectileAttack;
-import io.github.frqnny.golemsgalore.entity.ai.ghastly.WanderAroundPOIGoalFix;
-import io.github.frqnny.golemsgalore.entity.ai.ghastly.WanderNearTargetGoalFix;
+import io.github.frqnny.golemsgalore.entity.ai.ghastly.TrackGhastlyGolemTargetGoal;
 import io.github.frqnny.golemsgalore.entity.projectile.PumpkinProjectileEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.PathNodeMaker;
-import net.minecraft.entity.ai.pathing.PathNodeType;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
+
+import java.util.EnumSet;
 
 public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMob {
 
@@ -34,15 +34,15 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
     @Override
     protected void initGoals() {
         this.goalSelector.add(1, new PumpkingProjectileAttack<>(this));
-        //this.goalSelector.add(1, new ProjectileAttackGoal(0.2, ));
-        //this.goalSelector.add(2, new FlyRandomlyGoal());
-        this.goalSelector.add(2, new WanderNearTargetGoalFix(this, 0.9D, 32.0F));
-        this.goalSelector.add(2, new WanderAroundPOIGoalFix(this, 0.6D, false));
-        this.goalSelector.add(4, new IronGolemWanderAroundGoalFix(this, 0.6D));
-        this.goalSelector.add(5, new IronGolemLookGoal(this));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(1, new TrackIronGolemTargetGoal(this));
+        this.goalSelector.add(2, new GhastlyGolemEntity.LookAtTargetGoal());
+
+        this.goalSelector.add(3, new FlyAroundPOIGoal(this, 0.6D, false));
+        this.goalSelector.add(5, new GhastlyGolemFlyAroundGoal(this, 0.6D));
+
+
+        this.goalSelector.add(9, new IronGolemLookGoal(this));
+
+        this.targetSelector.add(1, new TrackGhastlyGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
         this.targetSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
         this.targetSelector.add(3, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity)));
@@ -61,11 +61,12 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
 
     @Override
     public void tick() {
-        this.setNoGravity(true);
         //this.noClip = true;
         super.tick();
+        //this.goalSelector.getRunningGoals().forEach((goalOptional) -> System.out.println(goalOptional.getGoal()));
 
-        this.isAlive();
+        this.setNoGravity(true);
+
 
     }
 
@@ -75,70 +76,72 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
 
     }
 
-    private static class GhostMoveControl extends MoveControl {
+    private class GhostMoveControl extends MoveControl {
         public GhostMoveControl(MobEntity entity) {
             super(entity);
         }
 
         @Override
         public void tick() {
-            if (state == MoveControl.State.MOVE_TO) {
-                Vec3d vec3d = new Vec3d(this.targetX - entity.getX(), this.targetY - entity.getY(), this.targetZ - entity.getZ());
+            if (this.state == State.MOVE_TO) {
+                Vec3d vec3d = new Vec3d(this.targetX - GhastlyGolemEntity.this.getX(), this.targetY - GhastlyGolemEntity.this.getY(), this.targetZ - GhastlyGolemEntity.this.getZ());
                 double d = vec3d.length();
-                if (d < entity.getBoundingBox().getAverageSideLength()) {
-                    this.state = MoveControl.State.WAIT;
-                    entity.setVelocity(entity.getVelocity().multiply(0.5D));
+                //quickly get out of the way
+                if (d < GhastlyGolemEntity.this.getBoundingBox().getAverageSideLength()) {
+                    this.state = State.WAIT;
+                    GhastlyGolemEntity.this.setVelocity(GhastlyGolemEntity.this.getVelocity().multiply(0.5D));
                 } else {
-                    entity.setVelocity(entity.getVelocity().add(vec3d.multiply(this.speed * 0.05D / d)));
-                    if (entity.getTarget() == null) {
-                        Vec3d vec3d2 = entity.getVelocity();
-                        entity.setYaw(-((float) MathHelper.atan2(vec3d2.x, vec3d2.z)) * 57.295776F);
+                    GhastlyGolemEntity.this.setVelocity(GhastlyGolemEntity.this.getVelocity().add(vec3d.multiply(this.speed * 0.07D / d)));
+                    if (GhastlyGolemEntity.this.getTarget() == null) {
+                        Vec3d velocity = GhastlyGolemEntity.this.getVelocity();
+                        GhastlyGolemEntity.this.setYaw(-((float) MathHelper.atan2(velocity.x, velocity.z)) * 57.295776F);
+
+                        int topY = GhastlyGolemEntity.this.getWorld().getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GhastlyGolemEntity.this.getBlockX(), GhastlyGolemEntity.this.getBlockZ());
+                        int entityY = GhastlyGolemEntity.this.getBlockY();
+                        if (entityY - topY > 7) {
+                            GhastlyGolemEntity.this.setVelocity(GhastlyGolemEntity.this.getVelocity().add(new Vec3d(0, -0.1, 0)));
+                        }
                     } else {
-                        double e = entity.getTarget().getX() - entity.getX();
-                        double f = entity.getTarget().getZ() - entity.getZ();
-                        entity.setYaw(-((float) MathHelper.atan2(e, f)) * 57.295776F);
+                        double e = GhastlyGolemEntity.this.getTarget().getX() - GhastlyGolemEntity.this.getX();
+                        double f = GhastlyGolemEntity.this.getTarget().getZ() - GhastlyGolemEntity.this.getZ();
+                        GhastlyGolemEntity.this.setYaw(-((float) MathHelper.atan2(e, f)) * 57.295776F);
                     }
-                    entity.bodyYaw = entity.getYaw();
+                    GhastlyGolemEntity.this.bodyYaw = GhastlyGolemEntity.this.getYaw();
                 }
 
-            } else if (this.state == MoveControl.State.STRAFE) {
-                float q;
-                float f = (float) this.entity.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-                float g = (float) this.speed * f;
-                float h = this.forwardMovement;
-                float i = this.sidewaysMovement;
-                float j = MathHelper.sqrt(h * h + i * i);
-                if (j < 1.0F) {
-                    j = 1.0F;
-                }
-
-                j = g / j;
-                h *= j;
-                i *= j;
-                float k = MathHelper.sin(this.entity.getYaw() * 0.017453292F);
-                float l = MathHelper.cos(this.entity.getYaw() * 0.017453292F);
-                float m = h * l - i * k;
-                q = i * l + h * k;
-                if (!this.method_25946(m, q)) {
-                    this.forwardMovement = 1.0F;
-                    this.sidewaysMovement = 0.0F;
-                }
-
-                this.entity.setMovementSpeed(g);
-                this.entity.setForwardSpeed(this.forwardMovement);
-                this.entity.setSidewaysSpeed(this.sidewaysMovement);
-                this.state = MoveControl.State.WAIT;
             }
         }
 
-        private boolean method_25946(float f, float g) {
-            EntityNavigation entityNavigation = this.entity.getNavigation();
-            if (entityNavigation != null) {
-                PathNodeMaker pathNodeMaker = entityNavigation.getNodeMaker();
-                return pathNodeMaker == null || pathNodeMaker.getDefaultNodeType(this.entity.world, MathHelper.floor(this.entity.getX() + (double) f), MathHelper.floor(this.entity.getY()), MathHelper.floor(this.entity.getZ() + (double) g)) == PathNodeType.WALKABLE;
+
+    }
+
+    private class LookAtTargetGoal extends Goal {
+        public LookAtTargetGoal() {
+            this.setControls(EnumSet.of(Control.MOVE));
+        }
+
+        public boolean canStart() {
+            return !GhastlyGolemEntity.this.getMoveControl().isMoving() && GhastlyGolemEntity.this.random.nextInt(toGoalTicks(7)) == 0;
+        }
+
+        public boolean shouldContinue() {
+            return false;
+        }
+
+        public void tick() {
+            BlockPos blockPos = GhastlyGolemEntity.this.getBlockPos();
+
+            for (int i = 0; i < 3; ++i) {
+                BlockPos blockPos2 = blockPos.add(GhastlyGolemEntity.this.random.nextInt(15) - 7, GhastlyGolemEntity.this.random.nextInt(11) - 5, GhastlyGolemEntity.this.random.nextInt(15) - 7);
+                if (GhastlyGolemEntity.this.world.isAir(blockPos2)) {
+                    GhastlyGolemEntity.this.moveControl.moveTo((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.5D, (double) blockPos2.getZ() + 0.5D, 0.25D);
+                    if (GhastlyGolemEntity.this.getTarget() == null) {
+                        GhastlyGolemEntity.this.getLookControl().lookAt((double) blockPos2.getX() + 0.5D, (double) blockPos2.getY() + 0.5D, (double) blockPos2.getZ() + 0.5D, 180.0F, 20.0F);
+                    }
+                    break;
+                }
             }
 
-            return true;
         }
     }
 }

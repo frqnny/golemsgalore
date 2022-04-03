@@ -2,7 +2,6 @@ package io.github.frqnny.golemsgalore.init;
 
 import io.github.frqnny.golemsgalore.GolemsGalore;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.sound.BlockSoundGroup;

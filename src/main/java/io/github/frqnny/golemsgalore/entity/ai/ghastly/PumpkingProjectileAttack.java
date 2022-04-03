@@ -42,7 +42,7 @@ public class PumpkingProjectileAttack<T extends GhastlyGolemEntity & RangedAttac
             lookControl.lookAt(livingEntity, 90F, 90F);
             if (counter <= 0) {
                 ((RangedAttackMob) actor).attack(livingEntity, 0);
-                this.counter = 40;
+                this.counter = 15;
             } else {
                 counter--;
             }

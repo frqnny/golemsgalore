@@ -3,8 +3,8 @@ package io.github.frqnny.golemsgalore.entity.ai.ghastly;
 import net.minecraft.entity.ai.goal.WanderAroundPointOfInterestGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 
-public class WanderAroundPOIGoalFix extends WanderAroundPointOfInterestGoal {
-    public WanderAroundPOIGoalFix(PathAwareEntity pathAwareEntity, double d, boolean bl) {
+public class FlyAroundPOIGoal extends WanderAroundPointOfInterestGoal {
+    public FlyAroundPOIGoal(PathAwareEntity pathAwareEntity, double d, boolean bl) {
         super(pathAwareEntity, d, bl);
     }
 

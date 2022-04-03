@@ -4,8 +4,8 @@ import net.minecraft.entity.ai.goal.IronGolemWanderAroundGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 
 //Uses move control instead of navigation
-public class IronGolemWanderAroundGoalFix extends IronGolemWanderAroundGoal {
-    public IronGolemWanderAroundGoalFix(PathAwareEntity pathAwareEntity, double d) {
+public class GhastlyGolemFlyAroundGoal extends IronGolemWanderAroundGoal {
+    public GhastlyGolemFlyAroundGoal(PathAwareEntity pathAwareEntity, double d) {
         super(pathAwareEntity, d);
     }
 

@@ -1,6 +1,6 @@
 package io.github.frqnny.golemsgalore.entity.projectile;
 
-import com.google.common.collect.Lists;
+import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import io.github.frqnny.golemsgalore.init.ModEntities;
 import io.github.frqnny.golemsgalore.init.ModPackets;
 import io.netty.buffer.Unpooled;
@@ -14,6 +14,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -30,12 +31,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
+//TODO Request owner for more targets
+//TODO Keep adjusting
 public class PumpkinProjectileEntity extends ProjectileEntity {
     protected static final TrackedData<Boolean> IS_SPAWNING = DataTracker.registerData(PumpkinProjectileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     protected int spawningTicks = 20;
@@ -44,7 +47,6 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
     private double targetX;
     private double targetY;
     private double targetZ;
-    private Direction direction;
     private int stepCount;
 
 
@@ -72,21 +74,35 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         this.updateTrackedPosition(d, e, f);
         this.target = target;
         this.targetUuid = target.getUuid();
-        this.direction = Direction.UP;
-        this.refreshDirection(direction.getAxis());
     }
 
+    public static HitResult getCollision(Entity entity, Predicate<Entity> predicate) {
+        Vec3d vec3d = entity.getVelocity();
+        World world = entity.world;
+        Vec3d vec3d2 = entity.getPos();
+        Vec3d vec3d3 = vec3d2.add(vec3d);
+        HitResult hitResult = world.raycast(new RaycastContext(vec3d2, vec3d3, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity));
+        if (hitResult.getType() != HitResult.Type.MISS) {
+            vec3d3 = hitResult.getPos();
+        }
+
+        HitResult hitResult2 = ProjectileUtil.getEntityCollision(world, entity, vec3d2, vec3d3, entity.getBoundingBox().stretch(entity.getVelocity()).expand(1.7D), predicate);
+        if (hitResult2 != null) {
+            hitResult = hitResult2;
+        }
+
+        return hitResult;
+    }
 
     @Override
     protected void initDataTracker() {
         this.dataTracker.startTracking(IS_SPAWNING, true);
     }
 
-
     @Override
     public void tick() {
         super.tick();
-        Vec3d vec3d;
+        Vec3d velocity;
         if (!this.world.isClient) {
             if (this.target == null && this.targetUuid != null) {
                 this.target = ((ServerWorld) this.world).getEntity(this.targetUuid);
@@ -103,143 +119,107 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
                 this.targetX = MathHelper.clamp(this.targetX * 1.025D, -1.0D, 1.0D);
                 this.targetY = MathHelper.clamp(this.targetY * 1.025D, -1.0D, 1.0D);
                 this.targetZ = MathHelper.clamp(this.targetZ * 1.025D, -1.0D, 1.0D);
-                vec3d = this.getVelocity();
-                this.setVelocity(vec3d.add((this.targetX - vec3d.x) * 0.2D, (this.targetY - vec3d.y) * 0.2D, (this.targetZ - vec3d.z) * 0.2D));
+                velocity = this.getVelocity();
+                this.setVelocity(velocity.add((this.targetX - velocity.x) * 0.01D, (this.targetY - velocity.y) * 0.01D, (this.targetZ - velocity.z) * 0.01D));
             }
 
-            HitResult hitResult = ProjectileUtil.getCollision(this, this::canHit);
+            HitResult hitResult = getCollision(this, this::canHit);
             if (hitResult.getType() != HitResult.Type.MISS) {
                 this.onCollision(hitResult);
             }
         }
 
         this.checkBlockCollision();
-        vec3d = this.getVelocity();
-        this.updatePosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
+        velocity = this.getVelocity();
+        this.updatePosition(this.getX() + velocity.x, this.getY() + velocity.y, this.getZ() + velocity.z);
         ProjectileUtil.setRotationFromVelocity(this, 0.5F);
         if (this.world.isClient) {
-            this.world.addParticle(ParticleTypes.END_ROD, this.getX() - vec3d.x, this.getY() - vec3d.y + 0.15D, this.getZ() - vec3d.z, 0.0D, 0.0D, 0.0D);
+            this.world.addParticle(ParticleTypes.WITCH, this.getX() - velocity.x, this.getY() - velocity.y + 0.15D, this.getZ() - velocity.z, 0.0D, 0.0D, 0.0D);
         } else if (this.target != null && this.target.isAlive()) {
-            if (this.stepCount > 0) {
+            if (this.stepCount >= 0) {
                 --this.stepCount;
-                if (this.stepCount == 0) {
-                    this.refreshDirection(this.direction == null ? null : this.direction.getAxis());
+                if (this.stepCount < 0) {
+                    this.refreshDirection();
                 }
             }
 
-            if (this.direction != null) {
+            if (this.target != null) {
                 BlockPos blockPos = this.getBlockPos();
-                Direction.Axis axis = this.direction.getAxis();
-                if (this.world.isTopSolid(blockPos.offset(this.direction), this)) {
-                    this.refreshDirection(axis);
-                } else {
-                    BlockPos blockPos2 = this.target.getBlockPos();
-                    if (axis == Direction.Axis.X && blockPos.getX() == blockPos2.getX() || axis == Direction.Axis.Z && blockPos.getZ() == blockPos2.getZ() || axis == Direction.Axis.Y && blockPos.getY() == blockPos2.getY()) {
-                        this.refreshDirection(axis);
-                    }
+
+                boolean topSolidX = this.world.isTopSolid(blockPos.offset(Direction.getLookDirectionForAxis(this, Direction.Axis.X)), this);
+                boolean topSolidZ = this.world.isTopSolid(blockPos.offset(Direction.getLookDirectionForAxis(this, Direction.Axis.Z)), this);
+
+                if (topSolidX && topSolidZ) {
+                    this.refreshDirection();
                 }
             }
         }
 
     }
 
-    private void refreshDirection(@Nullable Direction.Axis axis) {
+    private void refreshDirection() {
         double d = 0.5D;
-        BlockPos blockPos2;
+        BlockPos targetPos;
         if (this.target == null) {
-            blockPos2 = this.getBlockPos().down();
+            targetPos = this.getBlockPos().down();
         } else {
             d = (double) this.target.getHeight() * 0.5D;
-            blockPos2 = new BlockPos(this.target.getX(), this.target.getY() + d, this.target.getZ());
+            targetPos = new BlockPos(this.target.getX(), this.target.getY() + d, this.target.getZ());
         }
 
-        double e = (double) blockPos2.getX() + 0.5D;
-        double f = (double) blockPos2.getY() + d;
-        double g = (double) blockPos2.getZ() + 0.5D;
-        Direction direction = null;
-        if (!blockPos2.isWithinDistance(this.getPos(), 2.0D)) {
-            BlockPos blockPos3 = this.getBlockPos();
-            List<Direction> list = Lists.newArrayList();
-            if (axis != Direction.Axis.X) {
-                if (blockPos3.getX() < blockPos2.getX() && this.world.isAir(blockPos3.east())) {
-                    list.add(Direction.EAST);
-                } else if (blockPos3.getX() > blockPos2.getX() && this.world.isAir(blockPos3.west())) {
-                    list.add(Direction.WEST);
-                }
-            }
+        double adjustedX = (double) targetPos.getX() + 0.5D;
+        double adjustedY = (double) targetPos.getY() + d;
+        double adjustedZ = (double) targetPos.getZ() + 0.5D;
 
-            if (axis != Direction.Axis.Y) {
-                if (blockPos3.getY() < blockPos2.getY() && this.world.isAir(blockPos3.up())) {
-                    list.add(Direction.UP);
-                } else if (blockPos3.getY() > blockPos2.getY() && this.world.isAir(blockPos3.down())) {
-                    list.add(Direction.DOWN);
-                }
-            }
 
-            if (axis != Direction.Axis.Z) {
-                if (blockPos3.getZ() < blockPos2.getZ() && this.world.isAir(blockPos3.south())) {
-                    list.add(Direction.SOUTH);
-                } else if (blockPos3.getZ() > blockPos2.getZ() && this.world.isAir(blockPos3.north())) {
-                    list.add(Direction.NORTH);
-                }
-            }
-
-            direction = Direction.random(this.random);
-            if (list.isEmpty()) {
-                for (int i = 5; !this.world.isAir(blockPos3.offset(direction)) && i > 0; --i) {
-                    direction = Direction.random(this.random);
-                }
-            } else {
-                direction = list.get(this.random.nextInt(list.size()));
-            }
-
-            e = this.getX() + (double) direction.getOffsetX();
-            f = this.getY() + (double) direction.getOffsetY();
-            g = this.getZ() + (double) direction.getOffsetZ();
-        }
-
-        this.direction = (direction);
-        double h = e - this.getX();
-        double j = f - this.getY();
-        double k = g - this.getZ();
-        double l = MathHelper.sqrt((float) (h * h + j * j + k * k));
-        if (l == 0.0D) {
+        //3D Distance Calculations
+        double distanceX = adjustedX - this.getX();
+        double distanceY = adjustedY - this.getY();
+        double distanceZ = adjustedZ - this.getZ();
+        double totalDistance = MathHelper.sqrt((float) (distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ));
+        if (totalDistance == 0.0D) {
             this.targetX = 0.0D;
             this.targetY = 0.0D;
             this.targetZ = 0.0D;
         } else {
-            this.targetX = h / l * 0.15D;
-            this.targetY = j / l * 0.15D;
-            this.targetZ = k / l * 0.15D;
+            float angle = (float) MathHelper.atan2(distanceZ, distanceX);
+            this.targetX = totalDistance * MathHelper.cos(angle) * 0.15D;
+            this.targetY = distanceY / totalDistance;
+            this.targetZ = totalDistance * MathHelper.sin(angle) * 0.15D;
         }
 
         this.velocityDirty = true;
-        this.stepCount = 10 + this.random.nextInt(5) * 10;
+        this.stepCount = this.random.nextInt(5);
     }
 
     @Override
     protected void onCollision(HitResult hitResult) {
         super.onCollision(hitResult);
-        this.remove(RemovalReason.DISCARDED);
+        //this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
         super.onBlockHit(blockHitResult);
-        ((ServerWorld) this.world).spawnParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY(), this.getZ(), 2, 0.2D, 0.2D, 0.2D, 0.0D);
-        this.remove(RemovalReason.DISCARDED);
+        ((ServerWorld) this.world).spawnParticles(ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(), 2, 0.2D, 0.2D, 0.2D, 0.0D);
+        //this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
         Entity entity = entityHitResult.getEntity();
-        Entity entity2 = this.getOwner();
-        LivingEntity livingEntity = entity2 instanceof LivingEntity ? (LivingEntity) entity2 : null;
-        boolean bl = entity.damage(DamageSource.mobProjectile(this, livingEntity).setProjectile(), 4.0F);
-        if (bl) {
-            this.applyDamageEffects(livingEntity, entity);
-            this.remove(RemovalReason.DISCARDED);
+        Entity owner = this.getOwner();
+        LivingEntity livingEntity = owner instanceof LivingEntity ? (LivingEntity) owner : null;
+
+        if (entity instanceof ModGolemEntity golem) {
+            golem.heal(1);
+        } else if (entity instanceof HostileEntity) {
+            boolean bl = entity.damage(DamageSource.mobProjectile(this, livingEntity).setProjectile(), 15.0F);
+            if (bl) {
+                this.applyDamageEffects(livingEntity, entity);
+                this.remove(RemovalReason.DISCARDED);
+            }
         }
     }
 

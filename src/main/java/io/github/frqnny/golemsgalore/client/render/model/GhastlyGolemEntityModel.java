@@ -52,7 +52,7 @@ public class GhastlyGolemEntityModel extends SinglePartEntityModel<GhastlyGolemE
         modelPartData.addChild("r1",
                 ModelPartBuilder.create()
                         .uv(47, 0)
-                        .cuboid(5.0F, 13.0F, 4.0F, 10.0F, 4.0F, 7.0F),
+                        .cuboid(-5.0F, 13.0F, 4.0F, 10.0F, 4.0F, 7.0F),
                 ModelTransform.pivot(0.0F, 0.0F, 0.0F));
         modelPartData.addChild("r2",
                 ModelPartBuilder.create()
