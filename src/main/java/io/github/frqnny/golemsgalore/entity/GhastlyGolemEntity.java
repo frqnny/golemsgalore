@@ -16,6 +16,8 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -46,7 +48,7 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
         this.targetSelector.add(1, new TrackGhastlyGolemTargetGoal(this));
         this.targetSelector.add(2, new RevengeGoal(this));
         this.targetSelector.add(3, new ActiveTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAngerAt));
-        this.targetSelector.add(3, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity )  && !(livingEntity instanceof EndermanEntity)));
+        this.targetSelector.add(3, new ActiveTargetGoal<>(this, MobEntity.class, 5, false, false, (livingEntity) -> livingEntity instanceof Monster && !(livingEntity instanceof CreeperEntity) && !(livingEntity instanceof EndermanEntity)));
         this.targetSelector.add(4, new UniversalAngerGoal<>(this, false));
     }
 
@@ -74,7 +76,11 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
     @Override
     public void attack(LivingEntity target, float pullProgress) {
         this.world.spawnEntity(new PumpkinProjectileEntity(this.world, this, this.getTarget()));
+    }
 
+    @Override
+    protected Item getHealItem() {
+        return Items.PUMPKIN;
     }
 
     private class GhostMoveControl extends MoveControl {

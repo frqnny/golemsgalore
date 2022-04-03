@@ -1,5 +1,6 @@
 package io.github.frqnny.golemsgalore.mixin;
 
+import io.github.frqnny.golemsgalore.entity.GhastlyGolemEntity;
 import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
@@ -25,7 +26,7 @@ public class MixinMobEntity {
     @Inject(method = "<init>", at = @At("TAIL"))
     protected void addGolemsToTarget(EntityType<? extends MobEntity> entityType, World world, CallbackInfo info) {
         if (this instanceof Monster && !(((MobEntity) (Object) this) instanceof CreeperEntity)) {
-            this.targetSelector.add(3, new ActiveTargetGoal<>(((MobEntity) (Object) this), ModGolemEntity.class, true));
+            this.targetSelector.add(3, new ActiveTargetGoal<>(((MobEntity) (Object) this), ModGolemEntity.class, true, (entity -> !(entity instanceof GhastlyGolemEntity))));
         }
     }
 }
