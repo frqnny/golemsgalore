@@ -13,5 +13,8 @@
   "entity.golemsgalore.anti_creeper_golem": "Anti-Creeper Golem",
   "entity.golemsgalore.diamond_laser_golem": "Diamond Laser Golem",
   "entity.golemsgalore.obama_prism_golem": "Obamium Golem",
-  "itemGroup.golemsgalore.item_group": "Golems Galore"
+  "entity.golemsgalore.ghastly_golem": "Ghastly Golem",
+  "entity.golemsgalore.pumpkin_projectile": "Pumpkin Projectile",
+  "itemGroup.golemsgalore.item_group": "Golems Galore",
+  "message.golemsgalore.ghastly": "Ghastly Golems like to run around, so you might want to leash him."
 }

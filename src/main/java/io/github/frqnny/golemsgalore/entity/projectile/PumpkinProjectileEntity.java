@@ -1,5 +1,6 @@
 package io.github.frqnny.golemsgalore.entity.projectile;
 
+import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.entity.ModGolemEntity;
 import io.github.frqnny.golemsgalore.init.ModEntities;
 import io.github.frqnny.golemsgalore.init.ModPackets;
@@ -215,7 +216,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         if (entity instanceof ModGolemEntity golem) {
             golem.heal(1);
         } else if (entity instanceof HostileEntity) {
-            boolean bl = entity.damage(DamageSource.mobProjectile(this, livingEntity).setProjectile(), 15.0F);
+            boolean bl = entity.damage(DamageSource.mobProjectile(this, livingEntity).setProjectile(), (float) GolemsGalore.getConfig().attackDamageGhostly);
             if (bl) {
                 this.applyDamageEffects(livingEntity, entity);
                 this.remove(RemovalReason.DISCARDED);

@@ -15,6 +15,7 @@ import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.function.MaterialPredicate;
@@ -188,6 +189,9 @@ public class GolemSpawningUtil {
                 GhastlyGolemEntity golem = ModEntities.GHASTLY_GOLEM.create(world);
                 GolemSpawningUtil.spawnGolem(world, player, hand, ghastly, golem);
 
+                if (world.isClient) {
+                    player.sendMessage(new TranslatableText("message.golemsgalore.ghastly"), false);
+                }
                 return ActionResult.CONSUME;
             }
         }
