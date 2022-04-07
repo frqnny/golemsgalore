@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "golemsgalore",
-  "version": "1.2.1+1.18.2",
+  "version": "1.2.1+22w14a",
   "name": "Golems Galore",
   "description": "Adds many more golems that help you protect places in interesting ways!",
   "authors": [
@@ -25,7 +25,7 @@
   },
   "accessWidener": "golemsgalore.accesswidener",
   "depends": {
-    "minecraft": "1.18.x"
+    "minecraft": "1.19.x"
   },
   "mixins": [
     "golemsgalore.mixins.json"

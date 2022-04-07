@@ -31,7 +31,7 @@ dependencies {
 
 }
 repositories {
-
+	mavenLocal()
 	maven { url 'https://jitpack.io' }
 	maven {
 		name = "OnyxStudios"
