@@ -1,0 +1,22 @@
+{
+  "item.golemsgalore.golem_soul":"Душа голема",
+  "item.golemsgalore.obamium_ingot":"Обамиевый слиток",
+  "block.golemsgalore.obamium_block":"Обамиевый блок",
+
+  "entity.golemsgalore.diamond_golem":"Алмазный голем",
+  "entity.golemsgalore.netherite_golem":"Незеритовый голем",
+  "entity.golemsgalore.golden_golem":"Золотой голем",
+  "entity.golemsgalore.quartz_golem":"Кварцевый голем",
+  "entity.golemsgalore.obsidian_golem":"Обсидиановый голем",
+  "entity.golemsgalore.hay_golem":"Сенной голем",
+  "entity.golemsgalore.amethyst_golem":"Аметистовый голем",
+  "entity.golemsgalore.laser_golem":"Лазерный голем",
+  "entity.golemsgalore.anti_creeper_golem":"Противо-криперовый голем",
+  "entity.golemsgalore.diamond_laser_golem":"Алмазный лазерный голем",
+  "entity.golemsgalore.obama_prism_golem":"Обамиевый голем",
+  "entity.golemsgalore.ghastly_golem":"Ужасный голем",
+  "entity.golemsgalore.pumpkin_projectile":"Тыквенный снаряд",
+
+  "itemGroup.golemsgalore.item_group":"Golems Galore",
+  "message.golemsgalore.ghastly":"Ужасные големы любят бегать вокруг, так что вы можете привязать его на поводок."
+}

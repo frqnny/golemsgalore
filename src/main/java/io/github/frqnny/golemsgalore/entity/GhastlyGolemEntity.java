@@ -42,7 +42,6 @@ public class GhastlyGolemEntity extends ModGolemEntity implements RangedAttackMo
         this.goalSelector.add(3, new FlyAroundPOIGoal(this, 0.6D, false));
         this.goalSelector.add(5, new GhastlyGolemFlyAroundGoal(this, 0.6D));
 
-
         this.goalSelector.add(9, new IronGolemLookGoal(this));
 
         this.targetSelector.add(1, new TrackGhastlyGolemTargetGoal(this));
