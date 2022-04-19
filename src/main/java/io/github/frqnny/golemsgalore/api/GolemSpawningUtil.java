@@ -1,5 +1,6 @@
 package io.github.frqnny.golemsgalore.api;
 
+import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.entity.*;
 import io.github.frqnny.golemsgalore.init.ModBlocks;
 import io.github.frqnny.golemsgalore.init.ModEntities;
@@ -41,12 +42,14 @@ public class GolemSpawningUtil {
     public static final Predicate<BlockState> TNT_PREDICATE = getPredicateFromBlock(Blocks.TNT);
     public static final Predicate<BlockState> DIAMOND_BLOCK_PREDICATE = getPredicateFromBlock(Blocks.DIAMOND_BLOCK);
     public static final Predicate<BlockState> OBAMIUM_BLOCK_PREDICATE = getPredicateFromBlock(ModBlocks.OBAMIUM_BLOCK);
+    public static final Predicate<BlockState> HONEY_BLOCK_PREDICATE = getPredicateFromBlock(Blocks.HONEY_BLOCK);
     public static final BlockPattern commonPattern = getSingleBlockPattern(IS_VALID_BLOCK);
     public static final BlockPattern laserPattern = getSpecialPattern(IRON_BLOCK_PREDICATE, REDSTONE_BLOCK_PREDICATE);
     public static final BlockPattern antiCreeperPattern = getSpecialPattern(IRON_BLOCK_PREDICATE, TNT_PREDICATE);
     public static final BlockPattern diamondLaserPattern = getSpecialPattern(DIAMOND_BLOCK_PREDICATE, REDSTONE_BLOCK_PREDICATE);
     public static final BlockPattern obamaPattern = getSingleBlockPattern(OBAMIUM_BLOCK_PREDICATE);
     public static final BlockPattern ghastlyPattern = getSingleBlockPattern(IS_PUMPKIN_PREDICATE);
+    public static final BlockPattern beePattern = getSingleBlockPattern(HONEY_BLOCK_PREDICATE);
 
 
     public static Predicate<BlockState> getPredicateFromBlock(Block block) {
@@ -116,6 +119,7 @@ public class GolemSpawningUtil {
             BlockPattern.Result diamondLaser = GolemSpawningUtil.diamondLaserPattern.searchAround(world, pos);
             BlockPattern.Result obama = GolemSpawningUtil.obamaPattern.searchAround(world, pos);
             BlockPattern.Result ghastly = GolemSpawningUtil.ghastlyPattern.searchAround(world, pos);
+            BlockPattern.Result bee = GolemSpawningUtil.beePattern.searchAround(world, pos);
 
             if (common != null) {
                 if (!player.isCreative()) {
@@ -193,6 +197,11 @@ public class GolemSpawningUtil {
                     player.sendMessage(new TranslatableText("message.golemsgalore.ghastly"), false);
                 }
                 return ActionResult.CONSUME;
+            } else if (bee != null) {
+                for (int i = 0; i < GolemsGalore.getConfig().beeSpawnAmount; i++) {
+                    BeeGolemEntity golem = ModEntities.BEE_GOLEM.create(world);
+                    GolemSpawningUtil.spawnGolem(world, player, hand, bee, golem);
+                }
             }
         }
         return ActionResult.PASS;

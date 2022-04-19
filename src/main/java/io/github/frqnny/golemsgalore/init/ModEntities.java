@@ -14,6 +14,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.registry.Registry;
 
 import java.util.HashMap;
@@ -35,6 +36,8 @@ public class ModEntities {
     public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
     public static EntityType<GhastlyGolemEntity> GHASTLY_GOLEM;
     public static EntityType<PumpkinProjectileEntity> PUMPKIN_PROJECTILE;
+    public static EntityType<BeeGolemEntity> BEE_GOLEM;
+    public static final TagKey<EntityType<?>> GOLEM_BEEHIVE_INHABITORS = TagKey.of(Registry.ENTITY_TYPE_KEY, GolemsGalore.id("golem_beehive_inhabitors"));
 
     public static void init() {
         GolemsGaloreConfig config = GolemsGalore.getConfig();
@@ -136,6 +139,13 @@ public class ModEntities {
         );
         FabricDefaultAttributeRegistry.register(GHASTLY_GOLEM,
                 createDefaultGolemAttributes(config.healthGhostly, config.speedGhostly, config.knockbackResistanceGhostly, config.attackDamageGhostly)
+        );
+
+        BEE_GOLEM = register("bee_golem",
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, BeeGolemEntity::new).dimensions(EntityDimensions.fixed(0.7f, 0.6f)).trackRangeChunks(8).fireImmune().build()
+        );
+        FabricDefaultAttributeRegistry.register(BEE_GOLEM,
+                BeeGolemEntity.createBeeAttributes()
         );
 
         PUMPKIN_PROJECTILE = register("pumpkin_projectile",

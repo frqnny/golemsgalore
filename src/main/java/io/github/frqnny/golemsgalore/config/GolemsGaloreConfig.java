@@ -67,6 +67,12 @@ public class GolemsGaloreConfig implements Config {
     public double speedGhostly = 0.3D;
     public double knockbackResistanceGhostly = 0.9D;
     public double attackDamageGhostly = 15;
+    @Comment("Bee Golem")
+    public int healthBee = 50;
+    public double speedBee = 0.6F;
+    public double knockbackResistanceBee = 0;
+    public double attackDamageBee = 10;
+    public int beeSpawnAmount = 7;
     @Comment("Performance")
     public boolean renderLaserFlames = true;
     @Comment("Misc")

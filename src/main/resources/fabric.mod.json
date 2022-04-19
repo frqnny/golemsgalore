@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "golemsgalore",
-  "version": "1.2.1+22w14a",
+  "version": "${version}",
   "name": "Golems Galore",
-  "description": "Adds many more golems that help you protect places in interesting ways!",
+  "description": "Adds many more golems that help you protect places in interesting and funny ways!",
   "authors": [
     "Frqnny"
   ],

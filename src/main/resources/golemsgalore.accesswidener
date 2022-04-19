@@ -1,5 +1,8 @@
 accessWidener   v1  named
 
 accessible  method  net/minecraft/entity/projectile/ProjectileEntity  <init>  (Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/World;)V
+accessible    method    net/minecraft/world/poi/PointOfInterestType    register    (Ljava/lang/String;Ljava/util/Set;II)Lnet/minecraft/world/poi/PointOfInterestType;
+accessible    method    net/minecraft/world/poi/PointOfInterestType    register    (Ljava/lang/String;Ljava/util/Set;ILjava/util/function/Predicate;I)Lnet/minecraft/world/poi/PointOfInterestType;
+accessible    method    net/minecraft/world/poi/PointOfInterestType    getAllStatesOf    (Lnet/minecraft/block/Block;)Ljava/util/Set;
 accessible    class    net/minecraft/village/TradeOffers$SellItemFactory
 accessible    field    net/minecraft/entity/passive/IronGolemEntity    attackTicksLeft    I
