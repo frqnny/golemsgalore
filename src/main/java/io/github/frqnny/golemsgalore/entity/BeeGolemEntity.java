@@ -9,9 +9,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.AboveGroundTargeting;
-import net.minecraft.entity.ai.NoPenaltySolidTargeting;
-import net.minecraft.entity.ai.NoWaterTargeting;
+import net.minecraft.entity.ai.*;
+import net.minecraft.entity.ai.brain.task.LookTargetUtil;
 import net.minecraft.entity.ai.control.FlightMoveControl;
 import net.minecraft.entity.ai.control.LookControl;
 import net.minecraft.entity.ai.goal.*;
@@ -31,6 +30,7 @@ import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.NbtCompound;
@@ -49,6 +49,7 @@ import net.minecraft.tag.TagKey;
 import net.minecraft.util.TimeHelper;
 import net.minecraft.util.annotation.Debug;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
@@ -58,7 +59,6 @@ import net.minecraft.world.WorldEvents;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.poi.PointOfInterest;
 import net.minecraft.world.poi.PointOfInterestStorage;
-import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -66,8 +66,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//TODO test
-//TODO do not attack owner of golem
 public class BeeGolemEntity extends ModGolemEntity implements Flutterer {
     public static final int field_28638 = MathHelper.ceil(1.4959966f);
     public static final String CROPS_GROWN_SINCE_POLLINATION_KEY = "CropsGrownSincePollination";
@@ -213,7 +211,6 @@ public class BeeGolemEntity extends ModGolemEntity implements Flutterer {
     }
 
     @Override
-    //TODO redo
     public boolean tryAttack(Entity target) {
         boolean bl = target.damage(DamageSource.sting(this), (int) this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE));
         if (bl) {
@@ -1161,8 +1158,20 @@ public class BeeGolemEntity extends ModGolemEntity implements Flutterer {
             }
         }
 
-        @Nullable
         private Vec3d getRandomLocation() {
+            if (BeeGolemEntity.this.random.nextBoolean()) {
+                return getRandomBeeLocation();
+            } else {
+                if (BeeGolemEntity.this.random.nextBoolean()) {
+                    return getRandomVillagerPos();
+                } else {
+                    return getRandomPOILocation();
+                }
+            }
+        }
+
+        @Nullable
+        private Vec3d getRandomBeeLocation() {
             Vec3d vec3d2;
             if (BeeGolemEntity.this.isHiveValid() && !BeeGolemEntity.this.isWithinDistance(BeeGolemEntity.this.hivePos, 22)) {
                 Vec3d vec3d = Vec3d.ofCenter(BeeGolemEntity.this.hivePos);
@@ -1175,6 +1184,30 @@ public class BeeGolemEntity extends ModGolemEntity implements Flutterer {
                 return vec3d3;
             }
             return NoPenaltySolidTargeting.find(BeeGolemEntity.this, 8, 4, -2, vec3d2.x, vec3d2.z, 1.5707963705062866);
+        }
+
+        private Vec3d getRandomVillagerPos() {
+            ServerWorld serverWorld = (ServerWorld)BeeGolemEntity.this.world;
+            List<VillagerEntity> list = serverWorld.getEntitiesByType(EntityType.VILLAGER, BeeGolemEntity.this.getBoundingBox().expand(32.0), this::canVillagerSummonGolem);
+            if (list.isEmpty()) {
+                return null;
+            } else {
+                VillagerEntity villagerEntity = list.get(BeeGolemEntity.this.world.random.nextInt(list.size()));
+                Vec3d vec3d = villagerEntity.getPos();
+                return FuzzyTargeting.findTo(BeeGolemEntity.this, 10, 7, vec3d);
+            }
+        }
+
+        protected Vec3d getRandomPOILocation() {
+            ServerWorld serverWorld = (ServerWorld)BeeGolemEntity.this.world;
+            BlockPos blockPos = BeeGolemEntity.this.getBlockPos();
+            ChunkSectionPos chunkSectionPos = ChunkSectionPos.from(blockPos);
+            ChunkSectionPos chunkSectionPos2 = LookTargetUtil.getPosClosestToOccupiedPointOfInterest(serverWorld, chunkSectionPos, 2);
+            return chunkSectionPos2 != chunkSectionPos ? NoPenaltyTargeting.findTo(BeeGolemEntity.this, 10, 7, Vec3d.ofBottomCenter(chunkSectionPos2.getCenterPos()), 1.5707963705062866) : null;
+        }
+
+        private boolean canVillagerSummonGolem(VillagerEntity villager) {
+            return villager.canSummonGolem(BeeGolemEntity.this.world.getTime());
         }
     }
 

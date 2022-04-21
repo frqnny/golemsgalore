@@ -1,6 +1,7 @@
 package io.github.frqnny.golemsgalore.block;
 
 import com.google.common.collect.Lists;
+import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.entity.BeeGolemEntity;
 import io.github.frqnny.golemsgalore.init.ModBlocks;
 import io.github.frqnny.golemsgalore.init.ModEntities;
@@ -17,8 +18,6 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.EntityTypeTags;
 import net.minecraft.util.annotation.Debug;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -37,9 +36,9 @@ public class GolemBeehiveBlockEntity extends BlockEntity {
     public static final String HAS_NECTAR_KEY = "HasNectar";
     public static final String BEES_KEY = "Bees";
     private static final List<String> IRRELEVANT_BEE_NBT_KEYS = Arrays.asList("Air", "ArmorDropChances", "ArmorItems", "Brain", "CanPickUpLoot", "DeathTime", "FallDistance", "FallFlying", "Fire", "HandDropChances", "HandItems", "HurtByTimestamp", "HurtTime", "LeftHanded", "Motion", "NoGravity", "OnGround", "PortalCooldown", "Pos", "Rotation", "CannotEnterHiveTicks", "TicksSincePollination", "CropsGrownSincePollination", "HivePos", "Passengers", "Leash", "UUID");
-    public static final int MAX_BEE_COUNT = 3;
+    public static final int MAX_BEE_COUNT = GolemsGalore.getConfig().maxBeePerGolemHive;
     private static final int ANGERED_CANNOT_ENTER_HIVE_TICKS = 400;
-    private static final int MIN_OCCUPATION_TICKS_WITH_NECTAR = 2400;
+    private static final int MIN_OCCUPATION_TICKS_WITH_NECTAR = GolemsGalore.getConfig().minOccupationTicksWithNectar;
     public static final int MIN_OCCUPATION_TICKS_WITHOUT_NECTAR = 600;
     private final List<Bee> bees = Lists.newArrayList();
     @Nullable

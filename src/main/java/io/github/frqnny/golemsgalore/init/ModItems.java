@@ -3,7 +3,6 @@ package io.github.frqnny.golemsgalore.init;
 import io.github.frqnny.golemsgalore.GolemsGalore;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 

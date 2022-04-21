@@ -11,7 +11,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.SummonCommand;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -24,8 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @SuppressWarnings("unused")
 @Mixin(SummonCommand.class)
 public class MixinSummonCommand {
-    private static final SimpleCommandExceptionType FAILED_EXCEPTIONN = new SimpleCommandExceptionType(new TranslatableText("commands.summon.failed"));
-    private static final SimpleCommandExceptionType INVALID_POSITION_EXCEPTIONN = new SimpleCommandExceptionType(new TranslatableText("commands.summon.invalidPosition"));
+    private static final SimpleCommandExceptionType FAILED_EXCEPTIONN = new SimpleCommandExceptionType(Text.translatable("commands.summon.failed"));
+    private static final SimpleCommandExceptionType INVALID_POSITION_EXCEPTIONN = new SimpleCommandExceptionType(Text.translatable("commands.summon.invalidPosition"));
 
     @Inject(method = "execute", at = @At(value = "HEAD"), cancellable = true)
     private static void executeSpecialGolems(ServerCommandSource source, Identifier entity, Vec3d pos, NbtCompound nbt, boolean initialize, CallbackInfoReturnable<Integer> info) throws CommandSyntaxException {
@@ -64,7 +64,7 @@ public class MixinSummonCommand {
         golem.refreshPositionAndAngles((double) pos.getX() + 0.5D, (double) pos.getY() + 0.05D, (double) pos.getZ() + 0.5D, 0.0F, 0.0F);
         golem.initialize(source.getWorld(), source.getWorld().getLocalDifficulty(golem.getBlockPos()), SpawnReason.COMMAND, null, null);
         world.spawnEntity(golem);
-        source.sendFeedback(new TranslatableText("commands.summon.success", golem.getDisplayName()), true);
+        source.sendFeedback(Text.translatable("commands.summon.success", golem.getDisplayName()), true);
 
     }
 }

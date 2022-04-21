@@ -41,7 +41,7 @@ import java.util.function.Predicate;
 //TODO Request owner for more targets
 //TODO Keep adjusting
 public class PumpkinProjectileEntity extends ProjectileEntity {
-    //Identifier moved to PumpkinProjectileEntity for safety
+    //Packet Identifier moved to PumpkinProjectileEntity for safety
     public static final Identifier PUMPKING_PROJECTILE_SPAWN = GolemsGalore.id("pumpkin_spawn");
     protected static final TrackedData<Boolean> IS_SPAWNING = DataTracker.registerData(PumpkinProjectileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     protected int spawningTicks = 20;
@@ -56,13 +56,14 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
     public PumpkinProjectileEntity(EntityType<? extends PumpkinProjectileEntity> entityType, World world) {
         super(entityType, world);
         this.noClip = true;
+
     }
 
     @Environment(EnvType.CLIENT)
     public PumpkinProjectileEntity(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
         this(ModEntities.PUMPKIN_PROJECTILE, world);
         this.updatePosition(x, y, z);
-        this.updateTrackedPosition(x, y, z);
+        this.method_43391(x, y, z);
         this.setVelocity(velocityX, velocityY, velocityZ);
     }
 
@@ -74,7 +75,6 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         double e = (double) blockPos.getY() + 2.0D;
         double f = (double) blockPos.getZ() + 0.5D;
         this.refreshPositionAndAngles(d, e, f, this.getYaw(), this.getPitch());
-        this.updateTrackedPosition(d, e, f);
         this.target = target;
         this.targetUuid = target.getUuid();
     }
@@ -321,6 +321,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
         return this.target != null;
     }
 
+    @Override
     public float getBrightnessAtEyes() {
         return 1.0F;
     }

@@ -103,14 +103,14 @@ public class GolemBeehiveBlock extends BlockWithEntity {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
         int i = state.get(HONEY_LEVEL);
-        boolean bl = false;
+        boolean couldAngerBees = false;
         if (i >= FULL_HONEY_LEVEL) {
             Item item = itemStack.getItem();
             if (itemStack.isOf(Items.SHEARS)) {
                 world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_BEEHIVE_SHEAR, SoundCategory.NEUTRAL, 1.0F, 1.0F);
                 dropHoneycomb(world, pos);
                 itemStack.damage(1, player, (playerx) -> playerx.sendToolBreakStatus(hand));
-                bl = true;
+                couldAngerBees = true;
                 world.emitGameEvent(player, GameEvent.SHEAR, pos);
             } else if (itemStack.isOf(Items.GLASS_BOTTLE)) {
                 itemStack.decrement(1);
@@ -121,16 +121,16 @@ public class GolemBeehiveBlock extends BlockWithEntity {
                     player.dropItem(new ItemStack(Items.HONEY_BOTTLE), false);
                 }
 
-                bl = true;
+                couldAngerBees = true;
                 world.emitGameEvent(player, GameEvent.FLUID_PICKUP, pos);
             }
 
-            if (!world.isClient() && bl) {
+            if (!world.isClient() && couldAngerBees) {
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
             }
         }
 
-        if (bl) {
+        if (couldAngerBees) {
             if (!CampfireBlock.isLitCampfireInRange(world, pos)) {
                 if (this.hasBees(world, pos)) {
                     this.angerNearbyBees(world, pos);

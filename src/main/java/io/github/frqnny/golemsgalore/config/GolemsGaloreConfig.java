@@ -73,6 +73,9 @@ public class GolemsGaloreConfig implements Config {
     public double knockbackResistanceBee = 0;
     public double attackDamageBee = 10;
     public int beeSpawnAmount = 7;
+    public int maxBeePerGolemHive = 3;
+    @Comment("Amount of minimum ticks a bee will stay in a hive before leaving. This allows you to modify how fast bees can refill hives with honey")
+    public int minOccupationTicksWithNectar = 2400;
     @Comment("Performance")
     public boolean renderLaserFlames = true;
     @Comment("Misc")
