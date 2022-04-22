@@ -46,8 +46,7 @@ public class ModGolemEntity extends IronGolemEntity {
                 return ActionResult.PASS;
             } else {
                 float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-                //Too lazy to not hardcode this
-                this.playSound(this.getGolemType().equals(Type.AMETHYST) ? SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK : SoundEvents.ENTITY_IRON_GOLEM_REPAIR, 1.0F, g);
+                this.playSound(this.getHealSound(), 1.0F, g);
                 if (!player.isCreative()) {
                     player.getStackInHand(hand).decrement(1);
                 }
@@ -71,6 +70,10 @@ public class ModGolemEntity extends IronGolemEntity {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return this.getGolemType().equals(Type.AMETHYST) ? SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME : SoundEvents.ENTITY_IRON_GOLEM_HURT;
+        return SoundEvents.ENTITY_IRON_GOLEM_HURT;
+    }
+
+    protected SoundEvent getHealSound() {
+        return SoundEvents.ENTITY_IRON_GOLEM_REPAIR;
     }
 }

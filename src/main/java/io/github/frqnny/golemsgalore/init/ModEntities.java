@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModEntities {
-    public static final Map<Type, EntityType<ModGolemEntity>> typeMap = new HashMap<>(7);
+    public static final Map<Type, EntityType<? extends ModGolemEntity>> typeMap = new HashMap<>(7);
     public static final Map<Type, DefaultAttributeContainer.Builder> attributeContainerMap = new HashMap<>(7);
     public static EntityType<ModGolemEntity> DIAMOND_GOLEM;
     public static EntityType<ModGolemEntity> NETHERITE_GOLEM;
@@ -29,7 +29,7 @@ public class ModEntities {
     public static EntityType<ModGolemEntity> QUARTZ_GOLEM;
     public static EntityType<ModGolemEntity> OBSIDIAN_GOLEM;
     public static EntityType<ModGolemEntity> HAY_GOLEM;
-    public static EntityType<ModGolemEntity> AMETHYST_GOLEM;
+    public static EntityType<AmethystGolemEntity> AMETHYST_GOLEM;
     public static EntityType<LaserGolemEntity> LASER_GOLEM;
     public static EntityType<DiamondLaserGolemEntity> DIAMOND_LASER_GOLEM;
     public static EntityType<ObamaPyramidGolemEntity> OBAMA_PRISM_GOLEM;
@@ -89,7 +89,7 @@ public class ModEntities {
         );
 
         AMETHYST_GOLEM = register("amethyst_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, ModGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, AmethystGolemEntity::new).dimensions(EntityDimensions.fixed(1.4F, 2.7F)).build()
         );
 
         typeMap.put(Type.DIAMOND, DIAMOND_GOLEM);
@@ -102,7 +102,7 @@ public class ModEntities {
 
         for (Map.Entry<Type, DefaultAttributeContainer.Builder> entry : attributeContainerMap.entrySet()) {
             Type type = entry.getKey();
-            EntityType<ModGolemEntity> entityType = typeMap.get(type);
+            EntityType<? extends ModGolemEntity> entityType = typeMap.get(type);
             FabricDefaultAttributeRegistry.register(entityType, attributeContainerMap.get(type));
         }
 

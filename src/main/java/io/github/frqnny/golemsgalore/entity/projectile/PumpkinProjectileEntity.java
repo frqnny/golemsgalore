@@ -38,8 +38,6 @@ import net.minecraft.world.World;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-//TODO Request owner for more targets
-//TODO Keep adjusting
 public class PumpkinProjectileEntity extends ProjectileEntity {
     //Packet Identifier moved to PumpkinProjectileEntity for safety
     public static final Identifier PUMPKING_PROJECTILE_SPAWN = GolemsGalore.id("pumpkin_spawn");
