@@ -33,6 +33,8 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.particle.ParticleEffect;
@@ -87,14 +89,6 @@ public class BeeGolemEntity extends ModGolemEntity implements Flutterer {
      */
     private static final int POLLINATION_FAIL_TICKS = 3600;
     private static final int HARD_DIFFICULTY_STING_POISON_DURATION = 18;
-    /**
-     * The minimum distance that bees lose their hive or flower position at.
-     */
-    private static final int TOO_FAR_DISTANCE = 32;
-    /**
-     * The minimum distance that bees will immediately return to their hive at.
-     */
-    private static final int MIN_HIVE_RETURN_DISTANCE = 16;
     private static final UniformIntProvider ANGER_TIME_RANGE = TimeHelper.betweenSeconds(20, 39);
     int ticksSincePollination;
     int ticksLeftToFindHive;
@@ -142,6 +136,11 @@ public class BeeGolemEntity extends ModGolemEntity implements Flutterer {
             return 10.0f;
         }
         return 0.0f;
+    }
+
+    @Override
+    protected Item getHealItem() {
+        return Items.HONEY_BOTTLE;
     }
 
     @Override
