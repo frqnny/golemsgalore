@@ -1,7 +1,7 @@
 package io.github.frqnny.golemsgalore.entity;
 
-import io.github.frqnny.golemsgalore.api.Type;
 import io.github.frqnny.golemsgalore.init.ModItems;
+import io.github.frqnny.golemsgalore.util.Type;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.IronGolemEntity;

@@ -59,6 +59,10 @@ public class GolemBeehiveBlock extends BlockWithEntity {
         this.setDefaultState(this.stateManager.getDefaultState().with(HONEY_LEVEL, 0).with(FACING, Direction.NORTH));
     }
 
+    public static void dropHoneycomb(World world, BlockPos pos) {
+        dropStack(world, pos, new ItemStack(Items.HONEYCOMB, DROPPED_HONEYCOMB_COUNT));
+    }
+
     public boolean hasComparatorOutput(BlockState state) {
         return true;
     }
@@ -76,7 +80,7 @@ public class GolemBeehiveBlock extends BlockWithEntity {
                 this.angerNearbyBees(world, pos);
             }
 
-            Criteria.BEE_NEST_DESTROYED.trigger((ServerPlayerEntity)player, state, stack, beehiveBlockEntity.getBeeCount());
+            Criteria.BEE_NEST_DESTROYED.trigger((ServerPlayerEntity) player, state, stack, beehiveBlockEntity.getBeeCount());
         }
 
     }
@@ -94,10 +98,6 @@ public class GolemBeehiveBlock extends BlockWithEntity {
             }
         }
 
-    }
-
-    public static void dropHoneycomb(World world, BlockPos pos) {
-        dropStack(world, pos, new ItemStack(Items.HONEYCOMB, DROPPED_HONEYCOMB_COUNT));
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -171,7 +171,7 @@ public class GolemBeehiveBlock extends BlockWithEntity {
 
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, AbstractRandom random) {
         if (state.get(HONEY_LEVEL) >= FULL_HONEY_LEVEL) {
-            for(int i = 0; i < random.nextInt(1) + 1; ++i) {
+            for (int i = 0; i < random.nextInt(1) + 1; ++i) {
                 this.spawnHoneyParticles(world, pos, state);
             }
         }
@@ -185,14 +185,14 @@ public class GolemBeehiveBlock extends BlockWithEntity {
             if (d >= 1.0 && !state.isIn(BlockTags.IMPERMEABLE)) {
                 double e = voxelShape.getMin(Direction.Axis.Y);
                 if (e > 0.0) {
-                    this.addHoneyParticle(world, pos, voxelShape, (double)pos.getY() + e - 0.05);
+                    this.addHoneyParticle(world, pos, voxelShape, (double) pos.getY() + e - 0.05);
                 } else {
                     BlockPos blockPos = pos.down();
                     BlockState blockState = world.getBlockState(blockPos);
                     VoxelShape voxelShape2 = blockState.getCollisionShape(world, blockPos);
                     double f = voxelShape2.getMax(Direction.Axis.Y);
                     if ((f < 1.0 || !blockState.isFullCube(world, blockPos)) && blockState.getFluidState().isEmpty()) {
-                        this.addHoneyParticle(world, pos, voxelShape, (double)pos.getY() - 0.05);
+                        this.addHoneyParticle(world, pos, voxelShape, (double) pos.getY() - 0.05);
                     }
                 }
             }
@@ -201,7 +201,7 @@ public class GolemBeehiveBlock extends BlockWithEntity {
     }
 
     private void addHoneyParticle(World world, BlockPos pos, VoxelShape shape, double height) {
-        this.addHoneyParticle(world, (double)pos.getX() + shape.getMin(Direction.Axis.X), (double)pos.getX() + shape.getMax(Direction.Axis.X), (double)pos.getZ() + shape.getMin(Direction.Axis.Z), (double)pos.getZ() + shape.getMax(Direction.Axis.Z), height);
+        this.addHoneyParticle(world, (double) pos.getX() + shape.getMin(Direction.Axis.X), (double) pos.getX() + shape.getMax(Direction.Axis.X), (double) pos.getZ() + shape.getMin(Direction.Axis.Z), (double) pos.getZ() + shape.getMax(Direction.Axis.Z), height);
     }
 
     private void addHoneyParticle(World world, double minX, double maxX, double minZ, double maxZ, double height) {

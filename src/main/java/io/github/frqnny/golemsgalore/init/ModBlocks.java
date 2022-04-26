@@ -16,8 +16,7 @@ import net.minecraft.world.poi.PointOfInterestType;
 public class ModBlocks {
     public static final Block OBAMIUM_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).requiresTool().strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL));
     public static final Block GOLEM_BEEHIVE = new GolemBeehiveBlock(FabricBlockSettings.of(Material.WOOD).strength(0.6f).sounds(BlockSoundGroup.WOOD));
-    public static final BlockEntityType<GolemBeehiveBlockEntity> GOLEM_BEEHIVE_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(GolemBeehiveBlockEntity::new, GOLEM_BEEHIVE).build();
-    public static final PointOfInterestType BEEHIVE = PointOfInterestType.register("golemsgalore:beehive", PointOfInterestType.getAllStatesOf(GOLEM_BEEHIVE), 0, 1);
+    public static final PointOfInterestType BEEHIVE = PointOfInterestType.register("golemsgalore:beehive", PointOfInterestType.getAllStatesOf(GOLEM_BEEHIVE), 0, 1);    public static final BlockEntityType<GolemBeehiveBlockEntity> GOLEM_BEEHIVE_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(GolemBeehiveBlockEntity::new, GOLEM_BEEHIVE).build();
     public static final TagKey<Block> BEEHIVES = TagKey.of(Registry.BLOCK_KEY, GolemsGalore.id("beehives"));
 
     public static void init() {
@@ -25,4 +24,6 @@ public class ModBlocks {
         Registry.register(Registry.BLOCK, GolemsGalore.id("golem_beehive"), GOLEM_BEEHIVE);
         Registry.register(Registry.BLOCK_ENTITY_TYPE, GolemsGalore.id("golem_beehive"), GOLEM_BEEHIVE_BLOCK_ENTITY);
     }
+
+
 }

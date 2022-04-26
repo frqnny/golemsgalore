@@ -10,7 +10,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(value = EnvType.CLIENT)
 public class BeeGolemEntityRenderer extends MobEntityRenderer<BeeGolemEntity, BeeGolemEntityModel<BeeGolemEntity>> {
     private static final Identifier ANGRY_TEXTURE = GolemsGalore.id("textures/entity/golem/bee/bee_angry.png");
     private static final Identifier ANGRY_NECTAR_TEXTURE = GolemsGalore.id("textures/entity/golem/bee/bee_angry_nectar.png");

@@ -1186,7 +1186,7 @@ public class BeeGolemEntity extends ModGolemEntity implements Flutterer {
         }
 
         private Vec3d getRandomVillagerPos() {
-            ServerWorld serverWorld = (ServerWorld)BeeGolemEntity.this.world;
+            ServerWorld serverWorld = (ServerWorld) BeeGolemEntity.this.world;
             List<VillagerEntity> list = serverWorld.getEntitiesByType(EntityType.VILLAGER, BeeGolemEntity.this.getBoundingBox().expand(32.0), this::canVillagerSummonGolem);
             if (list.isEmpty()) {
                 return null;
@@ -1198,7 +1198,7 @@ public class BeeGolemEntity extends ModGolemEntity implements Flutterer {
         }
 
         protected Vec3d getRandomPOILocation() {
-            ServerWorld serverWorld = (ServerWorld)BeeGolemEntity.this.world;
+            ServerWorld serverWorld = (ServerWorld) BeeGolemEntity.this.world;
             BlockPos blockPos = BeeGolemEntity.this.getBlockPos();
             ChunkSectionPos chunkSectionPos = ChunkSectionPos.from(blockPos);
             ChunkSectionPos chunkSectionPos2 = LookTargetUtil.getPosClosestToOccupiedPointOfInterest(serverWorld, chunkSectionPos, 2);

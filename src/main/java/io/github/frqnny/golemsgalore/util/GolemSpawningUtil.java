@@ -1,4 +1,4 @@
-package io.github.frqnny.golemsgalore.api;
+package io.github.frqnny.golemsgalore.util;
 
 import io.github.frqnny.golemsgalore.GolemsGalore;
 import io.github.frqnny.golemsgalore.entity.*;
@@ -43,6 +43,8 @@ public class GolemSpawningUtil {
     public static final Predicate<BlockState> DIAMOND_BLOCK_PREDICATE = getPredicateFromBlock(Blocks.DIAMOND_BLOCK);
     public static final Predicate<BlockState> OBAMIUM_BLOCK_PREDICATE = getPredicateFromBlock(ModBlocks.OBAMIUM_BLOCK);
     public static final Predicate<BlockState> HONEY_BLOCK_PREDICATE = getPredicateFromBlock(Blocks.HONEY_BLOCK);
+    public static final Predicate<BlockState> COBWEB_PREDICATE = getPredicateFromBlock(Blocks.COBWEB);
+
     public static final BlockPattern commonPattern = getSingleBlockPattern(IS_VALID_BLOCK);
     public static final BlockPattern laserPattern = getSpecialPattern(IRON_BLOCK_PREDICATE, REDSTONE_BLOCK_PREDICATE);
     public static final BlockPattern antiCreeperPattern = getSpecialPattern(IRON_BLOCK_PREDICATE, TNT_PREDICATE);
@@ -50,6 +52,7 @@ public class GolemSpawningUtil {
     public static final BlockPattern obamaPattern = getSingleBlockPattern(OBAMIUM_BLOCK_PREDICATE);
     public static final BlockPattern ghastlyPattern = getSingleBlockPattern(IS_PUMPKIN_PREDICATE);
     public static final BlockPattern beePattern = getSingleBlockPattern(HONEY_BLOCK_PREDICATE);
+    public static final BlockPattern spiderPattern = getSingleBlockPattern(COBWEB_PREDICATE);
 
 
     public static Predicate<BlockState> getPredicateFromBlock(Block block) {
@@ -113,13 +116,14 @@ public class GolemSpawningUtil {
     public static ActionResult golemHook(World world, BlockPos pos, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
         if (stack.getItem() == ModItems.GOLEM_SOUL) {
-            BlockPattern.Result common = GolemSpawningUtil.commonPattern.searchAround(world, pos);
-            BlockPattern.Result laser = GolemSpawningUtil.laserPattern.searchAround(world, pos);
-            BlockPattern.Result antiCreeper = GolemSpawningUtil.antiCreeperPattern.searchAround(world, pos);
-            BlockPattern.Result diamondLaser = GolemSpawningUtil.diamondLaserPattern.searchAround(world, pos);
-            BlockPattern.Result obama = GolemSpawningUtil.obamaPattern.searchAround(world, pos);
-            BlockPattern.Result ghastly = GolemSpawningUtil.ghastlyPattern.searchAround(world, pos);
-            BlockPattern.Result bee = GolemSpawningUtil.beePattern.searchAround(world, pos);
+            BlockPattern.Result common = commonPattern.searchAround(world, pos);
+            BlockPattern.Result laser = laserPattern.searchAround(world, pos);
+            BlockPattern.Result antiCreeper = antiCreeperPattern.searchAround(world, pos);
+            BlockPattern.Result diamondLaser = diamondLaserPattern.searchAround(world, pos);
+            BlockPattern.Result obama = obamaPattern.searchAround(world, pos);
+            BlockPattern.Result ghastly = ghastlyPattern.searchAround(world, pos);
+            BlockPattern.Result bee = beePattern.searchAround(world, pos);
+            BlockPattern.Result spider = spiderPattern.searchAround(world, pos);
 
             if (common != null) {
                 if (!player.isCreative()) {
@@ -202,6 +206,9 @@ public class GolemSpawningUtil {
                     BeeGolemEntity golem = ModEntities.BEE_GOLEM.create(world);
                     GolemSpawningUtil.spawnGolem(world, player, hand, bee, golem);
                 }
+            } else if (spider != null) {
+                SpiderGolemEntity golem = ModEntities.SPIDER_GOLEM.create(world);
+                GolemSpawningUtil.spawnGolem(world, player, hand, spider, golem);
             }
         }
         return ActionResult.PASS;

@@ -1,4 +1,4 @@
-package io.github.frqnny.golemsgalore.api;
+package io.github.frqnny.golemsgalore.util;
 
 import com.google.common.collect.Sets;
 import io.github.frqnny.golemsgalore.GolemsGalore;
@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.Set;
 
-public final record Type(Block material, Item item, Identifier texture) {
+public record Type(Block material, Item item, Identifier texture) {
     public static final Type DIAMOND = new Type(Blocks.DIAMOND_BLOCK, Items.DIAMOND, GolemsGalore.id("textures/entity/golem/diamond_golem.png"));
     public static final Type GOLD = new Type(Blocks.GOLD_BLOCK, Items.GOLD_INGOT, GolemsGalore.id("textures/entity/golem/golden_golem.png"));
     public static final Type NETHERITE = new Type(Blocks.NETHERITE_BLOCK, Items.NETHERITE_INGOT, GolemsGalore.id("textures/entity/golem/netherite_golem.png"));

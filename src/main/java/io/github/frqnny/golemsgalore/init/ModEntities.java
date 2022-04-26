@@ -1,10 +1,11 @@
 package io.github.frqnny.golemsgalore.init;
 
 import io.github.frqnny.golemsgalore.GolemsGalore;
-import io.github.frqnny.golemsgalore.api.Type;
 import io.github.frqnny.golemsgalore.config.GolemsGaloreConfig;
 import io.github.frqnny.golemsgalore.entity.*;
+import io.github.frqnny.golemsgalore.entity.projectile.PoisonWebEntity;
 import io.github.frqnny.golemsgalore.entity.projectile.PumpkinProjectileEntity;
+import io.github.frqnny.golemsgalore.util.Type;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.Entity;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class ModEntities {
     public static final Map<Type, EntityType<? extends ModGolemEntity>> typeMap = new HashMap<>(7);
     public static final Map<Type, DefaultAttributeContainer.Builder> attributeContainerMap = new HashMap<>(7);
+    public static final TagKey<EntityType<?>> GOLEM_BEEHIVE_INHABITORS = TagKey.of(Registry.ENTITY_TYPE_KEY, GolemsGalore.id("golem_beehive_inhabitors"));
     public static EntityType<ModGolemEntity> DIAMOND_GOLEM;
     public static EntityType<ModGolemEntity> NETHERITE_GOLEM;
     public static EntityType<ModGolemEntity> GOLDEN_GOLEM;
@@ -35,9 +37,10 @@ public class ModEntities {
     public static EntityType<ObamaPyramidGolemEntity> OBAMA_PRISM_GOLEM;
     public static EntityType<AntiCreeperGolemEntity> ANTI_CREEPER_GOLEM;
     public static EntityType<GhastlyGolemEntity> GHASTLY_GOLEM;
-    public static EntityType<PumpkinProjectileEntity> PUMPKIN_PROJECTILE;
     public static EntityType<BeeGolemEntity> BEE_GOLEM;
-    public static final TagKey<EntityType<?>> GOLEM_BEEHIVE_INHABITORS = TagKey.of(Registry.ENTITY_TYPE_KEY, GolemsGalore.id("golem_beehive_inhabitors"));
+    public static EntityType<SpiderGolemEntity> SPIDER_GOLEM;
+    public static EntityType<PumpkinProjectileEntity> PUMPKIN_PROJECTILE;
+    public static EntityType<PoisonWebEntity> POISON_WEB_PROJECTILE;
 
     public static void init() {
         GolemsGaloreConfig config = GolemsGalore.getConfig();
@@ -142,14 +145,25 @@ public class ModEntities {
         );
 
         BEE_GOLEM = register("bee_golem",
-                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, BeeGolemEntity::new).dimensions(EntityDimensions.fixed(0.7f, 0.6f)).trackRangeChunks(8).fireImmune().build()
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, BeeGolemEntity::new).dimensions(EntityDimensions.fixed(0.7f, 0.6f)).trackRangeChunks(8).build()
         );
         FabricDefaultAttributeRegistry.register(BEE_GOLEM,
                 BeeGolemEntity.createBeeAttributes()
         );
 
+        SPIDER_GOLEM = register("spider_golem",
+                FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, SpiderGolemEntity::new).dimensions(EntityDimensions.fixed(1.4f, 0.9f)).trackRangeChunks(8).build()
+        );
+        FabricDefaultAttributeRegistry.register(SPIDER_GOLEM,
+                createDefaultGolemAttributes(config.healthSpider, config.speedSpider, config.knockbackResistanceSpider, config.attackDamageSpider)
+        );
+
         PUMPKIN_PROJECTILE = register("pumpkin_projectile",
                 FabricEntityTypeBuilder.<PumpkinProjectileEntity>create(SpawnGroup.MISC, PumpkinProjectileEntity::new).dimensions(EntityDimensions.fixed(1F, 1F)).trackRangeBlocks(10).build()
+        );
+
+        POISON_WEB_PROJECTILE = register("poison_web_projectile",
+                FabricEntityTypeBuilder.<PoisonWebEntity>create(SpawnGroup.MISC, PoisonWebEntity::new).dimensions(EntityDimensions.fixed(0.5F, 0.5F)).trackRangeBlocks(10).build()
         );
 
 

@@ -1,6 +1,7 @@
 {
   "item.golemsgalore.golem_soul": "Golem Soul",
   "item.golemsgalore.obamium_ingot": "Obamium Ingot",
+  "item.golemsgalore.poison_web": "Poison Web",
   "block.golemsgalore.obamium_block": "Obamium Block",
   "block.golemsgalore.golem_beehive": "Golem Beehive",
   "entity.golemsgalore.diamond_golem": "Diamond Golem",
@@ -17,6 +18,7 @@
   "entity.golemsgalore.ghastly_golem": "Ghastly Golem",
   "entity.golemsgalore.bee_golem": "Bee Golem",
   "entity.golemsgalore.pumpkin_projectile": "Pumpkin Projectile",
+  "entity.golemsgalore.poison_web_projectile": "Poison Web Projectile",
   "itemGroup.golemsgalore.item_group": "Golems Galore",
   "message.golemsgalore.ghastly": "Ghastly Golems like to run around, so you might want to leash him."
 }

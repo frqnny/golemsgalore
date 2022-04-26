@@ -1,6 +1,7 @@
 package io.github.frqnny.golemsgalore.init;
 
 import io.github.frqnny.golemsgalore.GolemsGalore;
+import io.github.frqnny.golemsgalore.item.PoisonWebItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Rarity;
@@ -11,11 +12,13 @@ public class ModItems {
     public static final Item OBAMIUM_BLOCK = new BlockItem(ModBlocks.OBAMIUM_BLOCK, new Item.Settings().group(GolemsGalore.ITEM_GROUP));
     public static final Item OBAMIUM_INGOT = new Item(new Item.Settings().rarity(Rarity.COMMON).group(GolemsGalore.ITEM_GROUP).maxCount(64));
     public static final Item BEEHIVE = new BlockItem(ModBlocks.GOLEM_BEEHIVE, new Item.Settings().group(GolemsGalore.ITEM_GROUP));
+    public static final Item POISON_WEB = new PoisonWebItem(new Item.Settings().maxCount(16).group(GolemsGalore.ITEM_GROUP));
 
     public static void init() {
         Registry.register(Registry.ITEM, GolemsGalore.id("golem_soul"), GOLEM_SOUL);
         Registry.register(Registry.ITEM, GolemsGalore.id("obamium_block"), OBAMIUM_BLOCK);
         Registry.register(Registry.ITEM, GolemsGalore.id("obamium_ingot"), OBAMIUM_INGOT);
         Registry.register(Registry.ITEM, GolemsGalore.id("golem_beehive"), BEEHIVE);
+        Registry.register(Registry.ITEM, GolemsGalore.id("poison_web"), POISON_WEB);
     }
 }

@@ -1,6 +1,6 @@
 package io.github.frqnny.golemsgalore.mixin;
 
-import io.github.frqnny.golemsgalore.api.GolemSpawningUtil;
+import io.github.frqnny.golemsgalore.util.GolemSpawningUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CarvedPumpkinBlock;
