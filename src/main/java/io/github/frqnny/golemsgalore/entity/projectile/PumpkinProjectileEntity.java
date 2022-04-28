@@ -61,7 +61,7 @@ public class PumpkinProjectileEntity extends ProjectileEntity {
     public PumpkinProjectileEntity(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
         this(ModEntities.PUMPKIN_PROJECTILE, world);
         this.updatePosition(x, y, z);
-        this.method_43391(x, y, z);
+        this.updateTrackedPosition(x, y, z);
         this.setVelocity(velocityX, velocityY, velocityZ);
     }
 

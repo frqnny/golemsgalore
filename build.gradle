@@ -21,7 +21,7 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-//	modImplementation include("com.github.Frqnny:structurized:1.4.0+1.18")
+	modImplementation include("com.github.Frqnny:structurized:3.0.0+22w17a")
 
 	modImplementation include("com.github.Draylar.omega-config:omega-config-base:${project.config_version}")
 
